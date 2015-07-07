@@ -1,0 +1,15 @@
+[color]
+	ui = auto
+[user]
+	name = kyawawa
+	email = ishikawa@jsk.imi.i.u-tokyo.ac.jp
+[alias]
+	co = checkout
+	ci = commit
+	st = status
+	br = branch
+	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+[core]
+	excludesfile = /home/ishikawa/.gitignore
+[http]
+	sslVerify = false
