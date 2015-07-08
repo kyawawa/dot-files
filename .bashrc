@@ -2,6 +2,10 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
+if [ -f $HOME/local/etc/bash_completion.d/git-prompt.sh ]; then
+    source $HOME/local/etc/bash_completion.d/git-prompt.sh
+fi
+
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
