@@ -1,5 +1,10 @@
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")
 
+;;ターミナル上でのキーバインド修正
+;; (defadvice terminal-init-xterm (after fix-some-keys activate)
+;;     (define-key input-decode-map "\e[1;2A" [S-up])
+;;     (define-key input-decode-map "\e[4~" [end]))
+
 ;; Shift+方向キーでバッファ切り替え
 (setq windmove-wrap-around t)
 (windmove-default-keybindings)
