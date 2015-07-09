@@ -13,5 +13,3 @@
 	excludesfile = /home/ishikawa/.gitignore
 [http]
 	sslVerify = false
-[push]
-	default = simple
