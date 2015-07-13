@@ -93,7 +93,8 @@ alias l='ls -CF'
 
 alias em='emacs -nw'
 
-# enable to use alias when sudo
+# enable to use alias when using sudo
+# http://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
 alias sudo='sudo '
 
 # Add an "alert" alias for long running commands.  Use like so:
