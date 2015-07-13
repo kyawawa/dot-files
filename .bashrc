@@ -118,3 +118,9 @@ fi
 
 export EDITOR="emacs -nw"
 export PATH=$PATH:$HOME/scripts
+
+# Message of the Day
+# https://jp.linux.com/news/linuxcom-exclusive/416957-lco20140519
+if type "fortune" > /dev/null 2>&1 && type "cowsay" > /dev/null 2>&1 ; then
+    [[ "$PS1" ]] && fortune | cowsay -n
+fi
