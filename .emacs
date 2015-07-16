@@ -9,6 +9,9 @@
 (setq windmove-wrap-around t)
 (windmove-default-keybindings)
 
+;; fix Shift + up is recognized as <select>
+(define-key input-decode-map "\e[1;2A" [S-up])
+
 ;; Tab Length
 (setq default-tab-width 4)
 
