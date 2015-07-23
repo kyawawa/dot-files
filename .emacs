@@ -209,6 +209,72 @@ are always included."
 ;; SLIME
 
 ;; YATEX
+(add-to-list 'load-path "~/.emacs.d/site-lisp/yatex/")
+(autoload 'yatex-mode "yatex" "Yet Another LaTeX mode" t)
+(setq auto-mode-alist
+      (append '(("\\.tex$" . yatex-mode)
+                ("\\.ltx$" . yatex-mode)
+                ("\\.cls$" . yatex-mode)
+                ("\\.sty$" . yatex-mode)
+                ("\\.clo$" . yatex-mode)
+                ("\\.bbl$" . yatex-mode)) auto-mode-alist))
+(setq YaTeX-inhibit-prefix-letter t)
+(setq YaTeX-kanji-code nil)
+(setq YaTeX-latex-message-code 'utf-8)
+(setq YaTeX-use-LaTeX2e t)
+(setq YaTeX-use-AMS-LaTeX t)
+(setq YaTeX-dvi2-command-ext-alist
+      '(("TeXworks\\|texworks\\|texstudio\\|mupdf\\|SumatraPDF\\|Preview\\|Skim\\|TeXShop\\|evince\\|okular\\|zathura\\|qpdfview\\|Firefox\\|firefox\\|chrome\\|chromium\\|Adobe\\|Acrobat\\|AcroRd32\\|acroread\\|pdfopen\\|xdg-open\\|open\\|start" . ".pdf")))
+(setq tex-command "ptex2pdf -u -l -ot '-synctex=1'")
+                                        ;(setq tex-command "latexmk -e '$latex=q/uplatex %O -synctex=1 %S/' -e '$bibtex=q/upbibtex %O %B/' -e '$biber=q/biber %O --bblencoding=utf8 -u -U --output_safechars %B/' -e '$makeindex=q/upmendex %O -o %D %S/' -e '$dvipdf=q/dvipdfmx %O -o %D %S/' -norc -gg -pdfdvi")
+                                        ;(setq tex-command "latexmk -e '$latex=q/uplatex %O -synctex=1 %S/' -e '$bibtex=q/upbibtex %O %B/' -e '$biber=q/biber %O --bblencoding=utf8 -u -U --output_safechars %B/' -e '$makeindex=q/upmendex %O -o %D %S/' -e '$dvips=q/dvips %O -z -f %S | convbkmk -u > %D/' -e '$ps2pdf=q/ps2pdf %O %S %D/' -norc -gg -pdfps")
+                                        ;(setq tex-command "latexmk -e '$pdflatex=q/platex-ng %O -synctex=1 %S/' -e '$bibtex=q/upbibtex %O %B/' -e '$biber=q/biber %O --bblencoding=utf8 -u -U --output_safechars %B/' -e '$makeindex=q/upmendex %O -o %D %S/' -norc -gg -pdf")
+                                        ;(setq tex-command "latexmk -e '$pdflatex=q/pdflatex %O -synctex=1 %S/' -e '$bibtex=q/bibtex %O %B/' -e '$biber=q/biber %O --bblencoding=utf8 -u -U --output_safechars %B/' -e '$makeindex=q/makeindex %O -o %D %S/' -norc -gg -pdf")
+(setq bibtex-command "latexmk -e '$latex=q/uplatex %O -synctex=1 %S/' -e '$bibtex=q/upbibtex %O %B/' -e '$biber=q/biber %O --bblencoding=utf8 -u -U --output_safechars %B/' -e '$makeindex=q/upmendex %O -o %D %S/' -e '$dvipdf=q/dvipdfmx %O -o %D %S/' -norc -gg -pdfdvi")
+(setq makeindex-command  "latexmk -e '$latex=q/uplatex %O -synctex=1 %S/' -e '$bibtex=q/upbibtex %O %B/' -e '$biber=q/biber %O --bblencoding=utf8 -u -U --output_safechars %B/' -e '$makeindex=q/upmendex %O -o %D %S/' -e '$dvipdf=q/dvipdfmx %O -o %D %S/' -norc -gg -pdfdvi")
+(setq dvi2-command "evince")
+(setq tex-pdfview-command "evince")
+(setq dviprint-command-format "xdg-open `echo %s | sed -e \"s/\\.[^.]*$/\\.pdf/\"`")
+
+(require 'dbus)
+
+(defun un-urlify (fname-or-url)
+  "A trivial function that replaces a prefix of file:/// with just /."
+  (if (string= (substring fname-or-url 0 8) "file:///")
+      (substring fname-or-url 7)
+    fname-or-url))
+
+;; evince forward search is C-c C-g
+
+(defun evince-inverse-search (file linecol &rest ignored)
+  (let* ((fname (un-urlify file))
+         (buf (find-file fname))
+         (line (car linecol))
+         (col (cadr linecol)))
+    (if (null buf)
+        (message "[Synctex]: %s is not opened..." fname)
+      (switch-to-buffer buf)
+      (goto-line (car linecol))
+      (unless (= col -1)
+        (move-to-column col)))))
+
+(dbus-register-signal
+ :session nil "/org/gnome/evince/Window/0"
+ "org.gnome.evince.Window" "SyncSource"
+ 'evince-inverse-search)
+
+(add-hook 'yatex-mode-hook
+          '(lambda ()
+             (auto-fill-mode -1)))
+
+;;
+;; RefTeX with YaTeX
+;;
+(add-hook 'yatex-mode-hook
+          '(lambda ()
+             (reftex-mode 1)
+             (define-key reftex-mode-map (concat YaTeX-prefix ">") 'YaTeX-comment-region)
+             (define-key reftex-mode-map (concat YaTeX-prefix "<") 'YaTeX-uncomment-region)))
 
 ;; -*- mode: Emacs-Lisp -*-
 ;; written by k-okada 2006.06.14

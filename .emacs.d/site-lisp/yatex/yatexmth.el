@@ -1,8 +1,8 @@
 ;;; yatexmth.el --- YaTeX math-mode-specific functions
 ;;; 
 ;;; (c)1993-2013 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Mon Apr  1 22:44:22 2013 on firestorm
-;;; $Id: yatexmth.el,v 1.77 2013/04/01 13:53:45 yuuji Rel $
+;;; Last modified Fri Jul  5 23:28:28 2013 on firestorm
+;;; $Id: yatexmth.el,v 8ee8514e06ed 2014-12-26 01:09 +0900 yuuji $
 
 ;;; Commentary:
 ;;; [Customization guide]
@@ -310,6 +310,8 @@
    ("[]"	"Box"		"[]")
    ("no"	"notag"		"\\notag")
    (":"		"colon"		":")
+   (".'."	"therefore"	(".'." "Åà"))
+   ("'.'"	"because"	("'.'" "ÅÊ"))
    ("Diamond"	"Diamond"	"/\\\n\\/")
    ("3"		"triangle"	"/\\\n~~")
    ("C"		"clubsuit"	" o\no+o\n |")

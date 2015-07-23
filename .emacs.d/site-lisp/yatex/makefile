@@ -3,13 +3,13 @@
 #
 
 # Edit these variables to be suitable for your site
-PREFIX	= /usr/local
-
-## mule2
+EMACS	= emacs
 #EMACS	= mule
+PREFIX	= `${EMACS} -batch --eval '(princ (expand-file-name "../../../.." data-directory))'`
+# PREFIX	= /usr/local
+
 #EMACSDIR= ${PREFIX}/lib/${EMACS}
 ## emacs20 or later
-EMACS	= emacs
 EMACSDIR= ${PREFIX}/share/${EMACS}
 ## XEmacs
 #EMACS	= xemacs
@@ -17,7 +17,7 @@ EMACSDIR= ${PREFIX}/share/${EMACS}
 ## Meadow (Sample)
 #EMACS	= meadow
 #EMACSDIR = c:/usr/local/meadow
-## CarbonEmacs on Darwin (Sample)
+## Cocoa(or Carbon)Emacs on Darwin (Sample)
 #EMACS	= /Applications/Emacs.app/Contents/MacOS/Emacs
 #PREFIX	= /Applications/Emacs.app/Contents/Resources
 #EMACSDIR = ${PREFIX}
@@ -25,8 +25,8 @@ EMACSDIR= ${PREFIX}/share/${EMACS}
 LISPDIR	= ${EMACSDIR}/site-lisp/yatex
 # LISPDIR	= ${EMACSDIR}/site-packages/lisp/yatex
 DOCDIR	= ${LISPDIR}/docs
-HELPDIR	= ${EMACSDIR}/site-lisp
-INFODIR	= ${PREFIX}/info
+HELPDIR	= ${LISPDIR}/help
+INFODIR	= ${PREFIX}/share/info
 
 TAR	= tar
 INSTALL	= install -c -m 444
@@ -41,7 +41,6 @@ GEO	= -geometry 80x20+0+0
 # Do not edit below
 ###################
 # make install		to install YaTeX into public space
-# make install-nw	same as above, but -nw mode, or Emacs18(Nemacs)
 # make ajimi		to feel taste
 # make ajimi-nw		same as above, but -nw mode
 # make package		to create package for relase
@@ -49,8 +48,8 @@ GEO	= -geometry 80x20+0+0
 # make clean		to delete all producted files
 # make ci		to check in all
 # make co		to check out all
-MVER	= 1.77
-LISP	= ${LISP18} ${LISP19}
+MVER	= 1.78
+LISP	= ${LISP18} ${LISP19} ${LISP23}
 YAHTML	= yahtml.el
 COMMON	= yatexlib.el yatexprc.el
 LISP18	= comment.el yatex.el yatexadd.el yatexgen.el yatexenv.el \
@@ -58,6 +57,7 @@ LISP18	= comment.el yatex.el yatexadd.el yatexgen.el yatexenv.el \
 	  yatexmth.el yatexhks.el yatexhlp.el \
 	  yatexm-o.el yatexsec.el  yatexhie.el yatexpkg.el ${YAHTML}
 LISP19	= yatex19.el
+LISP23	= yatex23.el
 DOCS	= ${DOCSRC} ${DOCOBJ} ${NEWS}
 NEWS	= yatex.new
 DOCHTML	= docs/htmlqa docs/htmlqa.eng docs/yahtmlj.tex docs/yahtmle.tex
@@ -86,7 +86,7 @@ all:
 #	@echo "If you don't use X-clinet of Emacs,"
 #	@echo 'type "make install-nw" instead.'
 
-install: install-real
+install: install-real install-message
 #install-yahtml: bytecompile-yahtml
 install-yahtml:
 	[ -d ${LISPDIR} ] || mkdir ${LISPDIR}
@@ -97,9 +97,10 @@ install-yahtml:
 	${INSTALL} *.el* ${LISPDIR}
 
 install-real:
-	if [ ! -d ${LISPDIR} ]; then ${MKDIR} ${LISPDIR}; fi
-	if [ ! -d ${DOCDIR} ]; then ${MKDIR} ${DOCDIR}; fi
-	if [ ! -d ${INFODIR} ]; then ${MKDIR} ${INFODIR}; fi
+	[ -d ${LISPDIR} ] || ${MKDIR} ${LISPDIR}
+	[ -d ${HELPDIR} ] || ${MKDIR} ${HELPDIR}
+	[ -d ${DOCDIR} ] || ${MKDIR} ${DOCDIR}
+	[ -d ${INFODIR} ] || ${MKDIR} ${INFODIR}
 	for f in *.el; do \
 	 rm -f ${LISPDIR}/$${f}c; \
 	done
@@ -107,10 +108,24 @@ install-real:
 	${INSTALL} ${DOCSRC} ${DOCDIR}
 	${INSTALL} ${DOCOBJ} ${INFODIR}
 	${INSTALL} ${HELP} ${HELPDIR}
+
+install-message:
 	@echo "--------------------------------"
 	@echo "If you have install-info command, type 'make install-info'."
 	@echo "If not, add next lines into your site's info dir manually."
 	@cat dir
+	@echo "--------------------------------"
+	@echo "=== INSTALLATION DONE ==="
+	@echo "  You might need to add these expression below to your ~/.emacs"
+	@echo "  完了. ~/.emacs 等に以下を追加する必要があるかもしれません."
+	@echo
+	@echo ";;; ------ Startup definitions for YaTeX ------ ;;;"
+	@make show-init
+	@echo ";;; ------------------------------------------- ;;;"
+	@echo
+	@echo " To get elisp above again, call make command as below."
+	@echo " 上記elispを再度得るには以下のようにmakeを起動してください."
+	@echo " % make $${PREFIX:+PREFIX=$$PREFIX }show-init"
 
 install-info:
 	for f in ${DOCOBJ}; do \
@@ -118,6 +133,30 @@ install-info:
 	  ${INSTINFO} --entry="`grep $$b dir`" --section=TeX \
 		--section=Emacs $${f} ${INFODIR}/dir; \
 	done
+
+show-init:
+	@printf '%s\n%s\n%s\n%s\n' \
+	  '(setq auto-mode-alist' \
+	  "  (cons (cons \"\\.tex$$\" 'yatex-mode) auto-mode-alist))" \
+	  "(autoload 'yatex-mode \"yatex\" \"Yet Another LaTeX mode\" t)" \
+	  "(add-to-list 'load-path \"${LISPDIR}\")"
+	@printf '(setq tex-command "%s")%s\n' \
+	 `CMDS='platex pdflatex ptex2pdf lualatex' DFLT=latex \
+	  make search-cmd`
+	@printf '(setq dvi2-command "%s")%s\n' \
+	 `CMDS='pxdvi xdvik kxdvi dviout texworks' DFLT=xdvi \
+	  make search-cmd`
+	@printf '(setq tex-pdfview-command "%s")%s\n' \
+	 `CMDS='evince mupdf xpdf kpdf texworks sumatrapdf' \
+	  DFLT=acroread \
+	  make search-cmd`
+
+show-init2:
+	@make LISPDIR=$$PWD show-init
+
+search-cmd:
+	@for f in $$CMDS; do \
+	  type $$f >/dev/null 2>&1 && echo $$f && exit 0; done; echo $$DFLT
 
 install-nw: bytecompile-nw install-real
 

@@ -1,8 +1,8 @@
 ;;; yatexgen.el --- YaTeX add-in function generator(rev.5)
 
 ;;; (c)1991-1995,1999,2000 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Sep  1 08:10:36 2012 on firestorm
-;;; $Id: yatexgen.el,v 1.77 2013/04/01 13:53:45 yuuji Rel $
+;;; Last modified Sun Dec 21 14:04:49 2014 on firestorm
+;;; $Id: yatexgen.el,v 8ee8514e06ed 2014-12-26 01:09 +0900 yuuji $
 
 ;;; Code:
 (require 'yatex)
@@ -244,7 +244,8 @@ Variable add-in is referred in parent function."
 	func-name (string ""))
     ;;Phase 1. extract argument from add-in string.
     (mapcar
-     '(lambda (arg)
+     (function
+      (lambda (arg)
 	(let ((index 0) (match 0) beg end (carg (car arg)))
 	  (YaTeX-generate-display-message
 	   YaTeX-generate-read-prompt-message)
@@ -265,7 +266,7 @@ Variable add-in is referred in parent function."
 	       ((YaTeX-generate-ask-match-position)
 		(YaTeX-generate-register-match))))
 	    (setq index end))
-	  (setq i (1+ i))))
+	  (setq i (1+ i)))))
      args)
     ;;Phase 2. Generate function!!
     (setq i 0)
@@ -287,10 +288,11 @@ Variable add-in is referred in parent function."
      "(defun " func-name " ()\n"
      "  (let (")
     (mapcar
-     '(lambda (arg)
+     (function
+      (lambda (arg)
 	(insert (format "(arg%d (read-string \"%s: \"))\n"
 			i (aref prompt (1- i))))
-	(setq i (1+ i)))
+	(setq i (1+ i))))
      args)
     (delete-region (point) (progn (forward-line -1) (end-of-line) (point)))
     (insert ")\n(concat " (YaTeX-generate-lisp-quote string)

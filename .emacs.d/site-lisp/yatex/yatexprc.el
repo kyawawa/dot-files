@@ -1,8 +1,8 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
-;;; (c)1993-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Apr  1 22:44:38 2013 on firestorm
-;;; $Id: yatexprc.el,v 1.77 2013/04/01 13:53:45 yuuji Rel $
+;;; (c)1993-2015 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Tue Jan  6 08:56:01 2015 on firestorm
+;;; $Id: yatexprc.el,v e95ae850eefb 2015-01-06 20:38 +0900 yuuji $
 
 ;;; Code:
 ;(require 'yatex)
@@ -64,6 +64,7 @@
   (save-excursion
     (let ((p (point)) (window (selected-window)) execdir (cb (current-buffer))
 	  (map YaTeX-typesetting-mode-map)
+	  (background (string-match "\\*bg:" buffer))
 	  (outcode
 	   (cond ((eq major-mode 'yatex-mode) YaTeX-coding-system)
 		 ((eq major-mode 'yahtml-mode) yahtml-kanji-code))))
@@ -78,8 +79,10 @@
       (setq execdir default-directory)
       ;;Select lower-most window if there are more than 2 windows and
       ;;typeset buffer not seen.
-      (YaTeX-showup-buffer
-       buffer (function (lambda (x) (nth 3 (window-edges x)))))
+      (if background
+	  nil				;do not showup
+	(YaTeX-showup-buffer
+	 buffer 'YaTeX-showup-buffer-bottom-most))
       (set-buffer (get-buffer-create buffer))
       (setq default-directory execdir)
       (cd execdir)
@@ -133,21 +136,25 @@
 		      (setq YaTeX-typeset-marker (make-marker)))
 		  (point))
       (insert (format "Call `%s'\n" command))
-      (if YaTeX-dos (message "Done.")
+      (cond
+       ((fboundp 'start-process)
 	(insert " ")
 	(set-marker (process-mark YaTeX-typeset-process) (1- (point))))
+       (t (message "Done.")))
       (if (bolp) (forward-line -1))	;what for?
-      (if (and YaTeX-emacs-19 window-system)
-	  (let ((win (get-buffer-window buffer t)) owin)
-	    (select-frame (window-frame win))
-	    (setq owin (selected-window))
-	    (select-window win)
-	    (goto-char (point-max))
-	    (recenter -1)
-	    (select-window owin))
-	(select-window (get-buffer-window buffer))
-	(goto-char (point-max))
-	(recenter -1))
+      (cond
+       (background nil)
+       ((and YaTeX-emacs-19 window-system)
+	(let ((win (get-buffer-window buffer t)) owin)
+	  (select-frame (window-frame win))
+	  (setq owin (selected-window))
+	  (select-window win)
+	  (goto-char (point-max))
+	  (recenter -1)
+	    (select-window owin)))
+       (t (select-window (get-buffer-window buffer))
+	  (goto-char (point-max))
+	  (recenter -1)))
       (select-window window)
       (switch-to-buffer cb)
       (YaTeX-remove-nonstopmode))))
@@ -172,7 +179,7 @@ thus, it call bibtex only if warning messages about citation are seen.")
 		tobecalled shortname
 		(thiscmd (get 'YaTeX-typeset-process 'thiscmd))
 		(ppprop (get 'YaTeX-typeset-process 'ppcmd))
-		(ppcmd (cdr (assq proc ppprop)))
+z		(ppcmd (cdr (assq proc ppprop)))
 		(bcprop (get 'YaTeX-typeset-process 'bibcmd))
 		(bibcmd (cdr (assq proc bcprop))))
 	   (put 'YaTeX-typeset-process 'ppcmd ;erase ppcmd
@@ -250,7 +257,7 @@ thus, it call bibtex only if warning messages about citation are seen.")
 		       (setq tobecalled thiscmd shortname "+typeset"))
 		      (t
 		       nil))			  ;no need to call any process
-		     (progn
+		     (progn ;;Something occurs to call next command
 		       (insert
 			(format
 			 "===!!! %s !!!===\n"
@@ -272,6 +279,10 @@ thus, it call bibtex only if warning messages about citation are seen.")
 			   (put 'YaTeX-typeset-process 'thiscmd thiscmd)))
 		   ;; If ppcmd is active, call it.
 		   (cond
+		    ((and ppcmd (symbolp ppcmd) (fboundp ppcmd))
+		     ;; If ppcmd is set and it is a function symbol,
+		     ;; call it whenever command succeeded or not
+		     (funcall ppcmd))
 		    ((and ppcmd (string-match "finish" mes))
 		     (insert (format "=======> Success! Calling %s\n" ppcmd))
 		     (setq mode-name	; set process name
@@ -286,7 +297,14 @@ thus, it call bibtex only if warning messages about citation are seen.")
 		       shell-file-name YaTeX-shell-command-option
 		       ppcmd)
 		      'YaTeX-typeset-sentinel))
-		    (t ;pull back original mode-name
+		    (t 
+		     (if (equal 0 (process-exit-status proc))
+			 nil		;do nothing at successful exit
+		       ;;Confirm process buffer to be shown when error
+		       (YaTeX-showup-buffer
+			pbuf 'YaTeX-showup-buffer-bottom-most)
+		       (message "Command FAILED!"))
+		     ;;pull back original mode-name
 		     (setq mode-name "typeset"))))
 		 (forward-char 1))
 	     (setq YaTeX-typeset-process nil)
@@ -299,7 +317,7 @@ thus, it call bibtex only if warning messages about citation are seen.")
 (defvar YaTeX-texput-file "texput.tex"
   "*File name for temporary file of typeset-region.")
 
-(defun YaTeX-typeset-region ()
+(defun YaTeX-typeset-region (&optional pp)
   "Paste the region to the file `texput.tex' and execute typesetter.
 The region is specified by the rule:
 	(1)If keyword `%#BEGIN' is found in the upper direction from (point).
@@ -310,17 +328,21 @@ The region is specified by the rule:
 	(2)If no `%#BEGIN' usage is found before the (point),
 		->Assume the text between current (point) and (mark) as region.
 DON'T forget to eliminate the `%#BEGIN/%#END' notation after editing
-operation to the region."
+operation to the region.
+Optional second argument PP specifies post-processor command which will be
+called with one argument of current file name whitout extension."
   (interactive)
   (save-excursion
     (let*
 	((end "") typeout ;Type out message that tells the method of cutting.
 	 (texput YaTeX-texput-file)
+	 (texputroot (substring texput 0 (string-match "\\.tex$" texput)))
 	 (cmd (concat (YaTeX-get-latex-command nil) " " texput))
 	 (buffer (current-buffer)) opoint preamble (subpreamble "") main
 	 (hilit-auto-highlight nil)	;for Emacs19 with hilit19
+	 ppcmd
 	 reg-begin reg-end lineinfo)
-
+      (setq ppcmd (if (stringp pp) (concat pp " " texputroot) pp))
       (save-excursion
 	(if (search-backward "%#BEGIN" nil t)
 	    (progn
@@ -368,9 +390,11 @@ operation to the region."
 	(set-buffer (find-file-noselect texput)))
       ;;(find-file YaTeX-texput-file)
       (erase-buffer)
+      (YaTeX-set-file-coding-system YaTeX-kanji-code YaTeX-coding-system)
       (if (and (eq major-mode 'yatex-mode) YaTeX-need-nonstop)
 	  (insert "\\nonstopmode{}\n"))
-      (insert preamble "\n" subpreamble "\n")
+      (insert preamble "\n" subpreamble "\n"
+	      "\\pagestyle{empty}\n\\thispagestyle{empty}\n")
       (setq lineinfo (list (count-lines 1 (point-end-of-line)) lineinfo))
       (insert-buffer-substring buffer reg-begin reg-end)
       (insert "\\typeout{" typeout end "}\n") ;Notice the selected method.
@@ -378,18 +402,268 @@ operation to the region."
       (basic-save-buffer)
       (kill-buffer (current-buffer))
       (set-buffer main)		;return to parent file or itself.
-      (YaTeX-typeset cmd YaTeX-typeset-buffer)
+      (YaTeX-typeset cmd YaTeX-typeset-buffer nil nil ppcmd)
       (switch-to-buffer buffer)		;for Emacs-19
       (put 'dvi2-command 'region t)
       (put 'dvi2-command 'file buffer)
       (put 'dvi2-command 'offset lineinfo))))
 
-(defun YaTeX-typeset-environment ()
-  "Typeset current math environment"
+(defvar YaTeX-use-image-preview "png"
+  "*Nil means not using image preview by [prefix] t e.
+Acceptable value is one of \"jpg\" or \"png\", which specifies
+format of preview image.  NOTE that if your system has /usr/bin/sips
+not having convert(ImageMagick), jpeg format is automatically taken
+for conversion.")
+(defvar YaTeX-preview-image-mode-map nil
+  "Keymap used in YaTeX-preview-image-mode")
+(defun YaTeX-preview-image-mode ()
   (interactive)
-  (save-excursion
-    (YaTeX-mark-environment)
-    (YaTeX-typeset-region)))
+  (if YaTeX-preview-image-mode-map
+      nil
+    (let ((map (setq YaTeX-preview-image-mode-map (make-sparse-keymap))))
+      (define-key map "q" (lambda()(interactive)
+			    (kill-buffer)
+			    (select-window
+			     (or (get 'YaTeX-typeset-process 'win)
+				 (selected-window)))))
+      (define-key map "j" (lambda()(interactive) (scroll-up 1)))
+      (define-key map "k" (lambda()(interactive) (scroll-up -1)))))
+  (use-local-map YaTeX-preview-image-mode-map))
+
+(defvar YaTeX-typeset-pdf2image-chain
+  (cond
+   ((YaTeX-executable-find "pdfcrop")	;Mac OS X
+    (list
+     "pdfcrop --clip %b.pdf tmp.pdf"
+     (if (YaTeX-executable-find "convert")
+	 "convert -density %d tmp.pdf %b.%f"
+       ;; If we use sips, specify jpeg as format
+       "sips -s format jpeg -s dpiWidth %d -s dpiHeight %d %b.pdf --out %b.jpg")
+     "rm -f tmp.pdf")))
+  "*Pipe line of command as a list to create image file from PDF.
+See also doc-string of YaTeX-typeset-dvi2image-chain.")
+
+(defvar YaTeX-typeset-dvi2image-chain
+  (cond
+   ((YaTeX-executable-find YaTeX-cmd-dvips)
+    (list
+     (format "%s -E -o %%b.eps %%b.dvi" YaTeX-cmd-dvips)
+     "convert -alpha off -density %d %b.eps %b.%f"))
+   ((and (equal YaTeX-use-image-preview "png")
+	 (YaTeX-executable-find "dvipng"))
+    (list "dvipng %b.dvi")))
+  "*Pipe line of command as a list to create png file from DVI or PDF.
+%-notation rewritten list:
+ %b	basename of target file(\"texput\")
+ %f	Output format(\"png\")
+ %d	DPI
+")
+
+(defvar YaTeX-typeset-conv2image-chain-alist
+  (list (cons 'pdf YaTeX-typeset-pdf2image-chain)
+	(cons 'dvi YaTeX-typeset-dvi2image-chain))
+  "Default alist for creating image files from DVI/PDF.
+The value is generated from YaTeX-typeset-pdf2image-chain and
+YaTeX-typeset-dvi2image-chain.")
+
+(defvar YaTeX-typeset-conv2image-process nil "Process of conv2image chain")
+(defun YaTeX-typeset-conv2image-chain ()
+  (let*((proc (or YaTeX-typeset-process YaTeX-typeset-conv2image-process))
+	(prevname (process-name proc))
+	(texput "texput")
+	(format YaTeX-use-image-preview)
+	(target (concat texput "." format))
+	(math (get 'YaTeX-typeset-conv2image-chain 'math))
+	(srctype (or (get 'YaTeX-typeset-conv2image-chain 'srctype)
+		     (if (file-newer-than-file-p
+			  (concat texput ".pdf")
+			  (concat texput ".dvi"))
+			 'pdf 'dvi)))
+	(chain (cdr (assq srctype YaTeX-typeset-conv2image-chain-alist)))
+	;; This function is the first evaluation code.
+	;; If you find these command line does not work
+	;; on your system, please tell the author
+	;; which commands should be taken to achieve
+	;; one-shot png previewing on your system
+	;; before publishing patch on the Web.
+	;; Please please please please please.
+	(curproc (member prevname chain))
+	(w (get 'YaTeX-typeset-conv2image-chain 'win))
+	(pwd default-directory)
+	img)
+    (if (not (= (process-exit-status proc) 0))
+	(progn
+	  (YaTeX-showup-buffer		;never comes here(?)
+	   (current-buffer) 'YaTeX-showup-buffer-bottom-most)
+	  (message "Region typesetting FAILED"))
+      (setq command
+	    (if curproc (car (cdr-safe curproc)) (car chain)))
+      (if command
+	  (let ((cmdline (YaTeX-replace-formats
+			  command
+			  (list (cons "b" "texput")
+				(cons "f" format)
+				(cons "d" (if math "300" "200"))))))
+	    (insert (format "Calling `%s'...\n" cmdline))
+	    (set-process-sentinel
+	     (setq YaTeX-typeset-conv2image-process
+		   (start-process
+		    command
+		    (current-buffer)
+		    shell-file-name YaTeX-shell-command-option
+		    cmdline))
+	     'YaTeX-typeset-sentinel)
+	    (put 'YaTeX-typeset-process 'ppcmd
+		 (cons (cons (get-buffer-process (current-buffer))
+			     'YaTeX-typeset-conv2image-chain)
+		       (get 'YaTeX-typeset-process 'ppcmd))))
+	;; After all chain executed, display image in current window
+	(cond
+	 ((and (featurep 'image) window-system)
+	  ;; If direct image displaying available in running Emacs,
+	  ;; display target image into the next window in Emacs.
+	  (select-window w)
+	  ;(setq foo (selected-window))
+	  (YaTeX-showup-buffer
+	   (get-buffer-create " *YaTeX-region-image*")
+	   'YaTeX-showup-buffer-bottom-most t)
+	  (remove-images (point-min) (point-max))
+	  (erase-buffer)
+	  (cd pwd)			;when reuse from other source
+					;(put-image (create-image (expand-file-name target)) (point))
+	  (insert-image-file target)
+	  (setq img (plist-get (text-properties-at (point)) 'intangible))
+	  (YaTeX-preview-image-mode)
+	  (if img
+	      (let ((height (cdr (image-size img))))
+		(enlarge-window
+		 (- (ceiling (min height (/ (frame-height) 2)))
+		    (window-height)))))
+	  ;; Remember elapsed time, which will be threshold in auto-preview
+	  (put 'YaTeX-typeset-conv2image-chain 'elapse
+	       (YaTeX-elapsed-time
+		(get 'YaTeX-typeset-conv2image-chain 'start) (current-time))))
+	 (t
+	  ;; Without direct image, display image with image viewer
+	  (YaTeX-system
+	   (format "%s %s" YaTeX-cmd-view-images target)
+	   "YaTeX-region-image"
+	   'noask)
+	  )
+	 )))))
+
+
+(defvar YaTeX-typeset-environment-timer nil)
+(defun YaTeX-typeset-environment-timer ()
+  "Update preview image in the 
+Plist: '(buf begPoint endPoint precedingChar 2precedingChar Substring time)"
+  (let*((plist (get 'YaTeX-typeset-environment-timer 'laststate))
+	(b (nth 0 plist))
+	(s (nth 1 plist))
+	(e (nth 2 plist))
+	(p (nth 3 plist))
+	(q (nth 4 plist))
+	(st (nth 5 plist))
+	(tm (nth 6 plist))
+	(overlay YaTeX-on-the-fly-overlay)
+	(thresh (* 2 (or (get 'YaTeX-typeset-conv2image-chain 'elapse) 1))))
+    (cond
+     ;; In minibuffer, do nothing
+     ((minibuffer-window-active-p (selected-window)) nil)
+     ;; If point went out from last environment, cancel timer
+     ;;;((and (message "s=%d, e=%d, p=%d" s e (point)) nil))
+     ((or (not (eq b (window-buffer (selected-window))))
+	  (< (point) s)
+	  (not (overlayp overlay))
+	  (not (eq (overlay-buffer overlay) (current-buffer)))
+	  (> (point) (overlay-end overlay)))
+      (YaTeX-typeset-environment-cancel-auto))
+     ;;;((and (message "e=%d, p=%d t=%s" e (point) (current-time)) nil))
+     ;; If recently called, hold
+     ;;; ((< (YaTeX-elapsed-time tm (current-time)) thresh) nil)
+     ;; If condition changed from last call, do it
+     ((not (string= st (YaTeX-buffer-substring s (overlay-end overlay))))
+      (YaTeX-typeset-environment)))))
+
+(defun YaTeX-typeset-environment-1 ()
+  (let ((math (YaTeX-in-math-mode-p)) usetimer)
+    (cond
+     ((and YaTeX-on-the-fly-overlay (overlayp YaTeX-on-the-fly-overlay)
+	   (member YaTeX-on-the-fly-overlay (overlays-at (point))))
+      ;; If current position is in on-the-fly overlay,
+      ;; use that region again
+      (setq math (get 'YaTeX-typeset-conv2image-chain 'math))
+      (push-mark (overlay-start YaTeX-on-the-fly-overlay))
+      (goto-char (overlay-end YaTeX-on-the-fly-overlay)))
+     ((and (fboundp 'region-active-p) (region-active-p))
+      nil)				;if region is active, use it
+     (math (setq usetimer t) (YaTeX-mark-environment))
+     ((equal (or (YaTeX-inner-environment t) "document") "document")
+      (mark-paragraph))
+     (t (setq usetimer t) (YaTeX-mark-environment)))
+    (if YaTeX-use-image-preview
+	(let ((YaTeX-typeset-buffer (concat "*bg:" YaTeX-typeset-buffer))
+	      (b (region-beginning)) (e (region-end)))
+	  (put 'YaTeX-typeset-conv2image-chain 'math math)
+	  (put 'YaTeX-typeset-conv2image-chain 'srctype nil)
+	  (put 'YaTeX-typeset-conv2image-chain 'win (selected-window))
+	  (put 'YaTeX-typeset-conv2image-chain 'start (current-time))
+	  (put 'YaTeX-typeset-environment-timer 'laststate
+	       (list (current-buffer) b e (preceding-char)
+		     (char-after (- (point) 2))
+		     (YaTeX-buffer-substring b e)
+		     (current-time)))
+	  (YaTeX-typeset-region 'YaTeX-typeset-conv2image-chain)
+	  (if usetimer
+	      (progn
+		(if YaTeX-on-the-fly-overlay
+		    (move-overlay YaTeX-on-the-fly-overlay b e)
+		  (overlay-put
+		   (setq YaTeX-on-the-fly-overlay (make-overlay b e))
+		   'face 'YaTeX-on-the-fly-activated-face))
+		(YaTeX-typeset-environment-auto)
+		)))
+      (YaTeX-typeset-region))))
+
+(defun YaTeX-typeset-environment ()
+  "Typeset current environment or paragraph.
+If region activated, use it."
+  (interactive)
+  (let ((md (match-data)))
+    (unwind-protect
+	(save-excursion
+	  (YaTeX-typeset-environment-1))
+      (store-match-data md))))
+
+
+(defvar YaTeX-on-the-fly-preview-interval (string-to-number "0.9")
+  "*Control the on-the-fly update of preview environment by an image.
+Nil disables on-the-fly update.  Otherwise on-the-fly update is enabled
+with update interval specified by this value.")
+
+(defun YaTeX-typeset-environment-auto ()
+  "Turn on on-the-fly preview-image"
+  (if YaTeX-typeset-environment-timer
+      nil
+    (setq YaTeX-typeset-environment-timer
+	  (run-with-idle-timer
+	   (max (string-to-number "0.1")
+		(cond
+		 ((numberp YaTeX-on-the-fly-preview-interval) 
+		  YaTeX-on-the-fly-preview-interval)
+		 ((stringp YaTeX-on-the-fly-preview-interval)
+		  (string-to-number YaTeX-on-the-fly-preview-interval))
+		 (t 1)))
+	   t 'YaTeX-typeset-environment-timer))))
+
+(defun YaTeX-typeset-environment-cancel-auto ()
+  "Cancel typeset-environment timer."
+  (interactive)
+  (cancel-timer YaTeX-typeset-environment-timer)
+  (setq YaTeX-typeset-environment-timer nil)
+  (delete-overlay YaTeX-on-the-fly-overlay)
+  (message "Auto-preview canceled"))
+
 
 (defun YaTeX-typeset-buffer (&optional pp)
   "Typeset whole buffer.
@@ -505,14 +779,21 @@ FILE changes the default file name."
 			     (format "%s %s" default mainroot))
 			 'YaTeX-call-command-history))
 	  (if (or update (null b-in))
-	      (if (y-or-n-p "Use this command line in the future? ")
+	      (if (y-or-n-p "Memorize this command line in this file? ")
 		  (YaTeX-getset-builtin builtin-type command) ;keep in a file
 		(setq YaTeX-call-builtin-on-file	      ;keep in memory
 		      (cons (cons builtin-type command)
-			    (delete (assoc builtin-type alist) alist)))))))
+			    (delete (assoc builtin-type alist) alist)))
+		(message "`%s' kept in memory.  Type `%s %s' to override."
+			 command
+			 (key-description
+			  (car (where-is-internal 'universal-argument)))
+			 (key-description (this-command-keys)))
+		(sit-for 2)))))
     (YaTeX-typeset
      command
-     (format " *YaTeX-%s*" (downcase builtin-type)))))
+     (format " *YaTeX-%s*" (downcase builtin-type))
+     builtin-type builtin-type)))
 
 (defun YaTeX-kill-typeset-process (proc)
   "Kill process PROC after sending signal to PROC.
@@ -537,28 +818,36 @@ PROC should be process identifier."
 	  (interrupt-process proc)
 	  (delete-process proc))))))
 
-(defun YaTeX-system (command buffer)
-  "Execute some command on buffer.  Not a official function."
+(defun YaTeX-system (command name &optional noask basedir)
+  "Execute some COMMAND with process name `NAME'.  Not a official function.
+Optional second argument NOASK skip query when privious process running.
+Optional third argument BASEDIR changes default-directory there."
   (save-excursion
-    (YaTeX-showup-buffer
-     buffer (function (lambda (x) (nth 3 (window-edges x)))))
-    (let ((df default-directory))		;preserve current buf's pwd
-      (set-buffer (get-buffer-create buffer))	;1.61.3
-      (setq default-directory df)
-      (cd df))
-    (erase-buffer)
-    (if (not (fboundp 'start-process))
-	(call-process
-	 shell-file-name nil buffer nil YaTeX-shell-command-option command)
-      (if (and (get-buffer-process buffer)
-	       (eq (process-status (get-buffer-process buffer)) 'run)
-	       (not
-		(y-or-n-p (format "Process %s is running. Continue?" buffer))))
-	  nil
-	(set-process-buffer
-	 (start-process
-	  "system" buffer shell-file-name YaTeX-shell-command-option command)
-	 (get-buffer buffer))))))
+    (let ((df default-directory)
+	  (buffer (get-buffer-create (format " *%s*" name)))
+	  proc status)
+      (set-buffer buffer)
+      (setq default-directory (cd (or basedir df)))
+      (erase-buffer)
+      (insert (format "Calling `%s'...\n" command)
+	      "==Kill this buffer to STOP process==")
+      (YaTeX-showup-buffer buffer 'YaTeX-showup-buffer-bottom-most)
+      (if (not (fboundp 'start-process))
+	  (call-process
+	   shell-file-name nil buffer nil YaTeX-shell-command-option command)
+	(if (and (setq proc (get-buffer-process buffer))
+		 (setq status (process-status proc))
+		 (eq status 'run)
+		 (not noask)
+		 (not
+		  (y-or-n-p (format "Process %s is running. Continue?" buffer))))
+	    nil
+	  (if (eq status 'run)
+	      (progn (interrupt-process proc) (delete-process proc)))
+	  (set-process-buffer
+	   (start-process
+	    name buffer shell-file-name YaTeX-shell-command-option command)
+	   (get-buffer buffer)))))))
 
 (defvar YaTeX-default-paper-type "a4"
   "*Default paper type.")
@@ -602,33 +891,49 @@ PROC should be process identifier."
 (defvar YaTeX-preview-file-history nil
   "Holds minibuffer history of file to preview.")
 (put 'YaTeX-preview-file-history 'no-default t)
-(defun YaTeX-preview (preview-command preview-file)
-  "Execute xdvi (or other) to tex-preview."
-  (interactive
-   (let* ((command (read-string-with-history
-		    "Preview command: "
-		    (YaTeX-replace-format
-		     (or (YaTeX-get-builtin "PREVIEW") dvi2-command)
+(defun YaTeX-preview-default-previewer ()
+  "Return default previewer for this document"
+  (YaTeX-replace-format
+		     (or (YaTeX-get-builtin "PREVIEW")
+			 (if (eq (get 'dvi2-command 'format) 'pdf)
+			     tex-pdfview-command
+			   dvi2-command))
 		     "p" (format (cond
 				  (YaTeX-dos "-y:%s")
 				  (t "-paper %s"))
-				 (YaTeX-get-paper-type)))
-		    'YaTeX-preview-command-history))
-	  (file (read-string-with-history
-		 "Preview file: "
-		 (if (get 'dvi2-command 'region)
+				 (YaTeX-get-paper-type))))
+(defun YaTeX-preview-default-main (command)
+  "Return default preview target file"
+  (if (get 'dvi2-command 'region)
 		     (substring YaTeX-texput-file
 				0 (rindex YaTeX-texput-file ?.))
-		   (YaTeX-get-preview-file-name command))
-		 'YaTeX-preview-file-history)))
+		   (YaTeX-get-preview-file-name command)))
+(defun YaTeX-preview (preview-command preview-file &optional as-default)
+  "Execute xdvi (or other) to tex-preview."
+  (interactive
+   (let* ((previewer (YaTeX-preview-default-previewer))
+	  (as-default current-prefix-arg)
+	  (command (if as-default
+		       previewer
+		     (read-string-with-history
+		      "Preview command: "
+		      previewer
+		      'YaTeX-preview-command-history)))
+	  (target (YaTeX-preview-default-main command))
+	  (file (if as-default
+		    target
+		  (read-string-with-history
+		   "Preview file: "
+		   target
+		   'YaTeX-preview-file-history))))
      (list command file)))
-  (setq dvi2-command preview-command)	;`dvi2command' is buffer local
+  (setq dvi2-command preview-command)	;`dvi2-command' is buffer local
   (save-excursion
     (YaTeX-visit-main t)
     (if YaTeX-dos (setq preview-file (expand-file-name preview-file)))
     (let ((pbuffer "*dvi-preview*") (dir default-directory))
       (YaTeX-showup-buffer
-       pbuffer (function (lambda (x) (nth 3 (window-edges x)))))
+       pbuffer 'YaTeX-showup-buffer-bottom-most)
       (set-buffer (get-buffer-create pbuffer))
       (erase-buffer)
       (setq default-directory dir)	;for 18
@@ -683,7 +988,64 @@ by region."
 	     (concat (YaTeX-get-preview-file-name) ".dvi")))
       (message "Searching `%s'...Done" str))))
 
-(defun YaTeX-set-virtual-error-position (file-sym line-sym)
+(defun YaTeX-preview-jlfmt-xdvi ()
+  "Call xdvi -sourceposition to DVI corresponding to current main file"
+  (interactive))
+
+(defun YaTeX-preview-jump-line ()
+  "Call jump-line function of various previewer on current main file"
+  (interactive)
+  (save-excursion
+    (save-restriction
+      (widen)
+      (let*((pf (or YaTeX-parent-file
+		    (save-excursion (YaTeX-visit-main t) (buffer-file-name))))
+	    (pdir (file-name-directory pf))
+	    (bnr (substring pf 0 (string-match "\\....$" pf)))
+	    (cf (file-relative-name (buffer-file-name) pdir))
+	    (buffer (get-buffer-create " *preview-jump-line*"))
+	    (line (count-lines (point-min) (point-end-of-line)))
+	    (previewer (YaTeX-preview-default-previewer))
+	    (cmd (cond
+		  ((string-match "xdvi" previewer)
+		   (format "%s -nofork -sourceposition '%d %s' %s.dvi"
+			   YaTeX-xdvi-remote-program
+			   line cf bnr))
+		  ((string-match "Skim" previewer)
+		   (format "%s %d '%s.pdf' '%s'"
+			   YaTeX-cmd-displayline line bnr cf))
+		  ((string-match "evince" previewer)
+		   (format "%s '%s.pdf' %d '%s'"
+			   "fwdevince" bnr line cf))
+		  ;;
+		  ;; These lines below for other PDF viewer is not confirmed
+		  ;; yet. If you find correct command line, PLEASE TELL
+		  ;; IT TO THE AUTHOR before publishing patch on the web.
+		  ;; ..PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE..
+		  ((string-match "sumatra" previewer)	;;??
+		   (format "%s \"%s.pdf\" -forward-search \"%s\" %d"
+			   ;;Send patch to the author, please
+			   previewer bnr cf line))
+		  ((string-match "qpdfview" previewer)	;;??
+		   (format "%s '%s.pdf#src:%s:%d:0'"
+			   ;;Send patch to the author, please
+		  	   previewer bnr cf line))
+		  ((string-match "okular" previewer)	;;??
+		   (format "%s '%s.pdf#src:%d' '%s'"
+			   ;;Send patch to the author, please
+		  	   previewer bnr line cf))
+		  )))
+	(YaTeX-system cmd "jump-line" 'noask pdir)))))
+
+(defun YaTeX-goto-corresponding-viewer ()
+  (let ((cmd (or (YaTeX-get-builtin "!") tex-command)))
+    (if (string-match "-src\\|synctex=" cmd)
+	(progn
+	  (YaTeX-preview-jump-line)
+	  t)				;for YaTeX-goto-corresponding-*
+      nil)))
+
+	 (defun YaTeX-set-virtual-error-position (file-sym line-sym)
   "Replace the value of FILE-SYM, LINE-SYM by virtual error position."
   (cond
    ((and (get 'dvi2-command 'region)
@@ -859,6 +1221,9 @@ error or warning lines in reverse order."
 	 (fname (if rin (substring latex-cmd (1+ rin)) ""))
 	 (r (YaTeX-assoc-regexp preview-command YaTeX-dvi2-command-ext-alist))
 	 (ext (if r (cdr r) "")))
+    (and (null r)
+	 (eq (get 'dvi2-command 'format) 'pdf)
+	 (setq ext "pdf"))
     (concat
      (if (string= fname "")
 	 (setq fname (substring (file-name-nondirectory
@@ -896,9 +1261,9 @@ will be given to the shell."
      (cond
       (magic
        (cond
-	(switch (if (string-match "\\s " magic) magic
+	(switch (if (string-match "\\s [^-]\\S *$" magic) magic
 		  (concat magic " " parent)))
-	(t (concat (substring magic 0 (string-match "\\s " magic)) " "))))
+	(t (concat (substring magic 0 (string-match "\\s [^-]\\S *$" magic)) " "))))
       (t (concat tex-command " " (if switch parent))))
      (list (cons "f" tparent)
 	   (cons "r" (substring tparent 0 (rindex tparent ?.)))))))
@@ -956,7 +1321,7 @@ page range description."
       (YaTeX-visit-main t) ;;change execution directory
       (setq dir default-directory)
       (YaTeX-showup-buffer
-       lbuffer (function (lambda (x) (nth 3 (window-edges x)))))
+       lbuffer 'YaTeX-showup-buffer-bottom-most)
       (set-buffer (get-buffer-create lbuffer))
       (erase-buffer)
       (cd dir)				;for 19
@@ -997,7 +1362,7 @@ SETBUF is t(Use it only from Emacs-Lisp program)."
   (let ((ff (function (lambda (f)
 			(if setbuf (set-buffer (find-file-noselect f))
 			  (find-file f)))))
-	b-in main-file YaTeX-create-file-prefix-g
+	b-in main-file mfa YaTeX-create-file-prefix-g
 	(hilit-auto-highlight (not setbuf)))
     (if (setq b-in (YaTeX-get-builtin "!"))
 	(setq main-file (YaTeX-guess-parent b-in)))
@@ -1022,14 +1387,14 @@ SETBUF is t(Use it only from Emacs-Lisp program)."
        ((and main-file
 	     (file-exists-p (setq main-file (concat "../" main-file)))
 	     (or b-in
-		 (y-or-n-p (concat (expand-file-name main-file)
+		 (y-or-n-p (concat (setq mfa (expand-file-name main-file))
 				   " is main file?:"))))
-	(setq YaTeX-parent-file main-file)
+	(setq YaTeX-parent-file mfa)
 	;(YaTeX-switch-to-buffer main-file setbuf)
 	(funcall ff main-file)
 	)
        (t (setq main-file (read-file-name "Enter your main text: " nil nil 1))
-	  (setq YaTeX-parent-file main-file)
+	  (setq YaTeX-parent-file (expand-file-name main-file))
 	 ; (YaTeX-switch-to-buffer main-file setbuf))
 	  (funcall ff main-file))
        )))
@@ -1037,8 +1402,8 @@ SETBUF is t(Use it only from Emacs-Lisp program)."
 
 (defun YaTeX-guess-parent (command-line)
   (setq command-line
-	(if (string-match ".*\\s " command-line)
-	    (substring command-line (match-end 0))
+	(if (string-match "\\s \\([^-]\\S *\\)$" command-line)
+	    (substring command-line (match-beginning 1))
 	  (file-name-nondirectory (buffer-file-name)))
 	command-line
 	(concat (if (string-match "\\(.*\\)\\." command-line)
@@ -1058,13 +1423,14 @@ SETBUF is t(Use it only from Emacs-Lisp program)."
   (basic-save-buffer)
   (let ((cmm major-mode))
     (save-excursion
-      (mapcar '(lambda (buf)
+      (mapcar (function
+	       (lambda (buf)
 		 (set-buffer buf)
 		 (if (and (buffer-file-name buf)
 			  (eq major-mode cmm)
 			  (buffer-modified-p buf)
 			  (y-or-n-p (format "Save %s" (buffer-name buf))))
-		     (save-buffer buf)))
+		     (save-buffer buf))))
 	      (buffer-list)))))
 
 (provide 'yatexprc)
