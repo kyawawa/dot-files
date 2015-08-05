@@ -120,6 +120,10 @@ fi
 export EDITOR="emacs -nw"
 export PATH=$PATH:$HOME/scripts
 
+# ruby on rails (should write .bash_profile?)
+export PATH=$PATH:$HOME/.rbenv/bin
+eval "$(rbenv init -)"
+
 # Message of the Day
 # https://jp.linux.com/news/linuxcom-exclusive/416957-lco20140519
 if type "fortune" > /dev/null 2>&1 && type "cowthink" > /dev/null 2>&1 ; then
