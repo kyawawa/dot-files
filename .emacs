@@ -210,6 +210,53 @@ are always included."
 ;;(define-key emmet-mode-keymap (kbd "H-i") 'emmet-expand-line) ;; C-i で展開
 
 ;; SLIME
+;; http://dev.ariel-networks.com/wp/archives/462
+;; ~/.emacs.d/slimeをload-pathに追加
+(add-to-list 'load-path "~/.emacs.d/site-lisp/slime")
+;; SLIMEのロード
+(require 'slime)
+;; Clozure CLをsbclに設定
+(setq inferior-lisp-program "sbcl")
+(setq slime-contribs '(slime-fancy))
+;(slime-setup '(slime-repl slime-fancy slime-banner))
+;; ac-slime
+(add-to-list 'load-path "~/.emacs.d/site-lisp/ac-slime")
+(require 'ac-slime)
+(add-hook 'slime-mode-hook 'set-up-slime-ac)
+(add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
+(eval-after-load "auto-complete"
+  '(add-to-list 'ac-modes 'slime-repl-mode))
+
+;; popwin
+(add-to-list 'load-path "~/.emacs.d/site-lisp/popwin-el")
+(require 'popwin)
+(setq display-buffer-function 'popwin:display-buffer)
+(setq popwin:popup-window-position 'bottom)
+
+;; Apropos
+(push '("*slime-apropos*") popwin:special-display-config)
+;; Macroexpand
+(push '("*slime-macroexpansion*") popwin:special-display-config)
+;; Help
+(push '("*slime-description*") popwin:special-display-config)
+;; Compilation
+(push '("*slime-compilation*" :noselect t) popwin:special-display-config)
+;; Cross-reference
+(push '("*slime-xref*") popwin:special-display-config)
+;; Fuzzy
+;;(push '("*Fuzzy Completions*") popwin:special-display-config)
+;; Debugger
+(push '(sldb-mode :stick t) popwin:special-display-config)
+;; REPL
+(push '(slime-repl-mode) popwin:special-display-config)
+;; Connections
+(push '(slime-connection-list-mode) popwin:special-display-config)
+;; Browse-Kill-RIng
+(push '("*Kill Ring*") popwin:special-display-config)
+;; anything
+(push '("*anything*") popwin:special-display-config)
+;; Completions
+(push '("*Completions*") popwin:special-display-config)
 
 ;; YATEX
 (add-to-list 'load-path "~/.emacs.d/site-lisp/yatex/")
