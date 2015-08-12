@@ -512,11 +512,12 @@ are always included."
 (defun lisp-other-window ()
   "Run Lisp on other window"
   (interactive)
+  (set-variable 'inferior-lisp-program "roseus")
   (switch-to-buffer-other-window
    (get-buffer-create "*inferior-lisp*"))
   (run-lisp inferior-lisp-program))
 
-(set-variable 'inferior-lisp-program "roseus")
+;; (set-variable 'inferior-lisp-program "roseus")
 (global-set-key "\C-cE" 'lisp-other-window)
 
 ;; add color space,tab,zenkaku-space
