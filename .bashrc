@@ -74,7 +74,7 @@ xterm*|rxvt*)
     ;;
 esac
 
-# enable color support of ls and also add handy aliases
+# enable color support of ls and also add handy aliass
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
@@ -96,6 +96,9 @@ alias em='emacs -nw'
 # enable to use alias when using sudo
 # http://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
 alias sudo='sudo '
+
+# Redefine a "rm" as moving "Trash" directory (for Ubuntu)
+#alias rm='mv $HOME/.local/share/Trash/files'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
