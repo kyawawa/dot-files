@@ -1,20 +1,12 @@
 #!/bin/sh
 
-if [ -f $HOME/.bashrc ]; then
-    rm $HOME/.bashrc
-fi
-
-if [ -f $HOME/.emacs ]; then
-    rm $HOME/.emacs
-fi
-
-if [ -d $HOME/.emacs.d ]; then
-    rm -rf $HOME/.emacs.d
-fi
-
-if [ -f $HOME/.gitconfig ]; then
-    rm $HOME/.gitconfig
-fi
+for dotfile in .bashrc .emacs .emacs.d .gitconfig
+do
+	if [ -e $HOME/$dotfile ]; then
+		rm -ri $HOME/$dotfile
+		echo $dotfile
+	fi
+done
 
 if [ $# -eq 0 ]; then
     ln -s $HOME/dot-files/.bashrc $HOME/.bashrc
@@ -24,6 +16,7 @@ else
     echo "Argument Error!!" 1>&2
     echo "Please select JSK or Nothing!!" 1>&2
 fi
+
 ln -s $HOME/dot-files/.emacs $HOME/.emacs
-ln -s $HOME/dot-files/.emacs.d/ $HOME/.emacs.d
+ln -s $HOME/dot-files/.emacs.d $HOME/ # not to create link such as $HOME/.emacs.d/.emacs.d
 ln -s $HOME/dot-files/.gitconfig $HOME/.gitconfig
