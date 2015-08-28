@@ -1,3 +1,6 @@
 [submodule ".emacs.d/site-lisp/popwin-el"]
 	path = .emacs.d/site-lisp/popwin-el
 	url = https://github.com/m2ym/popwin-el.git
+[submodule ".emacs.d/site-lisp/ac-slime"]
+	path = .emacs.d/site-lisp/ac-slime
+	url = https://github.com/purcell/ac-slime.git
