@@ -215,8 +215,9 @@ are always included."
 (add-to-list 'load-path "~/.emacs.d/site-lisp/slime")
 ;; SLIMEのロード
 (require 'slime)
+(slime-setup)
 ;; Clozure CLをsbclに設定
-(setq inferior-lisp-program "sbcl")
+(setq inferior-lisp-program "/usr/bin/sbcl")
 (setq slime-contribs '(slime-fancy))
 ;(slime-setup '(slime-repl slime-fancy slime-banner))
 ;; ac-slime
@@ -479,7 +480,7 @@ are always included."
 ;; ignore start message
 (setq inhibit-startup-message t)
 
-(when nil
+(when t
   (require 'autoinsert)
   (when (featurep 'emacs)
     (let (skeldir)
