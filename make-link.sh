@@ -2,10 +2,9 @@
 
 for dotfile in .bashrc .emacs .emacs.d .gitconfig
 do
-	if [ -e $HOME/$dotfile ]; then
-		rm -ri $HOME/$dotfile
-		echo $dotfile
-	fi
+    if [ -e $HOME/$dotfile ]; then
+        rm -ri $HOME/$dotfile
+    fi
 done
 
 if [ $# -eq 0 ]; then
