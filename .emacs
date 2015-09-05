@@ -5,15 +5,11 @@
 ;;     (define-key input-decode-map "\e[1;2A" [S-up])
 ;;     (define-key input-decode-map "\e[4~" [end]))
 
-;; Shift+方向キーでバッファ切り替え
+; Shift+方向キーでバッファ切り替え
 (setq windmove-wrap-around t)
 (windmove-default-keybindings)
-
 ;; fix Shift + up is recognized as <select>
 (define-key input-decode-map "\e[1;2A" [S-up])
-
-;; Tab Length
-(setq default-tab-width 4)
 
 ;; share clipboard
 (cond (window-system
@@ -50,23 +46,18 @@
 ;; (install-elisp "http://www.emacswiki.org/emacs/download/tabbar.el")
 (require 'tabbar)
 (tabbar-mode 1)
-
 ;; タブ上でマウスホイール操作無効
 (tabbar-mwheel-mode -1)
-
 ;; グループ化しない
 (setq tabbar-buffer-groups-function nil)
-
 ;; 左に表示されるボタンを無効化
 (dolist (btn '(tabbar-buffer-home-button
                tabbar-scroll-left-button
                tabbar-scroll-right-button))
   (set btn (cons (cons "" nil)
                  (cons "" nil))))
-
 ;; タブの長さ
 (setq tabbar-separator '(1.5))
-
 ;; 外観変更
 (set-face-attribute
  'tabbar-default nil
@@ -90,11 +81,10 @@
 (set-face-attribute
  'tabbar-separator nil
  :height 1.5)
-
 ;; タブに表示させるバッファの設定
 (defvar my-tabbar-displayed-buffers
 ;  '("*scratch*" "*Messages*" "*Backtrace*" "*Colors*" "*Faces*" "*vc-")
-  '("*scratch*" "*Backtrace*" "*Colors*" "*Faces*" "*vc-")
+  '("*scratch*" "*Colors*" "*Faces*" "*vc-" "*inferior-lisp*")
   "*Regexps matches buffer names always included tabs.")
 
 (defun my-tabbar-buffer-list ()
@@ -118,7 +108,6 @@ are always included."
       (cons cur-buf tabs))))
 
 (setq tabbar-buffer-list-function 'my-tabbar-buffer-list)
-
 ;; タブ切り替えのキーバインド
 (global-set-key (kbd "<M-right>") 'tabbar-forward-tab)
 (global-set-key (kbd "<M-left>") 'tabbar-backward-tab)
@@ -142,6 +131,7 @@ are always included."
 (setq tabbar-select-tab-function 'my-tabbar-buffer-select-tab)
 
 ;; setting of indent
+(setq default-tab-width 4)
 (setq-default c-basic-offset 4
               tab-width 4)
 (add-hook 'c-mode-hook '(lambda () (setq tab-width 4)))
@@ -161,7 +151,6 @@ are always included."
 (add-to-list 'auto-mode-alist '("\\.erb$"       . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html?$"     . web-mode))
 (add-to-list 'auto-mode-alist '("\\.xul?$"     . web-mode))
-
 ;; インデント数
 (defun web-mode-hook ()
   "Hooks for Web mode."
@@ -211,13 +200,22 @@ are always included."
 
 ;; SLIME
 ;; http://dev.ariel-networks.com/wp/archives/462
-;; ~/.emacs.d/slimeをload-pathに追加
 (add-to-list 'load-path "~/.emacs.d/site-lisp/slime")
 ;; SLIMEのロード
 (require 'slime)
 (slime-setup)
-;; Clozure CLをsbclに設定
+;; デフォルトをsbclに設定
 (setq inferior-lisp-program "/usr/bin/sbcl")
+;; select implementation
+(defun slime-on (x)
+  (progn (setq inferior-lisp-program x)
+         (slime)))
+(defun slime-sbcl ()
+  (interactive)
+  (slime-on "sbcl"))
+(defun slime-roseus ()
+  (interactive)
+  (slime-on "roseus"))
 (setq slime-contribs '(slime-fancy))
 ;(slime-setup '(slime-repl slime-fancy slime-banner))
 ;; ac-slime
@@ -287,8 +285,6 @@ are always included."
 (setq tex-pdfview-command "evince")
 (setq dviprint-command-format "xdg-open `echo %s | sed -e \"s/\\.[^.]*$/\\.pdf/\"`")
 
-(require 'dbus)
-
 (defun un-urlify (fname-or-url)
   "A trivial function that replaces a prefix of file:/// with just /."
   (if (string= (substring fname-or-url 0 8) "file:///")
@@ -296,7 +292,6 @@ are always included."
     fname-or-url))
 
 ;; evince forward search is C-c C-g
-
 (defun evince-inverse-search (file linecol &rest ignored)
   (let* ((fname (un-urlify file))
          (buf (find-file fname))
@@ -309,23 +304,23 @@ are always included."
       (unless (= col -1)
         (move-to-column col)))))
 
-(dbus-register-signal
- :session nil "/org/gnome/evince/Window/0"
- "org.gnome.evince.Window" "SyncSource"
- 'evince-inverse-search)
+;; (require 'dbus)
+;; (dbus-register-signal
+;;  :session nil "/org/gnome/evince/Window/0"
+;;  "org.gnome.evince.Window" "SyncSource"
+;;  'evince-inverse-search)
 
 (add-hook 'yatex-mode-hook
           '(lambda ()
              (auto-fill-mode -1)))
 
-;;
 ;; RefTeX with YaTeX
-;;
 (add-hook 'yatex-mode-hook
           '(lambda ()
              (reftex-mode 1)
              (define-key reftex-mode-map (concat YaTeX-prefix ">") 'YaTeX-comment-region)
              (define-key reftex-mode-map (concat YaTeX-prefix "<") 'YaTeX-uncomment-region)))
+
 
 ;; -*- mode: Emacs-Lisp -*-
 ;; written by k-okada 2006.06.14
@@ -422,14 +417,6 @@ are always included."
   (load-library "yc"))
 (when (require 'migemo nil t)
   (load "migemo"))
-
-;;; Timestamp
-;;;
-(defun timestamp-insert ()
-  (interactive)
-  (insert (current-time-string))
-  (backward-char))
-(global-set-key "\C-c\C-d" 'timestamp-insert)
 
 (global-font-lock-mode t)
 
