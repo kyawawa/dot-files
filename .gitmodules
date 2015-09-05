@@ -4,3 +4,6 @@
 [submodule ".emacs.d/site-lisp/ac-slime"]
 	path = .emacs.d/site-lisp/ac-slime
 	url = https://github.com/purcell/ac-slime.git
+[submodule ".emacs.d/site-lisp/bash-completion"]
+	path = .emacs.d/site-lisp/bash-completion
+	url = https://github.com/szermatt/emacs-bash-completion.git

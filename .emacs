@@ -13,8 +13,30 @@
 
 ;; share clipboard
 (cond (window-system
-       (setq x-select-enable-clipboard t)
+       (setq x-select-enable-primary t)
+       (setq x-select-enable-clipboard t) ))
+;; share clipboard at emacs -nw
+;; You must install xsel
+(cond ((executable-find "xsel")
+       (setq interprogram-paste-function
+             (lambda ()
+               (shell-command-to-string "xsel -b -o")))
+       (setq interprogram-cut-function
+             (lambda (text &optional rest)
+               (let* ((process-connection-type nil)
+                      (proc (start-process "xsel" "*Messages*" "xsel" "-b" "-i")))
+                 (process-send-string proc text)
+                 (process-send-eof proc))))
        ))
+
+(defun my-paste-function ()
+  (interactive)
+  (shell-command-to-string "xclip -o"))
+
+(when (and (not window-system)
+           (executable-find "xclip"))
+  (setq interprogram-cut-function 'my-cut-function)
+  (setq interprogram-paste-function 'my-paste-function))
 
 ;; show line number
 (global-linum-mode t)
@@ -36,6 +58,7 @@
 ;(setq indent-line-function 'indent-relative)
 
 ;; bash-completion
+(add-to-list 'load-path "~/.emacs.d/site-lisp/bash-completion/")
 (autoload 'bash-completion-dynamic-complete
   "bash-completion"
   "BASH completion hook")
@@ -617,9 +640,9 @@ This function also returns nil meaning don't specify the indentation."
 (setq auto-mode-alist (cons (cons "\\.launch$" 'xml-mode) auto-mode-alist))
 
 ;; sudo apt-get install rosemacs-el
-(when (require 'rosemacs nil t)
-  (invoke-rosemacs)
-  (global-set-key "\C-x\C-r" ros-keymap))
+;; (when (require 'rosemacs nil t)
+;;   (invoke-rosemacs)
+;;   (global-set-key "\C-x\C-r" ros-keymap))
 
 ;; vrml mode
 (add-to-list 'load-path (format "%s/.emacs.d" (getenv "HOME")))
