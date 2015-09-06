@@ -240,7 +240,7 @@ are always included."
   (interactive)
   (slime-on "roseus"))
 (setq slime-contribs '(slime-fancy))
-;(slime-setup '(slime-repl slime-fancy slime-banner))
+(slime-setup '(slime-repl slime-fancy slime-banner))
 ;; ac-slime
 (add-to-list 'load-path "~/.emacs.d/site-lisp/ac-slime")
 (require 'ac-slime)
@@ -376,48 +376,6 @@ are always included."
 ;(load "time" t t)
 ;(setq display-time-24hr-format t)
 ;(display-time)
-
-;;; for mew
-;;;
-;;;     explanation exists in /opt/src/Solaris/mew-1.03/00install.jis
-;;;
-(when nil ;; obsolate mew setting
-  (autoload 'mew "mew" nil t)
-  (autoload 'mew-read "mew" nil t)
-  (autoload 'mew-send "mew" nil t)
-
-  (setq mew-name "User Name")
-  (setq mew-user "user")
-  (setq mew-dcc "user@jsk.t.u-tokyo.ac.jp")
-
-  (setq mew-mail-domain "jsk.t.u-tokyo.ac.jp")
-  (setq mew-pop-server "mail.jsk.t.u-tokyo.ac.jp")
-  (setq mew-pop-auth 'apop)
-  (setq mew-pop-delete 3)
-  (setq mew-smtp-server "mail.jsk.t.u-tokyo.ac.jp")
-  (setq mew-fcc nil)
-  (setq mew-use-cached-passwd t)
-
-  ;;
-  ;; Optional setup (Read Mail menu for Emacs 21):
-  (if (boundp 'read-mail-command)
-      (setq read-mail-command 'mew))
-
-  ;; Optional setup (e.g. C-xm for sending a message):
-  (autoload 'mew-user-agent-compose "mew" nil t)
-  (if (boundp 'mail-user-agent)
-      (setq mail-user-agent 'mew-user-agent))
-  (if (fboundp 'define-mail-user-agent)
-      (define-mail-user-agent
-        'mew-user-agent
-        'mew-user-agent-compose
-        'mew-draft-send-message
-        'mew-draft-kill
-        'mew-send-hook))
-
-  (define-key ctl-x-map "r" 'mew)
-  (define-key ctl-x-map "m" 'mew-send)
-  ) ;; /obsolate mew setting
 
 ;; (lookup)
 ;;
