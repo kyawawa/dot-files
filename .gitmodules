@@ -7,3 +7,6 @@
 [submodule ".emacs.d/site-lisp/bash-completion"]
 	path = .emacs.d/site-lisp/bash-completion
 	url = https://github.com/szermatt/emacs-bash-completion.git
+[submodule ".emacs.d/site-lisp/yaml-mode"]
+	path = .emacs.d/site-lisp/yaml-mode
+	url = https://github.com/yoshiki/yaml-mode.git

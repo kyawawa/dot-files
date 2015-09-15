@@ -602,7 +602,6 @@ This function also returns nil meaning don't specify the indentation."
 ;;   (global-set-key "\C-x\C-r" ros-keymap))
 
 ;; vrml mode
-(add-to-list 'load-path (format "%s/.emacs.d" (getenv "HOME")))
 (when (file-exists-p (format "%s/.emacs.d/site-lisp/vrml-mode.el" (getenv "HOME")))
   (load "vrml-mode.el")
   (autoload 'vrml-mode "vrml" "VRML mode." t)
@@ -621,5 +620,6 @@ This function also returns nil meaning don't specify the indentation."
                               auto-mode-alist))
 
 ;; yaml mode
+(add-to-list 'load-path "~/.emacs.d/site-lisp/yaml-mode/")
 (when (require 'yaml-mode nil t)
   (add-to-list 'auto-mode-alist '("¥¥.yml$" . yaml-mode)))
