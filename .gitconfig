@@ -13,3 +13,5 @@
 	excludesfile = /home/ishikawa/.gitignore
 [http]
 	sslVerify = false
+[credential]
+	helper = cache --timeout=3600
