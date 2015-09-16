@@ -1,7 +1,7 @@
 [color]
 	ui = auto
 [user]
-	name = kyawawa
+	name = Tatsuya Ishikawa
 	email = ishikawa@jsk.imi.i.u-tokyo.ac.jp
 [alias]
 	co = checkout
@@ -14,4 +14,4 @@
 [http]
 	sslVerify = false
 [credential]
-	helper = cache --timeout=3600
+	helper = cache
