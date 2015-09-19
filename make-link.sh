@@ -16,6 +16,5 @@ else
     echo "Please select JSK or Nothing!!" 1>&2
 fi
 
-ln -s $HOME/dot-files/.emacs $HOME/.emacs
 ln -s $HOME/dot-files/.emacs.d $HOME/ # not to create link such as $HOME/.emacs.d/.emacs.d
 ln -s $HOME/dot-files/.gitconfig $HOME/.gitconfig
