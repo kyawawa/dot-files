@@ -1,7 +1,7 @@
 [color]
 	ui = auto
 [user]
-	name = kyawawa
+	name = Tatsuya Ishikawa
 	email = ishikawa@jsk.imi.i.u-tokyo.ac.jp
 [alias]
 	co = checkout
@@ -13,3 +13,5 @@
 	excludesfile = /home/ishikawa/.gitignore
 [http]
 	sslVerify = false
+[credential]
+	helper = cache
