@@ -1,6 +1,13 @@
-# dot-files
+my dot-files
 
-It's my dot-files
-First, you should
-$ git submodule init
-$ git submodule update
+create symbolic link to $HOME
+----
+    cd dot-files
+    ./make-link.sh #or ./make-link.sh JSK  
+
+package-list-packages
+-----
+*written at .emacs.d/site-lisp/package-install.el*
+* auto-complete
+* bash-completion
+* tabbar
