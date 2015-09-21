@@ -287,9 +287,10 @@ This function also returns nil meaning don't specify the indentation."
 (setq auto-mode-alist (cons (cons "\\.launch$" 'xml-mode) auto-mode-alist))
 
 ;; sudo apt-get install rosemacs-el
-;; (when (require 'rosemacs nil t)
-;;   (invoke-rosemacs)
-;;   (global-set-key "\C-x\C-r" ros-keymap))
+(when (getenv "ROS_WORKSPACE" )
+  (when (require 'rosemacs nil t)
+    (invoke-rosemacs)
+    (global-set-key "\C-x\C-r" ros-keymap)))
 
 ;; vrml mode
 (add-to-list 'load-path (format "%s/.emacs.d" (getenv "HOME")))
