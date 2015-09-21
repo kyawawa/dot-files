@@ -14,6 +14,9 @@
 ;; hidden menu bar
 (menu-bar-mode -1)
 
+;; auto reload when file is changed
+(global-auto-revert-mode 1)
+
 ;; share clipboard
 (cond (window-system
        (setq x-select-enable-primary t)
@@ -49,6 +52,32 @@
 
 ;; 保存時に行末の空白削除
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+;; vcを起動しないようにする
+(custom-set-variables
+ '(vc-handled-backends nil))
+
+;; 不要なhookを外す
+(remove-hook 'find-file-hook 'vc-find-file-hook)
+(remove-hook 'kill-buffer-hook 'vc-kill-buffer-hook)
+
+;; Show Git branch information to mode-line
+;; http://syohex.hatenablog.com/entry/20130201/1359731697
+(let ((cell (or (memq 'mode-line-position mode-line-format)
+                (memq 'mode-line-buffer-identification mode-line-format)))
+      (newcdr '(:eval (my/update-git-branch-mode-line))))
+  (unless (member newcdr mode-line-format)
+    (setcdr cell (cons newcdr (cdr cell)))))
+
+(defun my/update-git-branch-mode-line ()
+  (let* ((branch (replace-regexp-in-string
+                  "[\r\n]+\\'" ""
+                  (shell-command-to-string "git symbolic-ref -q HEAD")))
+         (mode-line-str (if (string-match "^refs/heads/" branch)
+                            (format "[%s]" (substring branch 11))
+                          "[Not Repo]")))
+    (propertize mode-line-str
+                'face '((:foreground "Dark green" :weight bold)))))
 
 ;; -*- mode: Emacs-Lisp -*-
 ;;; Global Setting Key
