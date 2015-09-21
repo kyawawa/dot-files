@@ -52,9 +52,6 @@
                '("melpa" . "http://melpa.milkbox.net/packages/") t)
   (add-to-list 'package-archives
                '("marmalade" . "http://marmalade-repo.org/packages/") t)
-  (when (< emacs-major-version 24)
-    ;; For important compatibility libraries like cl-lib
-    (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/")))
 
   (package-initialize)
   (let ((pkgs (loop for pkg in my/favorite-packages

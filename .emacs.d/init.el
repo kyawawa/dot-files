@@ -9,6 +9,11 @@
 ;; fix Shift + up is recognized as <select>
 (define-key input-decode-map "\e[1;2A" [S-up])
 
+;; hidden tool bar
+(tool-bar-mode -1)
+;; hidden menu bar
+(menu-bar-mode -1)
+
 ;; share clipboard
 (cond (window-system
        (setq x-select-enable-primary t)

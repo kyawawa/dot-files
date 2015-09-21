@@ -30,6 +30,8 @@ export SVN_SSH="ssh -l ${SSH_USER}"
 ## ROS DISTRO
 source $HOME/ros/hydro/devel/setup.bash
 
+export ROS_WORKSPACE=${HOME}/ros/${ROS_DISTRO}
+
 ## Rviz for a laptop user
 export OGRE_RTT_MODE=Copy
 

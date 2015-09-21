@@ -10,7 +10,7 @@ done
 if [ $# -eq 0 ]; then
     ln -s $HOME/dot-files/.bashrc $HOME/.bashrc
 elif [ $# -eq 1 -a $1 = "JSK" ]; then
-    ln -s $HOME/dot-files/.bashrc-jsk $HOME/.bashrc
+    ln -s $HOME/dot-files/jsk.bash $HOME/.bashrc
 else
     echo "Argument Error!!" 1>&2
     echo "Please select JSK or Nothing!!" 1>&2
