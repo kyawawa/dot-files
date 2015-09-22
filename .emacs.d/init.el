@@ -1,4 +1,5 @@
 ;;; -*- Mode: Emacs-Lisp; Coding: utf-8 -*-
+(require 'package) ;; dont read package.el when emacs24
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")
 
 (load "package-install.el")
@@ -430,3 +431,20 @@ are always included."
   (setq tabbar-help-on-tab-function 'my-tabbar-buffer-help-on-tab)
   (setq tabbar-select-tab-function 'my-tabbar-buffer-select-tab)
   ) ;; end of tabbar settings
+
+;; popwin
+(when (locate-library "popwin")
+      (setq display-buffer-function 'popwin:display-buffer)
+      (setq popwin:special-display-config))
+
+;; direx (with popwin)
+(when (locate-library "direx")
+  (setq direx:leaf-icon "  "
+        direx:open-icon "- "
+        direx:closed-icon "+ ")
+  (if (locate-library "popwin")
+      (progn
+        (push '(direx:direx-mode :position left :width 40 :dedicated t)
+              popwin:special-display-config)
+        (global-set-key (kbd "C-x C-j") 'direx:jump-to-directory-other-window))
+    (global-set-key (kbd "C-x C-j") 'direx:jump-to-directory)))
