@@ -24,17 +24,17 @@
        (setq x-select-enable-clipboard t) ))
 ;; share clipboard at emacs -nw
 ;; You must install xsel
-(cond ((executable-find "xsel")
-       (setq interprogram-paste-function
-             (lambda ()
-               (shell-command-to-string "xsel -b -o")))
-       (setq interprogram-cut-function
-             (lambda (text &optional rest)
-               (let* ((process-connection-type nil)
-                      (proc (start-process "xsel" "*Messages*" "xsel" "-b" "-i")))
-                 (process-send-string proc text)
-                 (process-send-eof proc))))
-       ))
+;; (cond ((executable-find "xsel")
+;;        (setq interprogram-paste-function
+;;              (lambda ()
+;;                (shell-command-to-string "xsel -b -o")))
+;;        (setq interprogram-cut-function
+;;              (lambda (text &optional rest)
+;;                (let* ((process-connection-type nil)
+;;                       (proc (start-process "xsel" "*Messages*" "xsel" "-b" "-i")))
+;;                  (process-send-string proc text)
+;;                  (process-send-eof proc))))
+;;        ))
 
 ;; setting of indent
 (setq default-tab-width 4)
@@ -324,7 +324,7 @@ This function also returns nil meaning don't specify the indentation."
 
 ;; vrml mode
 (add-to-list 'load-path (format "%s/.emacs.d" (getenv "HOME")))
-(when (file-exists-p (format "%s/.emacs.d/vrml-mode.el" (getenv "HOME")))
+(when (file-exists-p (format "%s/.emacs.d/site-lisp/vrml-mode.el" (getenv "HOME")))
   (load "vrml-mode.el")
   (autoload 'vrml-mode "vrml" "VRML mode." t)
   (setq auto-mode-alist (append '(("\\.wrl\\'" . vrml-mode))
