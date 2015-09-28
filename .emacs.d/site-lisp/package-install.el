@@ -8,9 +8,11 @@
 
 (defvar my/favorite-packages
   '(
-    tabbar
     auto-complete
     bash-completion
+    direx
+    popwin
+    tabbar
     )
   "起動時に自動的にインストールされるパッケージのリスト")
 

@@ -36,7 +36,13 @@ export SVN_SSH="ssh -l ${SSH_USER}"
 # fi
 
 ## ROS DISTRO
-source $HOME/ros/hydro/devel/setup.bash
+for rosdistro in indigo hydro
+do
+    if [ -e $HOME/ros/$rosdistro ]; then
+        source $HOME/ros/$rosdistro/devel/setup.bash
+        break
+    fi
+done
 
 export ROS_WORKSPACE=${HOME}/ros/${ROS_DISTRO}
 
@@ -88,4 +94,3 @@ function proggrep() {
                 # ${CVSDIR}/jvl/src/*/*.{cpp,c,h} \
                 # ${CVSDIR}/eusdyna/*.{l,cpp,c,h}
 }
-

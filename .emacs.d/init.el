@@ -1,4 +1,5 @@
 ;;; -*- Mode: Emacs-Lisp; Coding: utf-8 -*-
+(require 'package) ;; dont read package.el when emacs24
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")
 
 (load "package-install.el")
@@ -23,17 +24,17 @@
        (setq x-select-enable-clipboard t) ))
 ;; share clipboard at emacs -nw
 ;; You must install xsel
-(cond ((executable-find "xsel")
-       (setq interprogram-paste-function
-             (lambda ()
-               (shell-command-to-string "xsel -b -o")))
-       (setq interprogram-cut-function
-             (lambda (text &optional rest)
-               (let* ((process-connection-type nil)
-                      (proc (start-process "xsel" "*Messages*" "xsel" "-b" "-i")))
-                 (process-send-string proc text)
-                 (process-send-eof proc))))
-       ))
+;; (cond ((executable-find "xsel")
+;;        (setq interprogram-paste-function
+;;              (lambda ()
+;;                (shell-command-to-string "xsel -b -o")))
+;;        (setq interprogram-cut-function
+;;              (lambda (text &optional rest)
+;;                (let* ((process-connection-type nil)
+;;                       (proc (start-process "xsel" "*Messages*" "xsel" "-b" "-i")))
+;;                  (process-send-string proc text)
+;;                  (process-send-eof proc))))
+;;        ))
 
 ;; setting of indent
 (setq default-tab-width 4)
@@ -430,3 +431,20 @@ are always included."
   (setq tabbar-help-on-tab-function 'my-tabbar-buffer-help-on-tab)
   (setq tabbar-select-tab-function 'my-tabbar-buffer-select-tab)
   ) ;; end of tabbar settings
+
+;; popwin
+(when (locate-library "popwin")
+      (setq display-buffer-function 'popwin:display-buffer)
+      (setq popwin:special-display-config))
+
+;; direx (with popwin)
+(when (locate-library "direx")
+  (setq direx:leaf-icon "  "
+        direx:open-icon "- "
+        direx:closed-icon "+ ")
+  (if (locate-library "popwin")
+      (progn
+        (push '(direx:direx-mode :position left :width 40 :dedicated t)
+              popwin:special-display-config)
+        (global-set-key (kbd "C-x C-j") 'direx:jump-to-directory-other-window))
+    (global-set-key (kbd "C-x C-j") 'direx:jump-to-directory)))
