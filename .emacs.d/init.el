@@ -323,7 +323,7 @@ This function also returns nil meaning don't specify the indentation."
 
 ;; vrml mode
 (add-to-list 'load-path (format "%s/.emacs.d" (getenv "HOME")))
-(when (file-exists-p (format "%s/.emacs.d/vrml-mode.el" (getenv "HOME")))
+(when (file-exists-p (format "%s/.emacs.d/site-lisp/vrml-mode.el" (getenv "HOME")))
   (load "vrml-mode.el")
   (autoload 'vrml-mode "vrml" "VRML mode." t)
   (setq auto-mode-alist (append '(("\\.wrl\\'" . vrml-mode))
