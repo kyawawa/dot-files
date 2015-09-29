@@ -57,9 +57,16 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
+case $(hostname) in
+    centos7      ) col='31' ;; # red
+    mirei-antec  ) col='33' ;; # yellow
+    chiya-acubic ) col='32' ;; # green
+    *            ) col='36' ;; # cyan
+esac
+
 if [ "$color_prompt" = yes ] || [ $EMACS ]; then
-    #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$(__git_ps1 ) \$ '
+    #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;${col}m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;${col}m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$(__git_ps1 ) \$ '
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w$(__git_ps1 ) \$ '
 fi
@@ -74,7 +81,7 @@ xterm*|rxvt*)
     ;;
 esac
 
-# enable color support of ls and also add handy aliass
+# enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'

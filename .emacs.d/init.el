@@ -1,7 +1,7 @@
 ;;; -*- Mode: Emacs-Lisp; Coding: utf-8 -*-
-(require 'package) ;; dont read package.el when emacs24
-(add-to-list 'load-path "~/.emacs.d/site-lisp/")
 
+(add-to-list 'load-path "~/.emacs.d/site-lisp/")
+(require 'package) ;; dont read package.el when emacs24
 (load "package-install.el")
 
 ;; Shift+方向キーでバッファ切り替え
