@@ -44,7 +44,11 @@
 (add-hook 'c++-mode-hook '(lambda () (setq tab-width 4)))
 
 ;; show line number
-(global-linum-mode t)
+(global-linum-mode 1)
+;; not show line number when shell-mode
+(add-hook 'shell-mode-hook
+          '(lambda ()
+             (global-linum-mode 0)))
 ;; show and hide line number by f8 key
 (global-set-key [f8] 'linum-mode)
 
@@ -385,7 +389,7 @@ This function also returns nil meaning don't specify the indentation."
   ;; タブに表示させるバッファの設定
   (defvar my-tabbar-displayed-buffers
                                         ;  '("*scratch*" "*Messages*" "*Backtrace*" "*Colors*" "*Faces*" "*vc-")
-    '("*scratch*" "*Colors*" "*Faces*" "*vc-" "*inferior-lisp*")
+    '("*scratch*" "*shell*" "*Colors*" "*Faces*" "*vc-" "*inferior-lisp*")
     "*Regexps matches buffer names always included tabs.")
 
   (defun my-tabbar-buffer-list ()
