@@ -347,8 +347,8 @@ This function also returns nil meaning don't specify the indentation."
 (when (require 'yaml-mode nil t)
   (add-to-list 'auto-mode-alist '("¥¥.yml$" . yaml-mode)))
 
-;; tabbar
-(when (require 'tabbar nil t)
+;; tabbar settings
+(when (locate-library "tabbar")
   (tabbar-mode 1)
   ;; タブ上でマウスホイール操作無効
   (tabbar-mwheel-mode -1)
@@ -433,7 +433,7 @@ are always included."
 
   (setq tabbar-help-on-tab-function 'my-tabbar-buffer-help-on-tab)
   (setq tabbar-select-tab-function 'my-tabbar-buffer-select-tab)
-  ) ;; end of tabbar settings
+) ;; end of tabbar settings
 
 ;; popwin
 (when (locate-library "popwin")
