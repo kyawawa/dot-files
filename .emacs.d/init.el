@@ -414,7 +414,9 @@ are always included."
   (setq tabbar-buffer-list-function 'my-tabbar-buffer-list)
   ;; タブ切り替えのキーバインド
   (global-set-key (kbd "<M-right>") 'tabbar-forward-tab)
+  (global-set-key "\C-\\" 'tabbar-forward-tab)
   (global-set-key (kbd "<M-left>") 'tabbar-backward-tab)
+  (global-set-key "\C-^" 'tabbar-backward-tab)
 
   (defun my-tabbar-buffer-select-tab (event tab)
     "On mouse EVENT, select TAB."
