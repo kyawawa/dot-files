@@ -1,13 +1,5 @@
 source $HOME/dot-files/.bashrc
 
-## tmp
-rossetchidori() {
-    rossetmaster 192.168.96.20
-    export ROBOT=CHIDORI
-    rossetip
-}
-
-
 ##### JSK settings #####
 ## Alias Commands
 #alias rm='rm -i'
