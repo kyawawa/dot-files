@@ -334,8 +334,9 @@ This function also returns nil meaning don't specify the indentation."
                                 auto-mode-alist)))
 
 ;; matlab mode
-(when (file-exists-p (format "%s/.emacs.d/matlab/matlab.el.1.10.1" (getenv "HOME")))
-  (load "matlab/matlab.el.1.10.1" (getenv "HOME"))
+;; (when (file-exists-p (format "%s/.emacs.d/matlab/matlab.el.1.10.1" (getenv "HOME")))
+(when (require 'matlab-mode nil t)
+  ;; (load "matlab/matlab.el.1.10.1" (getenv "HOME"))
   (setq auto-mode-alist (append '(("\\.m\\'" . matlab-mode))
                                 auto-mode-alist)))
 
@@ -414,7 +415,9 @@ are always included."
   (setq tabbar-buffer-list-function 'my-tabbar-buffer-list)
   ;; タブ切り替えのキーバインド
   (global-set-key (kbd "<M-right>") 'tabbar-forward-tab)
+  (global-set-key "\C-\\" 'tabbar-forward-tab)
   (global-set-key (kbd "<M-left>") 'tabbar-backward-tab)
+  (global-set-key "\C-^" 'tabbar-backward-tab)
 
   (defun my-tabbar-buffer-select-tab (event tab)
     "On mouse EVENT, select TAB."
