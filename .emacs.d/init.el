@@ -1,7 +1,7 @@
 ;;; -*- Mode: Emacs-Lisp; Coding: utf-8 -*-
 
-(add-to-list 'load-path "~/.emacs.d/site-lisp/")
 (require 'package) ;; dont read package.el when emacs24
+(add-to-list 'load-path "~/.emacs.d/site-lisp/")
 (load "package-install.el")
 
 ;; Shift+方向キーでバッファ切り替え
@@ -454,3 +454,8 @@ are always included."
               popwin:special-display-config)
         (global-set-key (kbd "C-x C-j") 'direx:jump-to-directory-other-window))
     (global-set-key (kbd "C-x C-j") 'direx:jump-to-directory)))
+
+;; http://qiita.com/yuizho/items/4c121bdecc103109e4fd
+(when (locate-library "jedi")
+  (add-hook 'python-mode-hook 'jedi:setup)
+  (setq jedi:complete-on-dot t))
