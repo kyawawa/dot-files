@@ -1,4 +1,5 @@
-source $HOME/dot-files/.bashrc
+dot_dir=$(dirname `readlink -f .bashrc`)
+source $dot_dir/.bashrc
 
 ##### JSK settings #####
 ## Alias Commands
