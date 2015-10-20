@@ -1,4 +1,4 @@
-dot_dir=$(dirname `readlink -f .bashrc`)
+dot_dir=$(dirname `readlink -f $HOME/.bashrc`)
 source $dot_dir/.bashrc
 
 ##### JSK settings #####
