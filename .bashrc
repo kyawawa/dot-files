@@ -99,6 +99,7 @@ alias la='ls -A'
 alias l='ls -CF'
 
 alias em='emacs -nw'
+alias rm='rm -i'
 
 # enable to use alias when using sudo
 # http://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
