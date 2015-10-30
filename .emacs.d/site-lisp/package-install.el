@@ -11,7 +11,6 @@
     auto-complete
     bash-completion
     direx
-    jedi
     popwin
     tabbar
     )
