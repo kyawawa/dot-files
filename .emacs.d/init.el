@@ -455,6 +455,78 @@ are always included."
         (global-set-key (kbd "C-x C-j") 'direx:jump-to-directory-other-window))
     (global-set-key (kbd "C-x C-j") 'direx:jump-to-directory)))
 
+;; helm
+;; https://monolog.linkode.co.jp/articles/kotoh/Emacs%E3%81%A7helm%E3%82%92%E4%BD%BF%E3%81%86
+(when (locate-library "helm")
+  (require 'helm-config)
+  (helm-mode 1)
+  (add-to-list 'helm-completing-read-handlers-alist '(find-file . nil))
+
+  (define-key helm-map (kbd "C-h") 'delete-backward-char)
+  (define-key helm-find-files-map (kbd "C-h") 'delete-backward-char)
+  (define-key helm-find-files-map (kbd "TAB") 'helm-execute-persistent-action)
+  (define-key helm-read-file-map (kbd "TAB") 'helm-execute-persistent-action)
+
+  (defvar helm-source-emacs-commands
+    (helm-build-sync-source "Emacs commands"
+                            :candidates (lambda ()
+                                          (let ((cmds))
+                                            (mapatoms
+                                             (lambda (elt) (when (commandp elt) (push elt cmds))))
+                                            cmds))
+                            :coerce #'intern-soft
+                            :action #'command-execute)
+    "A simple helm source for Emacs commands.")
+
+  (defvar helm-source-emacs-commands-history
+    (helm-build-sync-source "Emacs commands history"
+                            :candidates (lambda ()
+                                          (let ((cmds))
+                                            (dolist (elem extended-command-history)
+                                              (push (intern elem) cmds))
+                                            cmds))
+                            :coerce #'intern-soft
+                            :action #'command-execute)
+    "Emacs commands history")
+
+  (custom-set-variables
+   '(helm-mini-default-sources '(helm-source-buffers-list
+                                 helm-source-recentf
+                                 helm-source-files-in-current-dir
+                                 helm-source-emacs-commands-history
+                                 helm-source-emacs-commands
+                                 )))
+
+  (define-key global-map (kbd "C-;") 'helm-mini)
+  (define-key global-map (kbd "M-y") 'helm-show-kill-ring))
+
+;; ggtags
+;; http://futurismo.biz/archives/3071
+(when (locate-library "ggtags")
+  (require 'ggtags)
+  (add-hook 'c-mode-common-hook
+            (lambda ()
+              (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+                (ggtags-mode 1))))
+
+  ;; use helm
+  (setq ggtags-completing-read-function nil)
+
+  ;; use eldoc
+  (setq-local eldoc-documentation-function #'ggtags-eldoc-function)
+
+  ;; imenu
+  (setq-local imenu-create-index-function #'ggtags-build-imenu-index)
+
+  (define-key ggtags-mode-map (kbd "C-c g s") 'ggtags-find-other-symbol)
+  (define-key ggtags-mode-map (kbd "C-c g h") 'ggtags-view-tag-history)
+  (define-key ggtags-mode-map (kbd "C-c g r") 'ggtags-find-reference)
+  (define-key ggtags-mode-map (kbd "C-c g f") 'ggtags-find-file)
+  (define-key ggtags-mode-map (kbd "C-c g c") 'ggtags-create-tags)
+  (define-key ggtags-mode-map (kbd "C-c g u") 'ggtags-update-tags)
+
+  (define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark))
+
 ;; http://qiita.com/yuizho/items/4c121bdecc103109e4fd
 (when (locate-library "jedi")
   (add-hook 'python-mode-hook 'jedi:setup)
