@@ -11,6 +11,8 @@
     auto-complete
     bash-completion
     direx
+    ggtags
+    helm
     jedi
     popwin
     tabbar
