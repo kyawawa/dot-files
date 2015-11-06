@@ -11,6 +11,5 @@ package-list-packages
 * auto-complete
 * bash-completion
 * direx
-* jedi
 * popwin
 * tabbar
