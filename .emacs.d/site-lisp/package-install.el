@@ -1,4 +1,4 @@
-;;; -*- Mode: Emacs-Lisp; Coding: utf-8 -*-
+g;;; -*- Mode: Emacs-Lisp; Coding: utf-8 -*-
 
 ;; package.el
 ;; http://qiita.com/catatsuy/items/5f1cd86e2522fd3384a0
@@ -11,6 +11,8 @@
     auto-complete
     bash-completion
     direx
+    ggtags
+    helm
     popwin
     tabbar
     )
