@@ -185,20 +185,17 @@
 (when t
   (require 'autoinsert)
   (when (featurep 'emacs)
-    (let (skeldir)
-      (setq skeldir "$HOME/.emacs.d/templates")
-      (setq auto-insert-directory skeldir)
-      (setq auto-insert-alist
-            (nconc '(
-                     ("\\.l$" . "template.l")
-                     ("\\.sh$" . "template.sh")
-                     ("Makefile$" . "template.Makefile")
-                     ("\\.cpp$" . "template.cpp")
-                     ("\\.h$" . "template.h")
-                     ("\\.py$" . "template.py")
-                     ) auto-insert-alist))
-      (add-hook 'find-file-not-found-hooks 'auto-insert)
-      )
+    (setq auto-insert-directory "$HOME/.emacs.d/templates")
+    (setq auto-insert-alist
+          (nconc '(
+                   ("\\.l$" . "template.l")
+                   ("\\.sh$" . "template.sh")
+                   ("Makefile$" . "template.Makefile")
+                   ("\\.cpp$" . "template.cpp")
+                   ("\\.h$" . "template.h")
+                   ("\\.py$" . "template.py")
+                   ) auto-insert-alist))
+    (add-hook 'find-file-not-found-hooks 'auto-insert)
     )
   )
 
@@ -336,24 +333,22 @@ This function also returns nil meaning don't specify the indentation."
 
 ;; vrml mode
 (when (file-exists-p (format "%s/.emacs.d/site-lisp/vrml-mode.el" (getenv "HOME")))
-  (load "vrml-mode.el")
-  (autoload 'vrml-mode "vrml" "VRML mode." t)
-  (setq auto-mode-alist (append '(("\\.wrl\\'" . vrml-mode))
-                                auto-mode-alist)))
+  (autoload 'vrml-mode "vrml-mode" "VRML mode." t)
+  (setq auto-mode-alist (append '(("\\.wrl\\'" . vrml-mode)) auto-mode-alist)))
 
 ;; matlab mode
-;; (when (file-exists-p (format "%s/.emacs.d/matlab/matlab.el.1.10.1" (getenv "HOME")))
-(when (require 'matlab-mode nil t)
-  ;; (load "matlab/matlab.el.1.10.1" (getenv "HOME"))
-  (setq auto-mode-alist (append '(("\\.m\\'" . matlab-mode))
-                                auto-mode-alist)))
+(when (locate-library "matlab-mode")
+  (setq auto-mode-alist (append '(("\\.m\\'" . matlab-mode)) auto-mode-alist)))
+
+(when (locate-library "octave-mod")
+  (setq auto-mode-alist (append '(("\\.m\\'" . octave-mode)) auto-mode-alist)))
 
 ;; for Arduino
-(setq auto-mode-alist (append '(("\\.pde\\'" . c++-mode))
-                              auto-mode-alist))
+(setq auto-mode-alist (append '(("\\.pde\\'" . c++-mode)) auto-mode-alist))
 
 ;; yaml mode
-(when (require 'yaml-mode nil t)
+(when (locate-library "yaml-mode")
+  ;; can use add-to-list too
   (add-to-list 'auto-mode-alist '("¥¥.yml$" . yaml-mode)))
 
 ;; tabbar settings
