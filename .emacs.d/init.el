@@ -487,3 +487,9 @@ are always included."
           '(lambda ()
              (hs-minor-mode 1)))
 (define-key global-map (kbd "C-c ;") 'hs-toggle-hiding)
+
+(when (locate-library "rainbow-mode")
+  (add-hook 'css-mode-hook 'rainbow-mode)
+  (add-hook 'web-mode-hook 'rainbow-mode)
+  (add-hook 'html-mode-hook 'rainbow-mode)
+  (add-hook 'vrml-mode-hook 'rainbow-mode))
