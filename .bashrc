@@ -138,7 +138,7 @@ if type "rbenv" > /dev/null 2>&1; then
     export PATH=$PATH:$HOME/.rbenv/bin
     eval "$(rbenv init -)"
 fi
-p
+
 # Message of the Day
 # https://jp.linux.com/news/linuxcom-exclusive/416957-lco20140519
 if type "fortune" > /dev/null 2>&1 && type "cowthink" > /dev/null 2>&1 ; then
