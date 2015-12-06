@@ -98,9 +98,9 @@ alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 
-#alias em='emacs -nw'
-alias em='emacsclient -nw -a ""'
-alias ekill='emacsclient -e "(kill-emacs)"'
+alias em='emacs -nw'
+#alias em='emacsclient -nw -a ""'
+#alias ekill='emacsclient -e "(kill-emacs)"'
 alias rm='rm -i'
 
 # enable to use alias when using sudo
