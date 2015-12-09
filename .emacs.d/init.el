@@ -130,8 +130,8 @@
 ;; sudo apt-get install yc-el migemo
 (when (require 'yc nil t)
   (load-library "yc"))
-(when (require 'migemo nil t)
-  (load "migemo"))
+;; (when (require 'migemo nil t)
+;;   (load "migemo"))
 
 (global-font-lock-mode t)
 

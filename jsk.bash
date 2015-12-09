@@ -54,6 +54,8 @@ export ROSCONSOLE_FORMAT='[${severity}] [${time}]: ${message}' # default
 export CVSDIR=~/prog
 alias eus='roseus "(jsk)" "(rbrain)"'
 
+alias rtccd='cd $HOME/ros/${ROS_DISTRO}_parent/src/hrpsys/rtc'
+
 #
 # for finding programs
 #
