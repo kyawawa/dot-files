@@ -368,24 +368,28 @@ This function also returns nil meaning don't specify the indentation."
   ;; 外観変更
   ;; tab width
   (setq tabbar-separator '(1.5))
-  (setq tabbar-background-color (face-attribute 'mode-line-inactive :background))
+  ;; (setq tabbar-background-color (face-attribute 'mode-line-inactive :background))
   (set-face-attribute
    'tabbar-default nil
    :family "Comic Sans MS"
-   :background (face-attribute 'mode-line-inactive :foreground)
-   :foreground (face-attribute 'mode-line-inactive :background)
+   ;; :background (face-attribute 'mode-line-inactive :foreground)
+   ;; :foreground (face-attribute 'mode-line-inactive :background)
+   :background "black"
+   :foreground "gray72"
    :height 1.0)
   (set-face-attribute
    'tabbar-unselected nil
-   :background (face-attribute 'mode-line-inactive :background)
-   :foreground (face-attribute 'mode-line-inactive :foreground)
-   ;; :background "gray90"
-   ;; :foreground "black"
+   ;; :background (face-attribute 'mode-line-inactive :background)
+   ;; :foreground (face-attribute 'mode-line-inactive :foreground)
+   :background "black"
+   :foreground "gray72"
    :box nil)
   (set-face-attribute
    'tabbar-selected nil
-   :background "cyan"
-   :foreground "black"
+   ;; :background "cyan"
+   ;; :foreground "black"
+   :background "black"
+   :foreground "yellow"
    :box nil)
   (set-face-attribute
    'tabbar-button nil
