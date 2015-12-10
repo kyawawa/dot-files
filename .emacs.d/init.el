@@ -493,3 +493,6 @@ are always included."
   (add-hook 'web-mode-hook 'rainbow-mode)
   (add-hook 'html-mode-hook 'rainbow-mode)
   (add-hook 'vrml-mode-hook 'rainbow-mode))
+
+(when (locate-library "ess-site")
+  (require 'ess-site))
