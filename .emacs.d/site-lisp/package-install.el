@@ -12,6 +12,7 @@
     bash-completion
     direx
     popwin
+    rainbow-mode
     tabbar
     )
   "起動時に自動的にインストールされるパッケージのリスト")

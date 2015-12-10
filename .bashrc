@@ -107,6 +107,11 @@ alias rm='rm -i'
 # http://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
 alias sudo='sudo '
 
+# Tab Completion like zsh
+if [ ! $EMACS ]; then
+    bind "C-j":menu-complete
+fi
+
 # Redefine a "rm" as moving "Trash" directory (for Ubuntu)
 #alias rm='mv $HOME/.local/share/Trash/files'
 

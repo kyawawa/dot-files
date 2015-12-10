@@ -130,8 +130,8 @@
 ;; sudo apt-get install yc-el migemo
 (when (require 'yc nil t)
   (load-library "yc"))
-(when (require 'migemo nil t)
-  (load "migemo"))
+;; (when (require 'migemo nil t)
+;;   (load "migemo"))
 
 (global-font-lock-mode t)
 
@@ -364,34 +364,35 @@ This function also returns nil meaning don't specify the indentation."
                  tabbar-scroll-right-button))
     (set btn (cons (cons "" nil)
                    (cons "" nil))))
-  ;; タブの長さ
-  (setq tabbar-separator '(1.5))
+
   ;; 外観変更
+  ;; tab width
+  (setq tabbar-separator '(1.5))
+  (setq tabbar-background-color (face-attribute 'mode-line-inactive :background))
   (set-face-attribute
    'tabbar-default nil
    :family "Comic Sans MS"
-   :background "black"
-   :foreground "gray72"
+   :background (face-attribute 'mode-line-inactive :foreground)
+   :foreground (face-attribute 'mode-line-inactive :background)
    :height 1.0)
   (set-face-attribute
    'tabbar-unselected nil
-   :background "black"
-   :foreground "grey72"
+   :background (face-attribute 'mode-line-inactive :background)
+   :foreground (face-attribute 'mode-line-inactive :foreground)
+   ;; :background "gray90"
+   ;; :foreground "black"
    :box nil)
   (set-face-attribute
    'tabbar-selected nil
-   :background "black"
-   :foreground "yellow"
+   :background "cyan"
+   :foreground "black"
    :box nil)
   (set-face-attribute
    'tabbar-button nil
    :box nil)
-  (set-face-attribute
-   'tabbar-separator nil
-   :height 1.5)
+
   ;; タブに表示させるバッファの設定
   (defvar my-tabbar-displayed-buffers
-                                        ;  '("*scratch*" "*Messages*" "*Backtrace*" "*Colors*" "*Faces*" "*vc-")
     '("*scratch*" "*shell*" "*Colors*" "*Faces*" "*vc-" "*inferior-lisp*")
     "*Regexps matches buffer names always included tabs.")
 
@@ -441,6 +442,10 @@ are always included."
   (setq tabbar-select-tab-function 'my-tabbar-buffer-select-tab)
 ) ;; end of tabbar settings
 
+;; auto-complete
+(when (locate-library "auto-complete")
+  (ac-config-default))
+
 ;; popwin
 (when (locate-library "popwin")
       (setq display-buffer-function 'popwin:display-buffer)
@@ -465,27 +470,11 @@ are always included."
 
 ;; For folding
 ;; http://d.hatena.ne.jp/yutoichinohe/20121119/1353321674
-(add-hook 'c++-mode-hook
-          '(lambda ()
-             (hs-minor-mode 1)))
-(add-hook 'c-mode-hook
-          '(lambda ()
-             (hs-minor-mode 1)))
-(add-hook 'scheme-mode-hook
-          '(lambda ()
-             (hs-minor-mode 1)))
-(add-hook 'emacs-lisp-mode-hook
-          '(lambda ()
-             (hs-minor-mode 1)))
-(add-hook 'lisp-mode-hook
-          '(lambda ()
-             (hs-minor-mode 1)))
-(add-hook 'python-mode-hook
-          '(lambda ()
-             (hs-minor-mode 1)))
-(add-hook 'ruby-mode-hook
-          '(lambda ()
-             (hs-minor-mode 1)))
+(dolist (mode-hook '(c++-mode-hook c-mode-hook scheme-mode-hook emacs-lisp-mode-hook
+                                   lisp-mode-hook python-mode-hook ruby-mode-hook))
+  (add-hook mode-hook
+            '(lambda ()
+               (hs-minor-mode 1))))
 (define-key global-map (kbd "C-c ;") 'hs-toggle-hiding)
 
 (when (locate-library "rainbow-mode")

@@ -6,7 +6,7 @@ source $dot_dir/.bashrc
 #alias rm='rm -i'
 #alias cp='cp -i'
 #alias mv='mv -i'
-alias grep='grep --exclude-dir=.svn'
+alias grep='grep --color=auto --exclude-dir=.svn'
 
 ## SVN and SSH
 export SSH_USER=ishikawa
@@ -53,6 +53,8 @@ export ROSCONSOLE_FORMAT='[${severity}] [${time}]: ${message}' # default
 #euslib
 export CVSDIR=~/prog
 alias eus='roseus "(jsk)" "(rbrain)"'
+
+alias rtccd='cd $HOME/ros/${ROS_DISTRO}_parent/src/hrpsys/rtc'
 
 #
 # for finding programs
