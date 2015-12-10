@@ -6,7 +6,7 @@ source $dot_dir/.bashrc
 #alias rm='rm -i'
 #alias cp='cp -i'
 #alias mv='mv -i'
-alias grep='grep --exclude-dir=.svn'
+alias grep='grep --color=auto --exclude-dir=.svn'
 
 ## SVN and SSH
 export SSH_USER=ishikawa
