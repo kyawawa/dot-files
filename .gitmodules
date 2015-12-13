@@ -1,0 +1,4 @@
+[submodule ".emacs.d/site-lisp/emacs-c-ide-demo"]
+    path = .emacs.d/site-lisp/emacs-c-ide-demo
+    url = https://github.com/kyawawa/emacs-c-ide-demo.git
+    ignore = dirty
