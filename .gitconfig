@@ -3,15 +3,45 @@
 [user]
 	name = Tatsuya Ishikawa
 	email = ishikawa@jsk.imi.i.u-tokyo.ac.jp
-[alias]
-	co = checkout
-	ci = commit
-	st = status
-	br = branch
-	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
 [core]
 	excludesfile = /home/ishikawa/.gitignore
 [http]
 	sslVerify = false
 [credential]
 	helper = cache
+[alias]
+	co = checkout
+	ci = commit
+	st = status
+	br = branch
+	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+
+    smrm  = "!f () {\
+             if [ $# -ne 1 ];then \
+                echo \"Usage: git smrm path/to/submodule\";\
+                exit;\
+             fi;\
+             sm=${1%/};\
+             echo git config --remove-section submodule.${sm};\
+             git config --remove-section submodule.${sm};\
+             echo git config --file .gitmodules --remove-section submodule.${sm};\
+             git config --file .gitmodules --remove-section submodule.${sm};\
+             echo git rm --cached ${sm};\
+             git rm --cached ${sm};\
+             gitdir=./;\
+             gitfile=.git;\
+             while : ;do \
+                 if [ -f $gitfile ];then \
+                     gitfile=${gitdir}/$(awk '/gitdir/ {print $2}' ${gitfile});\
+                 else \
+                     gitdir=${gitfile};\
+                 break;\
+                 fi;\
+             done;\
+             if [ -n \"${gitdir}\" ];then \
+                 echo rm -rf ${gitdir}/modules/${sm};\
+                 rm -rf ${gitdir}/modules/${sm};\
+             fi;\
+                 echo rm -rf ${sm};\
+             rm -rf ${sm};\
+        };f"
