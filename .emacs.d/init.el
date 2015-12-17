@@ -66,6 +66,10 @@
 (remove-hook 'find-file-hook 'vc-find-file-hook)
 (remove-hook 'kill-buffer-hook 'vc-kill-buffer-hook)
 
+;; cua-mode
+(cua-mode t)
+(setq cua-enable-cua-keys nil)
+
 ;; Show Git branch information to mode-line
 ;; http://syohex.hatenablog.com/entry/20130201/1359731697
 (let ((cell (or (memq 'mode-line-position mode-line-format)
@@ -489,3 +493,28 @@ are always included."
 
 (when (locate-library "ess-site")
   (require 'ess-site))
+
+(when (locate-library "anzu")
+  (require 'anzu)
+  (global-anzu-mode +1)
+  (set-face-attribute 'anzu-mode-line nil
+                      :foreground "yellow" :weight 'bold)
+  (custom-set-variables
+   '(anzu-mode-lighter "")
+   '(anzu-deactivate-region t)
+   '(anzu-search-threshold 1000)
+   '(anzu-replace-to-string-separator " => ")))
+
+(when (locate-library "volatile-highlights")
+  (require 'volatile-highlights)
+  (volatile-highlights-mode t))
+
+;; show undo-tree C-x u
+(when (locate-library "undo-tree")
+  (require 'undo-tree)
+  (global-undo-tree-mode t)
+  (global-set-key (kbd "M-/") 'undo-tree-redo))
+
+(when (locate-library "dtrt-indent")
+  (require 'dtrt-indent)
+  (dtrt-indent-mode 1))
