@@ -486,6 +486,16 @@ are always included."
                (hs-minor-mode 1))))
 (define-key global-map (kbd "C-c ;") 'hs-toggle-hiding)
 
+;; Open markdown with shiba
+(when (eq 0 (shell-command "type shiba"))
+  (defun open-with-shiba ()
+    "open a current markdown file with shiba"
+    (interactive)
+    (start-process "shiba" "*shiba*" "shiba" "--detach" buffer-file-name))
+  (add-hook 'markdown-mode-hook
+            '(lambda()
+               (define-key markdown-mode-map (kbd "C-c C-c") 'open-with-shiba))))
+
 (when (locate-library "rainbow-mode")
   (add-hook 'css-mode-hook 'rainbow-mode)
   (add-hook 'web-mode-hook 'rainbow-mode)
