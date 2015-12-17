@@ -55,6 +55,9 @@ export CVSDIR=~/prog
 alias eus='roseus "(jsk)" "(rbrain)"'
 
 alias rtccd='cd $HOME/ros/${ROS_DISTRO}_parent/src/hrpsys/rtc'
+if [ ! $EMACS ] && type "rlwrap" > /dev/null 2>&1; then
+    alias roseus='rlwrap roseus'
+fi
 
 #
 # for finding programs
