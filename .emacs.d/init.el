@@ -18,7 +18,7 @@
 ;; auto reload when file is changed
 (global-auto-revert-mode 1)
 
-;; share clipboard
+;; share clipboardn
 (cond (window-system
        (setq x-select-enable-primary t)
        (setq x-select-enable-clipboard t) ))
@@ -69,6 +69,7 @@
 ;; cua-mode
 (cua-mode t)
 (setq cua-enable-cua-keys nil)
+(define-key global-map (kbd "C-x SPC") 'cua-set-rectangle-mark)
 
 ;; Show Git branch information to mode-line
 ;; http://syohex.hatenablog.com/entry/20130201/1359731697
