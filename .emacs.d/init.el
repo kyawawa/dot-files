@@ -529,3 +529,7 @@ are always included."
 (when (locate-library "dtrt-indent")
   (require 'dtrt-indent)
   (dtrt-indent-mode 1))
+
+(when (locate-library "edit-server")
+  (require 'edit-server)
+  (edit-server-start))
