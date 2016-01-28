@@ -510,6 +510,7 @@ are always included."
   (global-anzu-mode +1)
   (set-face-attribute 'anzu-mode-line nil
                       :foreground "yellow" :weight 'bold)
+  (global-set-key "\er" 'anzu-query-replace)
   (custom-set-variables
    '(anzu-mode-lighter "")
    '(anzu-deactivate-region t)
@@ -529,3 +530,7 @@ are always included."
 (when (locate-library "dtrt-indent")
   (require 'dtrt-indent)
   (dtrt-indent-mode 1))
+
+(when (locate-library "edit-server")
+  (require 'edit-server)
+  (edit-server-start))

@@ -12,9 +12,9 @@
 [alias]
 	co = checkout
 	ci = commit
-	st = status
+	st = status --short --branch
 	br = branch
-	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+	hist = log --pretty=format:\"%h %ad [%an] \t| %s%d\" --graph --date=short
 
     smrm  = "!f () {\
              if [ $# -ne 1 ];then \

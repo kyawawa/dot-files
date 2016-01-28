@@ -8,12 +8,15 @@
 
 (defvar my/favorite-packages
   '(
+    anzu
     auto-complete
     bash-completion
     direx
+    edit-server
     popwin
     rainbow-mode
     tabbar
+    volatile-highlights
     )
   "起動時に自動的にインストールされるパッケージのリスト")
 
