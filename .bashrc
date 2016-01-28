@@ -107,6 +107,10 @@ alias rm='rm -i'
 # http://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
 alias sudo='sudo '
 
+# suspend without sudo
+alias power_suspend="dbus-send --print-reply --system --dest=org.freedesktop.UPower /org/freedesktop/UPower org.freedesktop.UPower.Suspend"
+alias power_shutdown="dbus-send --system --print-reply --dest=org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager.PowerOff boolean:false"
+
 # Tab Completion like zsh
 if [ ! $EMACS ]; then
     bind "C-j":menu-complete
