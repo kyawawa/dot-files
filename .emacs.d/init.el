@@ -528,7 +528,8 @@ are always included."
 
 (when (locate-library "dtrt-indent")
   (require 'dtrt-indent)
-  (dtrt-indent-mode 1))
+  (dtrt-indent-mode 1)
+  (setq dtrt-indent-verbosity 0))
 
 (when (locate-library "edit-server")
   (require 'edit-server)
