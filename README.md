@@ -8,11 +8,15 @@ create symbolic link to $HOME
 package-list-packages
 -----
 *written at .emacs.d/site-lisp/package-install.el*
+* anzu
 * auto-complete
 * bash-completion
 * direx
+* edit-server
 * popwin
+* rainbow-mode
 * tabbar
+* volatile-highlights
 
 Major keybindings for emacs
 -----
@@ -21,3 +25,4 @@ Major keybindings for emacs
 * \C-\\     : tabbar-forward-tab
 * \C-^      : tabbar-backward-tab
 * \C-c ;    : hs-toggle-hiding
+* \C-x SPC  : cua-mode
