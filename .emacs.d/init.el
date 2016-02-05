@@ -2,6 +2,7 @@
 
 (require 'package) ;; dont read package.el when emacs24
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")
+(add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-c-ide/")
 (load "package-install.el")
 
 ;; Shift+方向キーでバッファ切り替え
@@ -533,3 +534,5 @@ are always included."
 (when (locate-library "edit-server")
   (require 'edit-server)
   (edit-server-start))
+
+(require 'emacs-c-ide)
