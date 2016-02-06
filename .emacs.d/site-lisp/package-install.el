@@ -11,11 +11,19 @@
     anzu
     auto-complete
     bash-completion
+    comment-dwim-2
     direx
+    dtrt-indent
     edit-server
+    helm
+    helm-gtags
+    helm-projectile
+    helm-swoop
     popwin
+    projectile
     rainbow-mode
     tabbar
+    undo-tree
     volatile-highlights
     )
   "起動時に自動的にインストールされるパッケージのリスト")
