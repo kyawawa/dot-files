@@ -496,11 +496,65 @@ are always included."
             '(lambda()
                (define-key markdown-mode-map (kbd "C-c C-c") 'open-with-shiba))))
 
+(when (locate-library "web-mode")
+  (require 'web-mode)
+  (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.[gj]sp\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+
+  (defun web-mode-hook ()
+    (setq web-mode-markup-indent-offset 2)
+    (setq web-mode-css-indent-offset 2)
+    (setq web-mode-code-indent-offset 2)
+    (setq web-mode-engines-alist
+          '(("php"    . "\\.phtml\\'")
+            ("blade"  . "\\.blade\\."))))
+  (add-hook 'web-mode-hook  'web-mode-hook)
+
+
+  ;; 色の設定
+  (custom-set-faces
+   ;; web-mode. colors.
+   '(web-mode-doctype-face
+     ((t (:foreground "cyan"))))
+   '(web-mode-html-tag-face
+     ((t (:foreground "cyan"))))
+   '(web-mode-html-attr-name-face
+     ((t (:foreground "#87CEEB"))))
+   '(web-mode-html-attr-equal-face
+     ((t (:foreground "#FFFFFF"))))
+   '(web-mode-html-attr-value-face
+     ((t (:foreground "#00FF00"))))
+   '(web-mode-comment-face
+     ((t (:foreground "#587F35"))))
+   '(web-mode-server-comment-face
+     ((t (:foreground "#587F35"))))
+
+ ;;; web-mode. css colors.
+   '(web-mode-css-at-rule-face
+     ((t (:foreground "#DFCF44"))))
+   '(web-mode-comment-face
+     ((t (:foreground "#587F35"))))
+   '(web-mode-css-selector-face
+     ((t (:foreground "#DFCF44"))))
+   '(web-mode-css-pseudo-class
+     ((t (:foreground "#DFCF44"))))
+   '(web-mode-css-property-name-face
+     ((t (:foreground "#87CEEB"))))
+   '(web-mode-css-string-face
+     ((t (:foreground "#D78181")))))
+  )
+
 (when (locate-library "rainbow-mode")
-  (add-hook 'css-mode-hook 'rainbow-mode)
-  (add-hook 'web-mode-hook 'rainbow-mode)
-  (add-hook 'html-mode-hook 'rainbow-mode)
-  (add-hook 'vrml-mode-hook 'rainbow-mode))
+  (dolist (mode-hook '(css-mode-hook web-mode-hook
+                       html-mode-hook vrml-mode-hook
+                       emacs-lisp-mode-hook))
+    (add-hook mode-hook 'rainbow-mode)))
 
 (when (locate-library "ess-site")
   (require 'ess-site))

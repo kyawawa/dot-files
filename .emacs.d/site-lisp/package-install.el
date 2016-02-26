@@ -17,6 +17,7 @@
     rainbow-mode
     tabbar
     volatile-highlights
+    web-mode
     )
   "起動時に自動的にインストールされるパッケージのリスト")
 
