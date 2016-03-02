@@ -13,6 +13,7 @@
     bash-completion
     direx
     edit-server
+    markdown-mode
     popwin
     rainbow-mode
     tabbar
