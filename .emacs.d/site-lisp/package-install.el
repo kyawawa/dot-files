@@ -12,6 +12,7 @@
     auto-complete
     bash-completion
     direx
+    dtrt-indent
     edit-server
     popwin
     rainbow-mode
