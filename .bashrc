@@ -138,6 +138,14 @@ fi
 export EDITOR="emacs -nw"
 export PATH=$PATH:$HOME/scripts
 
+# colordiff
+if type "colordiff" > /dev/null 2>&1; then
+  alias diff='colordiff -u'
+else
+  alias diff='diff -u'
+fi
+export LESS='-R'
+
 # ruby on rails (should write .bash_profile?)
 if type "rbenv" > /dev/null 2>&1; then
     export PATH=$PATH:$HOME/.rbenv/bin
