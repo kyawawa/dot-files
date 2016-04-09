@@ -85,6 +85,44 @@
 (setq cua-enable-cua-keys nil)
 (define-key global-map (kbd "C-x SPC") 'cua-set-rectangle-mark)
 
+;; backtab
+;; http://d.hatena.ne.jp/mtv/20110925/p1
+(global-set-key (kbd "<backtab>") 'backtab-line-or-region)
+(defun backtab()
+  "Do reverse indentation"
+  (interactive)
+  (back-to-indentation)
+  (delete-backward-char
+   (if (< (current-column) (car tab-stop-list)) 0
+     (- (current-column)
+        (car (let ((value (list 0)))
+               (dolist (element tab-stop-list value)
+                 (setq value (if (< element (current-column)) (cons element value) value)))))))))
+
+(defun backtab-line-or-region ()
+  (interactive)
+  (if mark-active (save-excursion
+                    (setq count (count-lines (region-beginning) (region-end)))
+                    (goto-char (region-beginning))
+                    (while (> count 0)
+                      (backtab)
+                      (forward-line)
+                      (setq count (1- count)))
+                    (setq deactivate-mark nil))
+    (backtab)))
+
+(defun tab-to-tab-stop-line-or-region ()
+  (interactive)
+  (if mark-active (save-excursion
+                    (setq count (count-lines (region-beginning) (region-end)))
+                    (goto-char (region-beginning))
+                    (while (> count 0)
+                      (tab-to-tab-stop)
+                      (forward-line)
+                      (setq count (1- count)))
+                    (setq deactivate-mark nil))
+    (tab-to-tab-stop)))
+
 ;; Show Git branch information to mode-line
 ;; http://syohex.hatenablog.com/entry/20130201/1359731697
 (let ((cell (or (memq 'mode-line-position mode-line-format)
@@ -227,7 +265,6 @@
 (setq shell-file-name-chars "~/A-Za-z0-9_^$!#%&{}@`'.,:()-")
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
-
 (defun lisp-other-window ()
   "Run Lisp on other window"
   (interactive)
@@ -364,6 +401,11 @@ This function also returns nil meaning don't specify the indentation."
 
 ;; for Arduino
 (setq auto-mode-alist (append '(("\\.pde\\'" . c++-mode)) auto-mode-alist))
+
+;; assembler mode
+(when (locate-library "asm-mode")
+  ;; add .s
+  (setq auto-mode-alist (append '(("\\.s\\'" . asm-mode)) auto-mode-alist)))
 
 ;; yaml mode
 (when (locate-library "yaml-mode")
@@ -569,9 +611,6 @@ are always included."
                        html-mode-hook vrml-mode-hook
                        emacs-lisp-mode-hook))
     (add-hook mode-hook 'rainbow-mode)))
-
-(when (locate-library "ess-site")
-  (require 'ess-site))
 
 (when (locate-library "anzu")
   (require 'anzu)
