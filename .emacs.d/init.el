@@ -19,22 +19,22 @@
 (global-auto-revert-mode 1)
 
 ;; share clipboardn
-(cond (window-system
-       (setq x-select-enable-primary t)
-       (setq x-select-enable-clipboard t) ))
+(when (window-system)
+  (setq x-select-enable-primary t)
+  (setq x-select-enable-clipboard t))
 ;; share clipboard at emacs -nw
 ;; You must install xsel
-;; (cond ((executable-find "xsel")
-;;        (setq interprogram-paste-function
-;;              (lambda ()
-;;                (shell-command-to-string "xsel -b -o")))
-;;        (setq interprogram-cut-function
-;;              (lambda (text &optional rest)
-;;                (let* ((process-connection-type nil)
-;;                       (proc (start-process "xsel" "*Messages*" "xsel" "-b" "-i")))
-;;                  (process-send-string proc text)
-;;                  (process-send-eof proc))))
-;;        ))
+(when (and (executable-find "xsel") (getenv "DISPLAY"))
+  (setq interprogram-paste-function
+        (lambda ()
+          (shell-command-to-string "xsel -b -o")))
+  (setq interprogram-cut-function
+        (lambda (text &optional rest)
+          (let* ((process-connection-type nil)
+                 (proc (start-process "xsel" "*Messages*" "xsel" "-b" "-i")))
+            (process-send-string proc text)
+            (process-send-eof proc))))
+  )
 
 ;; setting of indent
 (setq default-tab-width 4)
@@ -54,6 +54,12 @@
 
 ;; don't make backup file such as (*.~)
 (setq make-backup-files nil)
+
+;; Scroll row by row
+(setq scroll-step 1)
+
+;; Show function name
+(which-function-mode 1)
 
 ;; 保存時に行末の空白削除
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -589,3 +595,8 @@ are always included."
 (when (locate-library "edit-server")
   (require 'edit-server)
   (edit-server-start))
+
+;;; smooth-scroll
+(when (locate-library "smooth-scroll")
+  (require 'smooth-scroll)
+  (smooth-scroll-mode t))

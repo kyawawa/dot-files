@@ -17,6 +17,7 @@
     markdown-mode
     popwin
     rainbow-mode
+    smooth-scroll
     tabbar
     volatile-highlights
     web-mode
