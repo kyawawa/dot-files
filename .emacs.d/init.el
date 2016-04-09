@@ -36,6 +36,11 @@
             (process-send-eof proc))))
   )
 
+;; Color Settings
+;; Comment Color for Byobu
+(set-face-foreground 'font-lock-comment-face "red")
+(set-face-foreground 'font-lock-comment-delimiter-face "red")
+
 ;; setting of indent
 (setq default-tab-width 4)
 (setq-default c-basic-offset 4
@@ -45,6 +50,9 @@
 
 ;; show line number
 (global-linum-mode 1)
+(set-face-attribute 'linum nil
+                    :foreground "green"
+                    :height 0.9)
 ;; not show line number when shell-mode
 (add-hook 'shell-mode-hook
           '(lambda ()
