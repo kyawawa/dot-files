@@ -113,7 +113,7 @@ alias power_shutdown="dbus-send --system --print-reply --dest=org.freedesktop.lo
 
 # Tab Completion like zsh
 if [ ! $EMACS ]; then
-    bind "C-j":menu-complete
+    bind "C-o":menu-complete
 fi
 
 # Redefine a "rm" as moving "Trash" directory (for Ubuntu)
