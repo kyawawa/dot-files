@@ -11,9 +11,11 @@
     anzu
     auto-complete
     bash-completion
+    c-eldoc
     direx
     dtrt-indent
     edit-server
+    ggtags
     markdown-mode
     popwin
     rainbow-mode
