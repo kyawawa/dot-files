@@ -647,3 +647,49 @@ are always included."
 (when (locate-library "smooth-scroll")
   (require 'smooth-scroll)
   (smooth-scroll-mode t))
+
+;;;;;;;;;; C-mode ;;;;;;;;;;
+;; eldoc
+(when (locate-library "c-eldoc")
+  (require 'c-eldoc)
+  (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
+  (add-hook 'c++-mode-hook 'c-turn-on-eldoc-mode)
+  (setq c-eldoc-buffer-regenerate-time 60))
+
+;; ggtags
+(when (locate-library "ggtags")
+  (require 'ggtags)
+  (add-hook 'c-mode-common-hook
+            (lambda ()
+              (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+                (ggtags-mode 1))))
+
+  ;; use helm
+  ;; (setq ggtags-completing-read-function nil)
+
+  ;; use eldoc
+  (setq-local eldoc-documentation-function #'ggtags-eldoc-function)
+
+  ;; imenu
+  (setq-local imenu-create-index-function #'ggtags-build-imenu-index)
+
+  (define-key ggtags-mode-map (kbd "C-c g s") 'ggtags-find-other-symbol)
+  (define-key ggtags-mode-map (kbd "C-c g h") 'ggtags-view-tag-history)
+  (define-key ggtags-mode-map (kbd "C-c g r") 'ggtags-find-reference)
+  (define-key ggtags-mode-map (kbd "C-c g f") 'ggtags-find-file)
+  (define-key ggtags-mode-map (kbd "C-c g c") 'ggtags-create-tags)
+  (define-key ggtags-mode-map (kbd "C-c g u") 'ggtags-update-tags)
+
+  (define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark)
+
+  ;; update GTAGS
+  (defun my-c-mode-update-gtags ()
+    (interactive "P")
+    (let* ((file (buffer-file-name (current-buffer)))
+           (dir (directory-file-name (file-name-directory file))))
+      (when (executable-find "global")
+        (start-process "gtags-update" nil
+                       "global" "-uv"))))
+
+  (add-hook 'after-save-hook
+            'my-c-mode-update-gtags))
