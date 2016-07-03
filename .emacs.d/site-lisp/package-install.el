@@ -12,8 +12,11 @@
     auto-complete
     bash-completion
     c-eldoc
+    company
+    company-cmake
     direx
     dtrt-indent
+    dummy-h-mode
     edit-server
     ggtags
     markdown-mode

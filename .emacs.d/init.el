@@ -18,7 +18,7 @@
 ;; auto reload when file is changed
 (global-auto-revert-mode 1)
 
-;; share clipboardn
+;; share clipboard
 (when (window-system)
   (setq x-select-enable-primary t)
   (setq x-select-enable-clipboard t))
@@ -67,7 +67,7 @@
 (setq scroll-step 1)
 
 ;; Show function name
-(which-function-mode 1)
+;; (which-function-mode 1)
 
 ;; 保存時に行末の空白削除
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -239,22 +239,20 @@
 ;; ignore start message
 (setq inhibit-startup-message t)
 
-(when t
-  (require 'autoinsert)
-  (when (featurep 'emacs)
-    (setq auto-insert-directory "$HOME/.emacs.d/templates")
-    (setq auto-insert-alist
-          (nconc '(
-                   ("\\.l$" . "template.l")
-                   ("\\.sh$" . "template.sh")
-                   ("Makefile$" . "template.Makefile")
-                   ("\\.cpp$" . "template.cpp")
-                   ("\\.h$" . "template.h")
-                   ("\\.py$" . "template.py")
-                   ) auto-insert-alist))
-    (add-hook 'find-file-not-found-hooks 'auto-insert)
-    )
-  )
+(require 'autoinsert)
+(when (featurep 'emacs)
+      (setq auto-insert-directory "$HOME/.emacs.d/templates")
+      (setq auto-insert-alist
+            (nconc '(
+                     ("\\.l\\'" . "template.l")
+                     ("\\.sh\\'" . "template.sh")
+                     ("Makefile\\'" . "template.Makefile")
+                     ("\\.cpp\\'" . "template.cpp")
+                     ("\\.h\\'" . "template.h")
+                     ("\\.py\\'" . "template.py")
+                     ) auto-insert-alist))
+      (add-hook 'find-file-not-found-hooks 'auto-insert)
+      )
 
 ;; shell mode
 (set-terminal-coding-system 'utf-8)
@@ -505,6 +503,35 @@ are always included."
 
   (setq tabbar-help-on-tab-function 'my-tabbar-buffer-help-on-tab)
   (setq tabbar-select-tab-function 'my-tabbar-buffer-select-tab)
+
+  ;; sort by fullpath
+  (defun tabbar-add-tab (tabset object &optional append)
+    "Add to TABSET a tab with value OBJECT if there isn't one there yet.
+If the tab is added, it is added at the beginning of the tab list,
+unless the optional argument APPEND is non-nil, in which case it is
+added at the end."
+    (let ((tabs (tabbar-tabs tabset)))
+      (if (tabbar-get-tab object tabset)
+          tabs
+        (let ((tab (tabbar-make-tab object tabset)))
+          (tabbar-set-template tabset nil)
+          (set tabset
+               (if (tabbar-tab-derived-mode-p 'dired-mode tab)
+                   (sort (cons tab tabs) #'tabbar-default-directory<)
+                 (if append
+                     (append tabs (list tab))
+                   (cons tab tabs))))))))
+
+  (defun tabbar-default-directory< (a b)
+    "Is the `default-directory' of tab A `string<' than that of B?"
+    (string<
+     (expand-file-name (buffer-local-value 'default-directory (car a)))
+     (expand-file-name (buffer-local-value 'default-directory (car b)))))
+
+  (defun tabbar-tab-derived-mode-p (mode tab)
+    "Is the major mode of TAB derived from MODE?"
+    (with-current-buffer (car tab)
+      (derived-mode-p mode)))
 ) ;; end of tabbar settings
 
 ;; auto-complete
@@ -553,15 +580,10 @@ are always included."
                (define-key markdown-mode-map (kbd "C-c C-c") 'open-with-shiba))))
 
 (when (locate-library "web-mode")
-  (require 'web-mode)
-  (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.[gj]sp\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  (require 'web-mode-autoloads)
+  (dolist (extensions '("\\.phtml\\'" "\\.tpl\\.php\\'" "\\.[gj]sp\\'" "\\.as[cp]x\\'"
+                        "\\.erb\\'" "\\.mustache\\'" "\\.djhtml\\'" "\\.html?\\'"))
+    (add-to-list 'auto-mode-alist `(,extensions . web-mode)))
 
   (defun web-mode-hook ()
     (setq web-mode-markup-indent-offset 2)
@@ -634,10 +656,14 @@ are always included."
   (global-undo-tree-mode t)
   (global-set-key (kbd "M-/") 'undo-tree-redo))
 
+(when (locate-library "dummy-h-mode")
+  (add-to-list 'auto-mode-alist '("\\.h$" . dummy-h-mode))
+  (autoload 'dummy-h-mode "dummy-h-mode" "Dummy H mode" t))
+
 (when (locate-library "dtrt-indent")
   (require 'dtrt-indent)
-  (dtrt-indent-mode 1)
-  (setq dtrt-indent-verbosity 0))
+  (dtrt-indent-mode 1))
+;; (setq dtrt-indent-verbosity 0))
 
 (when (locate-library "edit-server")
   (require 'edit-server)
@@ -650,11 +676,11 @@ are always included."
 
 ;;;;;;;;;; C-mode ;;;;;;;;;;
 ;; eldoc
-(when (locate-library "c-eldoc")
-  (require 'c-eldoc)
-  (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
-  (add-hook 'c++-mode-hook 'c-turn-on-eldoc-mode)
-  (setq c-eldoc-buffer-regenerate-time 60))
+;; (when (locate-library "c-eldoc")
+;;   (require 'c-eldoc)
+;;   (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
+;;   (add-hook 'c++-mode-hook 'c-turn-on-eldoc-mode)
+;;   (setq c-eldoc-buffer-regenerate-time 60))
 
 ;; ggtags
 (when (locate-library "ggtags")
@@ -676,6 +702,7 @@ are always included."
   (define-key ggtags-mode-map (kbd "C-c g s") 'ggtags-find-other-symbol)
   (define-key ggtags-mode-map (kbd "C-c g h") 'ggtags-view-tag-history)
   (define-key ggtags-mode-map (kbd "C-c g r") 'ggtags-find-reference)
+  (define-key ggtags-mode-map (kbd "C-c g d") 'ggtags-find-definition)
   (define-key ggtags-mode-map (kbd "C-c g f") 'ggtags-find-file)
   (define-key ggtags-mode-map (kbd "C-c g c") 'ggtags-create-tags)
   (define-key ggtags-mode-map (kbd "C-c g u") 'ggtags-update-tags)
@@ -693,3 +720,18 @@ are always included."
 
   (add-hook 'after-save-hook
             'my-c-mode-update-gtags))
+
+;; http://qiita.com/sune2/items/b73037f9e85962f5afb7
+(when (locate-library "company")
+  (require 'company)
+  (add-hook 'cmake-mode-hook 'company-mode)
+  (setq company-idle-delay 0) ; デフォルトは0.5
+  (setq company-minimum-prefix-length 2) ; デフォルトは4
+  (setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
+  (setq company-transformers '(company-sort-by-statistics company-sort-by-backend-importance))
+  (define-key company-active-map (kbd "M-n") nil)
+  (define-key company-active-map (kbd "M-p") nil)
+  (define-key company-active-map (kbd "C-n") 'company-select-next)
+  (define-key company-active-map (kbd "C-p") 'company-select-previous)
+  (define-key company-active-map (kbd "C-h") nil)
+  )
