@@ -735,3 +735,6 @@ added at the end."
   (define-key company-active-map (kbd "C-p") 'company-select-previous)
   (define-key company-active-map (kbd "C-h") nil)
   )
+
+;;;;;;;;;; git ;;;;;;;;;;
+(require 'gitconfig-mode-autoloads)

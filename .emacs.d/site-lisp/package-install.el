@@ -19,6 +19,7 @@
     dummy-h-mode
     edit-server
     ggtags
+    gitconfig-mode
     markdown-mode
     popwin
     rainbow-mode
