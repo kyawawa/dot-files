@@ -1,20 +1,20 @@
 [color]
-	ui = auto
+    ui = auto
 [user]
-	name = Tatsuya Ishikawa
-	email = ishikawa@jsk.imi.i.u-tokyo.ac.jp
+    name = Tatsuya Ishikawa
+    email = ishikawa@jsk.imi.i.u-tokyo.ac.jp
 [core]
-	excludesfile = /home/ishikawa/.gitignore
+    excludesfile = /home/ishikawa/.gitignore
 [http]
-	sslVerify = false
+    sslVerify = false
 [credential]
-	helper = cache
+    helper = cache
 [alias]
-	co = checkout
-	ci = commit
-	st = status --short --branch
-	br = branch
-	hist = log --pretty=format:\"%h %ad [%an] \t| %s%d\" --graph --date=short
+    co = checkout
+    ci = commit
+    st = status --short --branch
+    br = branch
+    hist = log --pretty=format:\"%h %ad [%an] \t| %s%d\" --graph --date=short
 
     smrm  = "!f () {\
              if [ $# -ne 1 ];then \
@@ -45,3 +45,13 @@
                  echo rm -rf ${sm};\
              rm -rf ${sm};\
         };f"
+
+    # port = "!f () {\
+    #             date=`date \"+%Y%m%d-%H%M%S\"`;\
+    #             branch=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p');\
+    #             echo $branch;\
+    #             host=`hostname -s`;\
+    #             git checkout -b \"wip-${date}\";\
+    #             git add -A;\
+    #             git commit -m \"[WIP] temporary commit from ${branch} on ${host}\";\
+    #         };f"

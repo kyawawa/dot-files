@@ -1,0 +1,3 @@
+[submodule ".emacs.d/site-lisp/ci"]
+	path = .emacs.d/site-lisp/ci
+	url = https://github.com/cs14095/ci.el.git

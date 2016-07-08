@@ -254,6 +254,16 @@
       (add-hook 'find-file-not-found-hooks 'auto-insert)
       )
 
+;; https://github.com/cs14095/ci.el
+;; Ctrl-c, i, w => kill a word
+;; Ctrl-c, i, t => kill inside of <>
+;; Ctrl-c, i, ' => kill inside of ''
+;; Ctrl-c, i, " => kill inside of ""
+;; Ctrl-c, i, ( => kill inside of ()
+;; Ctrl-c, i, { => kill inside of {}
+(when (file-exists-p (format "%s/.emacs.d/site-lisp/ci.el" (getenv "HOME")))
+  (require 'ci))
+
 ;; shell mode
 (set-terminal-coding-system 'utf-8)
 (set-buffer-file-coding-system 'utf-8)
