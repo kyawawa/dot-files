@@ -515,33 +515,18 @@ are always included."
   (setq tabbar-select-tab-function 'my-tabbar-buffer-select-tab)
 
   ;; sort by fullpath
-  (defun tabbar-add-tab (tabset object &optional append)
-    "Add to TABSET a tab with value OBJECT if there isn't one there yet.
-If the tab is added, it is added at the beginning of the tab list,
-unless the optional argument APPEND is non-nil, in which case it is
-added at the end."
-    (let ((tabs (tabbar-tabs tabset)))
-      (if (tabbar-get-tab object tabset)
-          tabs
-        (let ((tab (tabbar-make-tab object tabset)))
-          (tabbar-set-template tabset nil)
-          (set tabset
-               (if (tabbar-tab-derived-mode-p 'dired-mode tab)
-                   (sort (cons tab tabs) #'tabbar-default-directory<)
-                 (if append
-                     (append tabs (list tab))
-                   (cons tab tabs))))))))
-
-  (defun tabbar-default-directory< (a b)
-    "Is the `default-directory' of tab A `string<' than that of B?"
-    (string<
-     (expand-file-name (buffer-local-value 'default-directory (car a)))
-     (expand-file-name (buffer-local-value 'default-directory (car b)))))
-
-  (defun tabbar-tab-derived-mode-p (mode tab)
-    "Is the major mode of TAB derived from MODE?"
-    (with-current-buffer (car tab)
-      (derived-mode-p mode)))
+  (defun tabbar-add-tab (tabset object &optional append_ignored)
+  "Add to TABSET a tab with value OBJECT if there isn't one there yet.
+ If the tab is added, it is added at the beginning of the tab list,
+ unless the optional argument APPEND is non-nil, in which case it is
+ added at the end."
+  (let ((tabs (tabbar-tabs tabset)))
+    (if (tabbar-get-tab object tabset)
+        tabs
+      (let ((tab (tabbar-make-tab object tabset)))
+        (tabbar-set-template tabset nil)
+        (set tabset (sort (cons tab tabs)
+                          (lambda (a b) (string< (buffer-name (car a)) (buffer-name (car b))))))))))
 ) ;; end of tabbar settings
 
 ;; auto-complete
