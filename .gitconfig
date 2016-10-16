@@ -6,7 +6,7 @@
 [core]
     excludesfile = /home/ishikawa/.gitignore
 [http]
-    sslVerify = false
+	sslVerify = false
 [credential]
     helper = cache
 [alias]

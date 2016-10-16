@@ -1,10 +1,18 @@
-;;; -*- Mode: Emacs-Lisp; Coding: utf-8 -*-
+;; -*- Mode: Emacs-Lisp; Coding: utf-8 -*-
 
-(require 'package) ;; dont read package.el when emacs24
-(add-to-list 'load-path "~/.emacs.d/site-lisp/")
-(load "package-install.el")
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+;; (package-initialize)
 
-;; Shift+方向キーでバッファ切り替え
+(when load-file-name
+  (setq user-emacs-directory (file-name-directory load-file-name)))
+
+(add-to-list 'load-path (locate-user-emacs-file "site-lisp/"))
+(load "elget-settings.el")
+
+;; shift+方向キーでバッファ切り替え
 (setq windmove-wrap-around t)
 (windmove-default-keybindings)
 ;; fix Shift + up is recognized as <select>
@@ -49,10 +57,10 @@
 (add-hook 'c++-mode-hook '(lambda () (setq tab-width 4)))
 
 ;; show line number
-(global-linum-mode 1)
-(set-face-attribute 'linum nil
-                    :foreground "green"
-                    :height 0.9)
+;; (global-linum-mode 1)
+;; (set-face-attribute 'linum nil
+;;                     :foreground "green"
+;;                     :height 0.9)
 ;; not show line number when shell-mode
 (add-hook 'shell-mode-hook
           '(lambda ()
@@ -535,8 +543,11 @@ are always included."
 
 ;; popwin
 (when (locate-library "popwin")
-      (setq display-buffer-function 'popwin:display-buffer)
-      (setq popwin:special-display-config))
+  (require 'popwin)
+  (setq display-buffer-function 'popwin:display-buffer))
+  ;; (custom-set-variables popwin:special-display-config
+  ;;                       (append '(("*Apropos*") ("*sdic*") ("*Faces*") ("*Colors*"))
+  ;;                               popwin:special-display-config)))
 
 ;; direx (with popwin)
 (when (locate-library "direx")
@@ -575,7 +586,7 @@ are always included."
                (define-key markdown-mode-map (kbd "C-c C-c") 'open-with-shiba))))
 
 (when (locate-library "web-mode")
-  (require 'web-mode-autoloads)
+  (autoload 'web-mode "web-mode" "WEB mode." t)
   (dolist (extensions '("\\.phtml\\'" "\\.tpl\\.php\\'" "\\.[gj]sp\\'" "\\.as[cp]x\\'"
                         "\\.erb\\'" "\\.mustache\\'" "\\.djhtml\\'" "\\.html?\\'"))
     (add-to-list 'auto-mode-alist `(,extensions . web-mode)))
@@ -733,3 +744,34 @@ are always included."
 
 ;;;;;;;;;; git ;;;;;;;;;;
 (require 'gitconfig-mode-autoloads)
+
+(when (locate-library "git-gutter")
+  (require 'git-gutter)
+  ;; If you enable global minor mode
+  (global-git-gutter-mode t)
+  ;; If you would like to use git-gutter.el and linum-mode
+  ;; (git-gutter:linum-setup)
+  ;; If you enable git-gutter-mode for some modes
+  ;; (add-hook 'ruby-mode-hook 'git-gutter-mode)
+  (global-set-key (kbd "C-x g") 'git-gutter-mode)
+  (global-set-key (kbd "C-x v =") 'git-gutter:popup-hunk)
+  ;; Jump to next/previous hunk
+  (global-set-key (kbd "C-x p") 'git-gutter:previous-hunk)
+  (global-set-key (kbd "C-x n") 'git-gutter:next-hunk)
+  ;; Stage current hunk
+  (global-set-key (kbd "C-x v s") 'git-gutter:stage-hunk)
+  ;; Revert current hunk
+  (global-set-key (kbd "C-x v r") 'git-gutter:revert-hunk)
+  ;; Mark current hunk
+  (global-set-key (kbd "C-x v SPC") #'git-gutter:mark-hunk)
+
+  (custom-set-variables
+   '(git-gutter:modified-sign " ")
+   '(git-gutter:added-sign "+")
+   '(git-gutter:deleted-sign "-")
+   '(git-gutter:separator-sign "|"))
+
+  (set-face-background 'git-gutter:modified "purple") ;; background color
+  (set-face-foreground 'git-gutter:added "green")
+  (set-face-foreground 'git-gutter:deleted "red")
+  (set-face-foreground 'git-gutter:separator "blue"))
