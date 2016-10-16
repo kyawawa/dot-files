@@ -769,7 +769,8 @@ are always included."
    '(git-gutter:modified-sign " ")
    '(git-gutter:added-sign "+")
    '(git-gutter:deleted-sign "-")
-   '(git-gutter:separator-sign "|"))
+   '(git-gutter:separator-sign "|")
+   '(git-gutter:always-show-separator t))
 
   (set-face-background 'git-gutter:modified "purple") ;; background color
   (set-face-foreground 'git-gutter:added "green")
