@@ -743,7 +743,7 @@ are always included."
   )
 
 ;;;;;;;;;; git ;;;;;;;;;;
-(require 'gitconfig-mode-autoloads)
+(load "gitconfig-mode-autoloads.el")
 
 (when (locate-library "git-gutter")
   (require 'git-gutter)
