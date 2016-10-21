@@ -14,7 +14,7 @@
     ci = commit
     st = status --short --branch
     br = branch
-    hist = log --pretty=format:\"%h %ad [%an] \t| %s%d\" --graph --date=short
+    hist = log --pretty=format:\"%h %C(red reverse)%ad%Creset %C(green reverse)%an%Creset \t| %s%d\" --graph --date=short --name-status
 
     smrm  = "!f () {\
              if [ $# -ne 1 ];then \
