@@ -15,6 +15,7 @@
 (el-get-bundle auto-complete)
 (el-get-bundle bash-completion)
 (el-get-bundle c-eldoc)
+(el-get-bundle cmake-mode)
 (el-get-bundle company)
 (el-get-bundle company-cmake)
 (el-get-bundle dash)
