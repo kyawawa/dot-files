@@ -55,6 +55,7 @@
               tab-width 4)
 (add-hook 'c-mode-hook '(lambda () (setq tab-width 4)))
 (add-hook 'c++-mode-hook '(lambda () (setq tab-width 4)))
+(electric-indent-mode -1) ;; Enter: no indent, C-j: indent
 
 ;; show line number
 ;; (global-linum-mode 1)
@@ -239,10 +240,8 @@
                          (list "\\(\\+\\w\+\\+\\)\\>"
                                '(1 font-lock-constant-face nil t))))
 
-(when t
-  ;; does not allow use hard tab.
-  (setq-default indent-tabs-mode nil)
-  )
+;; does not allow use hard tab.
+(setq-default indent-tabs-mode nil)
 
 ;; ignore start message
 (setq inhibit-startup-message t)
