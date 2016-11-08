@@ -141,6 +141,8 @@ fi
 
 export EDITOR="emacs -nw"
 export PATH=$PATH:$HOME/scripts
+export GOPATH=$HOME/go_path
+export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 
 # colordiff
 if type "colordiff" > /dev/null 2>&1; then
