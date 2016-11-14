@@ -64,7 +64,7 @@ case $(hostname) in
     *            ) col='36' ;; # cyan
 esac
 
-if [ "$color_prompt" = yes ] || [ $EMACS ]; then
+if [ "$color_prompt" = yes ] || [ $INSIDE_EMACS ]; then
     #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;${col}m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
     PS1='${debian_chroot:+($debian_chroot)}\[\033[01;${col}m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$(__git_ps1 ) \$ '
 else
@@ -112,7 +112,7 @@ alias power_suspend="dbus-send --print-reply --system --dest=org.freedesktop.UPo
 alias power_shutdown="dbus-send --system --print-reply --dest=org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager.PowerOff boolean:false"
 
 # Tab Completion like zsh
-if [ ! $EMACS ]; then
+if [ ! $INSIDE_EMACS ]; then
     bind "C-o":menu-complete
 fi
 
