@@ -23,6 +23,7 @@
 (el-get-bundle dtrt-indent)
 (el-get-bundle dummy-h-mode)
 (el-get-bundle edit-server)
+(el-get-bundle flycheck)
 (el-get-bundle ggtags)
 (el-get-bundle git-commit-mode)
 (el-get-bundle git-gutter)

@@ -12,6 +12,15 @@
 (add-to-list 'load-path (locate-user-emacs-file "site-lisp/"))
 (load "elget-settings.el")
 
+(set-face-attribute 'mode-line
+                 nil
+                 :foreground "gray30"
+                 :background "green")
+(set-face-attribute 'mode-line-inactive
+                 nil
+                 :foreground "gray80"
+                 :background "gray25")
+
 ;; shift+方向キーでバッファ切り替え
 (setq windmove-wrap-around t)
 (windmove-default-keybindings)
@@ -55,7 +64,8 @@
               tab-width 4)
 (add-hook 'c-mode-hook '(lambda () (setq tab-width 4)))
 (add-hook 'c++-mode-hook '(lambda () (setq tab-width 4)))
-(electric-indent-mode -1) ;; Enter: no indent, C-j: indent
+(electric-indent-mode 1)
+(global-set-key "\C-j" 'newline-and-indent)
 
 ;; show line number
 ;; (global-linum-mode 1)
@@ -621,8 +631,6 @@ are always included."
  ;;; web-mode. css colors.
    '(web-mode-css-at-rule-face
      ((t (:foreground "#DFCF44"))))
-   '(web-mode-comment-face
-     ((t (:foreground "#587F35"))))
    '(web-mode-css-selector-face
      ((t (:foreground "#DFCF44"))))
    '(web-mode-css-pseudo-class
@@ -643,7 +651,7 @@ are always included."
   (require 'anzu)
   (global-anzu-mode +1)
   (set-face-attribute 'anzu-mode-line nil
-                      :foreground "yellow" :weight 'bold)
+                      :foreground "blue" :weight 'bold)
   (global-set-key "\er" 'anzu-query-replace)
   (custom-set-variables
    '(anzu-mode-lighter "")
@@ -667,7 +675,8 @@ are always included."
 
 (when (locate-library "dtrt-indent")
   (require 'dtrt-indent)
-  (dtrt-indent-mode 1))
+  (dtrt-indent-mode 1)
+  (custom-set-variables '(dtrt-indent-min-quality 50.0)))
 ;; (setq dtrt-indent-verbosity 0))
 
 (when (locate-library "edit-server")
