@@ -39,7 +39,7 @@ Major keybindings for emacs
 -----
 * f8        : show/hidden line number
 * \C-o      : dabbrev-expand
-* \C-q      : match-paren (Go to the matching parenthesis)
+* \C-i      : match-paren (Go to the matching parenthesis)
 * \C-\\     : tabbar-forward-tab
 * \C-^      : tabbar-backward-tab
 * \C-c ;    : hs-toggle-hiding

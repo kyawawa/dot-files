@@ -233,7 +233,7 @@
 ;; add by kojima
 (require 'paren)
 (show-paren-mode 1)
-;; ;; C-qで移動
+;; ;; C-iで移動
 (defun match-paren (arg)
   "Go to the matching parenthesis if on parenthesis."
   (interactive "p")
@@ -241,7 +241,7 @@
         ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
         )
   )
-(global-set-key "\C-Q" 'match-paren)
+(global-set-key "\C-I" 'match-paren)
 
 (font-lock-add-keywords 'lisp-mode
                         (list
@@ -752,6 +752,8 @@ are always included."
 
 ;;;;;;;;;; git ;;;;;;;;;;
 (load "gitconfig-mode-autoloads.el")
+;; (when (locate-library "magit")
+;;   (require 'magit))
 
 (when (locate-library "git-gutter")
   (require 'git-gutter)
