@@ -233,7 +233,7 @@
 ;; add by kojima
 (require 'paren)
 (show-paren-mode 1)
-;; ;; C-iで移動
+;; ;; C-mで移動
 (defun match-paren (arg)
   "Go to the matching parenthesis if on parenthesis."
   (interactive "p")
@@ -241,7 +241,7 @@
         ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
         )
   )
-(global-set-key "\C-I" 'match-paren)
+(global-set-key "\C-M" 'match-paren)
 
 (font-lock-add-keywords 'lisp-mode
                         (list
