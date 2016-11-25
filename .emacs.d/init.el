@@ -158,7 +158,7 @@
                             (format "[%s]" (substring branch 11))
                           "[Not Repo]")))
     (propertize mode-line-str
-                'face '((:foreground "Dark green" :weight bold)))))
+                'face '((:foreground "blue" :background "orange" :weight bold)))))
 
 (defun reopen-with-sudo ()
   "Reopen current buffer-file with sudo using tramp."
@@ -651,7 +651,7 @@ are always included."
   (require 'anzu)
   (global-anzu-mode +1)
   (set-face-attribute 'anzu-mode-line nil
-                      :foreground "blue" :weight 'bold)
+                      :foreground "blue" :background "orange" :weight 'bold)
   (global-set-key "\er" 'anzu-query-replace)
   (custom-set-variables
    '(anzu-mode-lighter "")
