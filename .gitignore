@@ -2,4 +2,5 @@
 .emacs.d/ac-comphist.dat
 .emacs.d/elpa/
 .emacs.d/el-get
+.emacs.d/el-get.lock
 *.elc
