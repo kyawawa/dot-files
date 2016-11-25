@@ -54,6 +54,7 @@ export ROSCONSOLE_FORMAT='[${severity}] [${time}]: ${message}' # default
 export CVSDIR=~/prog
 alias eus='roseus "(jsk)" "(rbrain)"'
 alias rtccd='cd $HOME/ros/${ROS_DISTRO}_parent/src/hrpsys/rtc'
+alias cs='catkin build --this --start-with-this'
 
 if [ ! $INSIDE_EMACS ] && type "rlwrap" > /dev/null 2>&1; then
     alias roseus='rlwrap roseus'
