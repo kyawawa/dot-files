@@ -99,6 +99,7 @@ alias la='ls -A'
 alias l='ls -CF'
 
 alias em='emacs -nw'
+alias emerge='emacs -nw `git status --short --branch | grep UU | cut -d " " -f2`'
 #alias em='emacsclient -nw -a ""'
 #alias ekill='emacsclient -e "(kill-emacs)"'
 alias rm='rm -i'
