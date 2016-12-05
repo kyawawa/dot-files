@@ -5,8 +5,9 @@
     email = ishikawa@jsk.imi.i.u-tokyo.ac.jp
 [core]
     excludesfile = /home/ishikawa/.gitignore
+    autocrlf = false
 [http]
-	sslVerify = false
+    sslVerify = false
 [credential]
     helper = cache
 [alias]
@@ -15,6 +16,9 @@
     st = status --short --branch
     br = branch
     hist = log --pretty=format:\"%h %C(red reverse)%ad%Creset %C(green reverse)%an%Creset \t| %s%d\" --graph --date=short --name-status
+    rm-all = "!f () {\
+              git rm `git ls-files --deleted`;\
+              };f"
 
     smrm  = "!f () {\
              if [ $# -ne 1 ];then \
