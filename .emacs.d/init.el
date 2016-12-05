@@ -53,6 +53,13 @@
             (process-send-eof proc))))
   )
 
+;; don't distinguish upper/lower cases when search
+(setq case-fold-search t)
+;; don't distinguish upper/lower cases when incremental search
+(setq isearch-case-fold-search t)
+(setq read-buffer-completion-ignore-case t)
+(setq read-file-name-completion-ignore-case t)
+
 ;; Color Settings
 ;; Comment Color for Byobu
 (set-face-foreground 'font-lock-comment-face "red")
