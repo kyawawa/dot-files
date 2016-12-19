@@ -22,7 +22,7 @@ el-get-list-packages
 * ggtags
 * git-commit-mode
 * git-gutter
-* gitconfig-mode
+* git-modes
 * magit
 * markdown-mode
 * popwin

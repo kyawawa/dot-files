@@ -758,7 +758,6 @@ are always included."
   )
 
 ;;;;;;;;;; git ;;;;;;;;;;
-(load "gitconfig-mode-autoloads.el")
 ;; (when (locate-library "magit")
 ;;   (require 'magit))
 

@@ -27,7 +27,7 @@
 (el-get-bundle ggtags)
 (el-get-bundle git-commit-mode)
 (el-get-bundle git-gutter)
-(el-get-bundle gitconfig-mode)
+(el-get-bundle git-modes)
 (el-get-bundle magit :type github :pkgname "magit/magit" :checkout "93cbf42") ;; ver 1.4.2 for emacs 24.3
 (el-get-bundle markdown-mode)
 (el-get-bundle popwin)
