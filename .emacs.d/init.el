@@ -745,7 +745,10 @@ are always included."
 ;; http://qiita.com/sune2/items/b73037f9e85962f5afb7
 (when (locate-library "company")
   (require 'company)
+  (require 'company-statistics)
+  (company-statistics-mode)
   (add-hook 'cmake-mode-hook 'company-mode)
+  (add-hook 'LaTeX-mode-hook 'company-mode)
   (setq company-idle-delay 0) ; デフォルトは0.5
   (setq company-minimum-prefix-length 2) ; デフォルトは4
   (setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
@@ -755,6 +758,21 @@ are always included."
   (define-key company-active-map (kbd "C-n") 'company-select-next)
   (define-key company-active-map (kbd "C-p") 'company-select-previous)
   (define-key company-active-map (kbd "C-h") nil)
+
+  (set-face-attribute 'company-tooltip nil
+                      :foreground "black" :background "lightgrey")
+  (set-face-attribute 'company-tooltip-common nil
+                      :foreground "black" :background "lightgrey")
+  (set-face-attribute 'company-tooltip-common-selection nil
+                      :foreground "white" :background "steelblue")
+  (set-face-attribute 'company-tooltip-selection nil
+                      :foreground "black" :background "steelblue")
+  (set-face-attribute 'company-preview-common nil
+                      :background nil :foreground "lightgrey" :underline t)
+  (set-face-attribute 'company-scrollbar-fg nil
+                      :background "orange")
+  (set-face-attribute 'company-scrollbar-bg nil
+                      :background "gray40")
   )
 
 ;;;;;;;;;; git ;;;;;;;;;;
@@ -792,3 +810,60 @@ are always included."
   (set-face-foreground 'git-gutter:added "green")
   (set-face-foreground 'git-gutter:deleted "red")
   (set-face-foreground 'git-gutter:separator "blue"))
+
+;;;;;;;;;; TeX ;;;;;;;;;;
+(when (locate-library "auctex")
+  (require 'company-auctex)
+  (company-auctex-init)
+  (setq TeX-default-mode 'japanese-latex-mode)
+  (setq japanese-LaTeX-default-style "jarticle")
+  (setq TeX-output-view-style '(("^dvi$" "." "xdvi '%d'")))
+  (setq preview-image-type 'dvipng)
+  (add-hook 'LaTeX-mode-hook (function (lambda ()
+                                         (add-to-list 'TeX-command-list
+                                                      '("pTeX" "%(PDF)ptex %`%S%(PDFout)%(mode)%' %t"
+                                                        TeX-run-TeX nil (plain-tex-mode) :help "Run ASCII pTeX"))
+                                         (add-to-list 'TeX-command-list
+                                                      '("pLaTeX" "%(PDF)platex %`%S%(PDFout)%(mode)%' %t"
+                                                        TeX-run-TeX nil (latex-mode) :help "Run ASCII pLaTeX"))
+                                         (add-to-list 'TeX-command-list
+                                                      '("acroread" "acroread '%s.pdf' " TeX-run-command t nil))
+                                         (add-to-list 'TeX-command-list
+                                                      '("pdf" "dvipdfmx -V 4 '%s' " TeX-run-command t nil))
+                                         )))
+
+  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+  (setq reftex-plug-into-AUCTeX t)
+
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq-default TeX-master nil)
+
+  (add-hook 'LaTeX-mode-hook 'visual-line-mode)
+  ;; (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+  (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+  (add-hook 'TeX-mode-hook (lambda () (TeX-fold-mode 1)))
+
+  ;; Change key binding
+  (add-hook 'reftex-mode-hook
+            '(lambda ()
+               (define-key reftex-mode-map (kbd "\C-cr") 'reftex-reference)
+               (define-key reftex-mode-map (kbd "\C-cl") 'reftex-label)
+               (define-key reftex-mode-map (kbd "\C-cc") 'reftex-citation)
+               ))
+
+  ;; 数式のラベル作成時にも自分でラベルを入力できるようにする
+  (setq reftex-insert-label-flags '("s" "sfte"))
+
+  (setq reftex-label-alist
+        '(
+          (nil ?e nil "\\figref{%s}" nil nil)
+          (nil ?e nil "\\tabref{%s}" nil nil)
+          (nil ?e nil "\\equref{%s}" nil nil)
+          (nil ?e nil "\\chapref{%s}" nil nil)
+          (nil ?e nil "\\secref{%s}" nil nil)
+          ))
+
+  ;; RefTeXで使用するbibファイルの位置を指定する
+  ;; (setq reftex-default-bibliography '("~/tex/biblio.bib" "~/tex/biblio2.bib"))
+)
