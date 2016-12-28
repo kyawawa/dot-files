@@ -96,7 +96,17 @@
 ;; (which-function-mode 1)
 
 ;; 保存時に行末の空白削除
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
+;; (add-hook 'before-save-hook 'delete-trailing-whitespace)
+(defvar delete-trailing-whitespece-before-save t)
+(defun my-delete-trailing-whitespace ()
+  (if delete-trailing-whitespece-before-save
+      (delete-trailing-whitespace)))
+(add-hook 'before-save-hook 'my-delete-trailing-whitespace)
+
+; 無効にしたいモードのhook
+(add-hook 'markdown-mode-hook
+          '(lambda ()
+             (set (make-local-variable 'delete-trailing-whitespece-before-save) nil)))
 
 ;; vcを起動しないようにする
 (custom-set-variables
@@ -599,7 +609,8 @@ are always included."
     (start-process "shiba" "*shiba*" "shiba" "--detach" buffer-file-name))
   (add-hook 'markdown-mode-hook
             '(lambda()
-               (define-key markdown-mode-map (kbd "C-c C-c") 'open-with-shiba))))
+               (define-key markdown-mode-map (kbd "C-c C-c") 'open-with-shiba)
+               )))
 
 (when (locate-library "web-mode")
   (autoload 'web-mode "web-mode" "WEB mode." t)
