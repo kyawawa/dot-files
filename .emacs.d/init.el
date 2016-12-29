@@ -868,13 +868,15 @@ are always included."
 
   (setq reftex-label-alist
         '(
-          (nil ?e nil "\\figref{%s}" nil nil)
-          (nil ?e nil "\\tabref{%s}" nil nil)
+          (nil ?f nil "\\figref{%s}" nil nil)
+          (nil ?t nil "\\tabref{%s}" nil nil)
           (nil ?e nil "\\equref{%s}" nil nil)
-          (nil ?e nil "\\chapref{%s}" nil nil)
-          (nil ?e nil "\\secref{%s}" nil nil)
+          (nil ?c nil "\\chapref{%s}" nil nil)
+          (nil ?s nil "\\secref{%s}" nil nil)
           ))
 
   ;; RefTeXで使用するbibファイルの位置を指定する
   ;; (setq reftex-default-bibliography '("~/tex/biblio.bib" "~/tex/biblio2.bib"))
+  (setq reftex-default-bibliography nil)
+  (add-hook 'bibtex-mode-hook '(lambda () (auto-revert-mode t)))
 )
