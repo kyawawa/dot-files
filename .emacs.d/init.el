@@ -704,6 +704,10 @@ are always included."
 ;;; smooth-scroll
 (when (locate-library "smooth-scroll")
   (require 'smooth-scroll)
+  ;; 縦方向のスクロール行数を変更する。
+  (setq smooth-scroll/vscroll-step-size 4)
+  ;; 横方向のスクロール行数を変更する。
+  (setq smooth-scroll/hscroll-step-size 4)
   (smooth-scroll-mode t))
 
 ;;;;;;;;;; C-mode ;;;;;;;;;;
