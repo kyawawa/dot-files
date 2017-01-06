@@ -12,6 +12,7 @@
 
 ;; Install list
 (el-get-bundle anzu)
+(el-get-bundle atomic-chrome :type github :pkgname "alpha22jp/atomic-chrome")
 (el-get-bundle auctex)
 (el-get-bundle auto-complete)
 (el-get-bundle bash-completion)
@@ -26,7 +27,6 @@
 (el-get-bundle direx)
 (el-get-bundle dtrt-indent)
 (el-get-bundle dummy-h-mode)
-(el-get-bundle edit-server)
 (el-get-bundle flycheck)
 (el-get-bundle ggtags)
 (el-get-bundle git-commit-mode)
@@ -42,6 +42,7 @@
 (el-get-bundle undo-tree)
 (el-get-bundle volatile-highlights)
 (el-get-bundle web-mode)
+(el-get-bundle websocket)
 (el-get-bundle yaml-mode)
 
 ;; Enable to fix version

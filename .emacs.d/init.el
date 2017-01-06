@@ -697,9 +697,8 @@ are always included."
   (custom-set-variables '(dtrt-indent-min-quality 50.0)))
 ;; (setq dtrt-indent-verbosity 0))
 
-(when (locate-library "edit-server")
-  (require 'edit-server)
-  (edit-server-start))
+(when (locate-library "atomic-chrome")
+  (atomic-chrome-start-server))
 
 ;;; smooth-scroll
 (when (locate-library "smooth-scroll")
