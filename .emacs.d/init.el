@@ -698,7 +698,9 @@ are always included."
 ;; (setq dtrt-indent-verbosity 0))
 
 (when (locate-library "atomic-chrome")
-  (atomic-chrome-start-server))
+  (setq atomic-chrome-url-major-mode-alist
+      '(("github\\.com" . gfm-mode))))
+  ;; (atomic-chrome-start-server))
 
 ;;; smooth-scroll
 (when (locate-library "smooth-scroll")
