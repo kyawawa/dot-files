@@ -9,36 +9,6 @@ cd dot-files
 ## el-get-list-packages
 
 *written at .emacs.d/site-lisp/elget-settings.el*
-* anzu
-* auctex
-* auto-complete
-* bash-completion
-* c-eldoc
-* clang-format
-* company
-* company-auctex
-* company-cmake
-* company-statistics
-* dash
-* direx
-* dtrt-indent
-* dummy-h-mode
-* edit-server
-* ggtags
-* git-commit-mode
-* git-gutter
-* git-modes
-* magit
-* markdown-mode
-* popwin
-* rainbow-mode
-* smooth-scroll
-* tramp
-* tabbar
-* undo-tree
-* volatile-highlights
-* web-mode
-* yaml-mode
 
 ## Major keybindings for emacs
 
