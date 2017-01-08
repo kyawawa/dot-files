@@ -44,6 +44,7 @@
 (el-get-bundle web-mode)
 (el-get-bundle websocket)
 (el-get-bundle yaml-mode)
+(el-get-bundle yasnippet)
 
 ;; Enable to fix version
 ;; To update package, just execute M-x el-get-update and git add el-get.lock

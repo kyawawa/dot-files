@@ -791,6 +791,17 @@ are always included."
                       :background "gray40")
   )
 
+;; yasnippet
+(when (locate-library "yasnippet")
+  (require 'yasnippet)
+  ;; insert existing snippet
+  (define-key yas-minor-mode-map (kbd "C-c i i") 'yas-insert-snippet)
+  ;; edit new snippet
+  (define-key yas-minor-mode-map (kbd "C-c i n") 'yas-new-snippet)
+  ;; edit existing snippet
+  (define-key yas-minor-mode-map (kbd "C-c i v") 'yas-visit-snippet-file)
+  (yas-global-mode 1))
+
 ;;;;;;;;;; git ;;;;;;;;;;
 ;; (when (locate-library "magit")
 ;;   (require 'magit))

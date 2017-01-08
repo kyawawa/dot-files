@@ -1,0 +1,29 @@
+# -*- mode: snippet -*-
+# name: an (n,m)-table
+# key: table
+# type: command
+# --
+(let ((width (read-number "Table width?" 3))
+      (height (read-number "Table height?" 3))
+      (header-text "")
+      (snippet-text ""))
+  (setq header-text
+        (format "%s%s%s%s%s{%s}\n%s"
+                "\\begin{table}[${1:htb}]\n"
+                "\\centering\n"
+                "\\caption{${2:caption}}\n"
+                "\\label{tab:${3:label}}\n"
+                "\\begin{tabular}"
+                (make-string width ?c)
+                "\\hline \\hline\n"))
+  (dotimes (i height)
+    (dotimes (j width)
+      (setq snippet-text (format "%s ${%d:m%d%d} %s"
+                                 snippet-text
+                                 (+ 4 (+ (* height i) j))
+                                 (1+ i)
+                                 (1+ j)
+                                 (if (= j (1- width))
+                                     "\\\\\\" "&"))))
+    (setq snippet-text (format "%s\n" snippet-text)))
+  (yas/expand-snippet (format "%s%s  \\end{tabular}\n\\end{table}" header-text snippet-text)))
