@@ -814,17 +814,15 @@ are always included."
   ;; (git-gutter:linum-setup)
   ;; If you enable git-gutter-mode for some modes
   ;; (add-hook 'ruby-mode-hook 'git-gutter-mode)
-  (global-set-key (kbd "C-x g") 'git-gutter-mode)
-  (global-set-key (kbd "C-x v =") 'git-gutter:popup-hunk)
-  ;; Jump to next/previous hunk
-  (global-set-key (kbd "C-x p") 'git-gutter:previous-hunk)
-  (global-set-key (kbd "C-x n") 'git-gutter:next-hunk)
-  ;; Stage current hunk
-  (global-set-key (kbd "C-x v s") 'git-gutter:stage-hunk)
-  ;; Revert current hunk
-  (global-set-key (kbd "C-x v r") 'git-gutter:revert-hunk)
-  ;; Mark current hunk
-  (global-set-key (kbd "C-x v SPC") #'git-gutter:mark-hunk)
+  (bind-keys*
+   ("C-x g" . git-gutter-mode)
+   ("C-x v =" . git-gutter:popup-hunk)
+   ("C-x p" . git-gutter:previous-hunk)
+   ("C-x n" . git-gutter:next-hunk)
+   ("C-x v r" . git-gutter:revert-hunk)
+   ("C-x v s" . git-gutter:stage-hunk)
+   ("C-x v SPC" . git-gutter:mark-hunk)
+   )
 
   (custom-set-variables
    '(git-gutter:modified-sign " ")

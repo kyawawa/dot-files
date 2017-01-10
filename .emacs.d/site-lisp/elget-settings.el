@@ -40,6 +40,7 @@
 (el-get-bundle tramp)
 (el-get-bundle tabbar)
 (el-get-bundle undo-tree)
+(el-get-bundle use-package)
 (el-get-bundle volatile-highlights)
 (el-get-bundle web-mode)
 (el-get-bundle websocket)
