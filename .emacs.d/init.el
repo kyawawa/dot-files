@@ -839,6 +839,9 @@ are always included."
   (set-face-foreground 'git-gutter:separator "blue"))
 
 ;;;;;;;;;; TeX ;;;;;;;;;;
+(custom-set-faces
+ '(font-latex-math-face ((t (:foreground "green"))))
+ )
 (when (locate-library "auctex")
   (require 'company-auctex)
   (company-auctex-init)
