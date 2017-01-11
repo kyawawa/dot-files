@@ -895,5 +895,7 @@ are always included."
   ;; RefTeXで使用するbibファイルの位置を指定する
   ;; (setq reftex-default-bibliography '("~/tex/biblio.bib" "~/tex/biblio2.bib"))
   (setq reftex-default-bibliography nil)
+  ;; buffer上のファイルを更新
+  (add-hook 'LaTeX-mode-hook '(lambda () (auto-revert-mode t)))
   (add-hook 'bibtex-mode-hook '(lambda () (auto-revert-mode t)))
 )
