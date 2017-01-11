@@ -1,9 +1,9 @@
 # -*- mode: snippet -*-
-# name: matrix
-# key: mat
+# name: bmatrix
+# key: bmat
 # type: command
 # --
-(insert "\\begin{pmatrix}\n")
+(insert "\\begin{bmatrix}\n")
 (let ((width (read-number "Matrix width?" 3))
       (height (read-number "Matrix height?" 3))
       (snippet-text ""))
@@ -18,4 +18,4 @@
                                  (if (= j (1- width))
                                      "\\\\\\" "&"))))
     (setq snippet-text (format "%s\n" snippet-text)))
-  (yas/expand-snippet (format "%s\\end{pmatrix}" snippet-text)))
+  (yas/expand-snippet (format "%s\\end{bmatrix}" snippet-text)))
