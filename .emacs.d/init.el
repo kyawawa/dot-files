@@ -794,6 +794,8 @@ are always included."
 ;; yasnippet
 (when (locate-library "yasnippet")
   (require 'yasnippet)
+  (define-key yas-minor-mode-map (kbd "C-M-y") 'yas/expand)
+  (define-key yas-minor-mode-map (kbd "TAB") nil)
   ;; insert existing snippet
   (define-key yas-minor-mode-map (kbd "C-c i i") 'yas-insert-snippet)
   ;; edit new snippet
@@ -890,6 +892,7 @@ are always included."
           (nil ?e nil "\\equref{%s}" nil nil)
           (nil ?c nil "\\chapref{%s}" nil nil)
           (nil ?s nil "\\secref{%s}" nil nil)
+          ("algorithm" ?a "alg:" "\\algref{%s}" nil)
           ))
 
   ;; RefTeXで使用するbibファイルの位置を指定する
