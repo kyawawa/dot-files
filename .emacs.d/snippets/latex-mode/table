@@ -26,4 +26,4 @@
                                  (if (= j (1- width))
                                      "\\\\\\" "&"))))
     (setq snippet-text (format "%s\n" snippet-text)))
-  (yas/expand-snippet (format "%s%s  \\end{tabular}\n\\end{table}" header-text snippet-text)))
+  (yas/expand-snippet (format "%s%s  \\hline\n\\end{tabular}\n\\end{table}" header-text snippet-text)))

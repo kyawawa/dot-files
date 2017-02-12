@@ -1,7 +1,12 @@
 # -*- mode: snippet -*-
-# name: enumerate environment
+# name: enumerate
 # key: enum
+# type: command
 # --
-\begin{enumerate}
-\item $0
-\end{enumerate}
+(let ((number (read-number "Number of items?" 2))
+      (begin "\\begin{enumerate}\n")
+      (end "\\end{enumerate}\n")
+      (snippet-text ""))
+  (dotimes (i number)
+    (setq snippet-text (format "%s \\item ${%d:m%d}\n" snippet-text (1+ i) i)))
+  (yas/expand-snippet (format "%s%s%s" begin snippet-text end)))
