@@ -72,7 +72,7 @@
 (add-hook 'c-mode-hook '(lambda () (setq tab-width 4)))
 (add-hook 'c++-mode-hook '(lambda () (setq tab-width 4)))
 (electric-indent-mode 1)
-(bind-key* "C-j" 'newline-and-indent)
+(bind-key* "C-j" 'newline-and-indent (not (eq major-mode 'lisp-interaction-mode)))
 
 ;; show line number
 ;; (global-linum-mode 1)
@@ -452,7 +452,8 @@ This function also returns nil meaning don't specify the indentation."
 ;; yaml mode
 (when (locate-library "yaml-mode")
   ;; can use add-to-list too
-  (add-to-list 'auto-mode-alist '("¥¥.yml$" . yaml-mode)))
+  (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+  (add-to-list 'auto-mode-alist '("\\.cnoid$" . yaml-mode)))
 
 ;; tabbar settings
 (when (locate-library "tabbar")
