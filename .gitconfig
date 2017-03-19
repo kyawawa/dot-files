@@ -15,6 +15,7 @@
     ci = commit
     st = status --short --branch
     br = branch
+    br-date = "!f () { (for i in `git branch | colrm 1 2`; do echo `git log --date=iso8601 -n 1 --pretty=\"format:[%ai] %h\" $i` $i ; done) | sort -r; };f"
     hist = log --pretty=format:\"%h %C(red reverse)%ad%Creset %C(green reverse)%an%Creset \t| %s%d\" --graph --date=short --name-status
     rm-all = "!f () {\
               git rm `git ls-files --deleted`;\
