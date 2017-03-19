@@ -2,9 +2,9 @@
 # name: figure
 # key: fig
 # --
-\begin{figure}[htb]
+\begin{figure}[${1:htb}]
   \centering
-  \includegraphics[${1:options}]{figs/${2:path}}
-  \caption{${3:caption}}
-  \label{fig:${4:label}}
+  \includegraphics[${2:width=\linewidth}]{figs/${3:path}}
+  \caption{${4:caption}}
+  \label{fig:${5:label}}
 \end{figure}
