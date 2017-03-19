@@ -795,7 +795,7 @@ are always included."
 ;; yasnippet
 (when (locate-library "yasnippet")
   (require 'yasnippet)
-  (define-key yas-minor-mode-map (kbd "C-M-y") 'yas/expand)
+  (define-key yas-minor-mode-map (kbd "C-M-y") 'yas-expand)
   (define-key yas-minor-mode-map (kbd "TAB") nil)
   ;; insert existing snippet
   (define-key yas-minor-mode-map (kbd "C-c i i") 'yas-insert-snippet)
