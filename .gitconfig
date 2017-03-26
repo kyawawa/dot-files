@@ -6,6 +6,7 @@
 [core]
     excludesfile = /home/ishikawa/.gitignore
     autocrlf = false
+    quotepath = false
 [http]
     sslVerify = false
 [credential]
