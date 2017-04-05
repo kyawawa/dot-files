@@ -25,3 +25,4 @@ fi
 ln -s $dir/.emacs.d $HOME/ # not to create link such as $HOME/.emacs.d/.emacs.d
 ln -s $dir/.gitconfig $HOME/.gitconfig
 ln -s $dir/gtk.css $HOME/.config/gtk-3.0/gtk.css
+ln -s $dir/.pythonstartup $HOME/.pythonstartup

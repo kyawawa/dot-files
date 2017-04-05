@@ -144,6 +144,7 @@ export EDITOR="emacs -nw"
 export PATH=$PATH:$HOME/scripts
 export GOPATH=$HOME/go_path
 export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
+export PYTHONSTARTUP=$HOME/.pythonstartup
 
 # colordiff
 if type "colordiff" > /dev/null 2>&1; then
