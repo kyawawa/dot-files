@@ -17,8 +17,8 @@ HISTCONTROL=ignoreboth
 shopt -s histappend
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=2000
-HISTFILESIZE=4000
+HISTSIZE=2000000
+HISTFILESIZE=4000000
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -58,10 +58,11 @@ if [ -n "$force_color_prompt" ]; then
 fi
 
 case $(hostname) in
-    centos7      ) col='31' ;; # red
-    mirei-antec  ) col='33' ;; # yellow
-    chiya-acubic ) col='32' ;; # green
-    *            ) col='36' ;; # cyan
+    centos7      ) col='31'   ;; # red
+    mirei-antec  ) col='33'   ;; # yellow
+    chiya-acubic ) col='32'   ;; # green
+    kon-antec    ) col='1;32' ;; # light green
+    *            ) col='36'   ;; # cyan
 esac
 
 if [ "$color_prompt" = yes ] || [ $INSIDE_EMACS ]; then
