@@ -1,6 +1,6 @@
 #!/bin/sh
 
-dir=`pwd`
+dir=$(dirname $(readlink -f $0))
 
 for dotfile in .bashrc .emacs .emacs.d .gitconfig
 do
@@ -22,7 +22,8 @@ else
     echo "Please select JSK or Nothing!!" 1>&2
 fi
 
-ln -s $dir/.emacs.d $HOME/ # not to create link such as $HOME/.emacs.d/.emacs.d
-ln -s $dir/.gitconfig $HOME/.gitconfig
-ln -s $dir/gtk.css $HOME/.config/gtk-3.0/gtk.css
-ln -s $dir/.pythonstartup $HOME/.pythonstartup
+ln -sn $dir/.emacs.d $HOME/.emacs.d # not to create link such as $HOME/.emacs.d/.emacs.d
+ln -sn $dir/.gitconfig $HOME/.gitconfig
+ln -sn $dir/gtk.css $HOME/.config/gtk-3.0/gtk.css
+ln -sn $dir/.pythonstartup $HOME/.pythonstartup
+ln -sn $dir/ipython-startup/*.py $HOME/.ipython/profile_default/startup/
