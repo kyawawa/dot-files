@@ -1,2 +1,2 @@
-#! /bin/bash -i
-# -*- mode: Shell-script; coding: utf-8-unix; -*-
+#!/bin/sh
+# -*- mode: sh; coding: utf-8-unix; -*-
