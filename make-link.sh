@@ -26,4 +26,4 @@ ln -sn $dir/.emacs.d $HOME/.emacs.d # not to create link such as $HOME/.emacs.d/
 ln -sn $dir/.gitconfig $HOME/.gitconfig
 ln -sn $dir/gtk.css $HOME/.config/gtk-3.0/gtk.css
 ln -sn $dir/.pythonstartup $HOME/.pythonstartup
-ln -sn $dir/ipython-startup/*.py $HOME/.ipython/profile_default/startup/
+ln -sn $dir/.ipython $HOME/.ipython
