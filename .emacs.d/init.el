@@ -277,19 +277,18 @@
 (setq inhibit-startup-message t)
 
 (require 'autoinsert)
-(when (featurep 'emacs)
-      (setq auto-insert-directory "$HOME/.emacs.d/templates")
-      (setq auto-insert-alist
-            (nconc '(
-                     ("\\.l\\'" . "template.l")
-                     ("\\.sh\\'" . "template.sh")
-                     ("Makefile\\'" . "template.Makefile")
-                     ("\\.cpp\\'" . "template.cpp")
-                     ("\\.h\\'" . "template.h")
-                     ("\\.py\\'" . "template.py")
-                     ) auto-insert-alist))
-      (add-hook 'find-file-not-found-hooks 'auto-insert)
-      )
+(setq auto-insert-directory (locate-user-emacs-file "templates/"))
+(setq auto-insert-alist
+      (append '(
+                ("\\.l$" . "template.l")
+                ("\\.sh$" . "template.sh")
+                ("\\.bash$" . "template.sh")
+                ("Makefile$" . "template.Makefile")
+                ("\\.cpp$" . "template.cpp")
+                ("\\.h$" . "template.h")
+                ("\\.py$" . "template.py")
+                ) auto-insert-alist))
+(add-hook 'find-file-not-found-hooks 'auto-insert)
 
 ;; https://github.com/cs14095/ci.el
 ;; Ctrl-c, i, w => kill a word
@@ -298,7 +297,7 @@
 ;; Ctrl-c, i, " => kill inside of ""
 ;; Ctrl-c, i, ( => kill inside of ()
 ;; Ctrl-c, i, { => kill inside of {}
-(when (file-exists-p (format "%s/.emacs.d/site-lisp/ci.el" (getenv "HOME")))
+(when (locate-library "ci")
   (require 'ci))
 
 ;; shell mode
@@ -433,7 +432,7 @@ This function also returns nil meaning don't specify the indentation."
     (global-set-key "\C-x\C-r" ros-keymap)))
 
 ;; vrml mode
-(when (file-exists-p (format "%s/.emacs.d/site-lisp/vrml-mode.el" (getenv "HOME")))
+(when (file-exists-p (expand-file-name "vrml-mode.el" (locate-user-emacs-file "site-lisp")))
   (autoload 'vrml-mode "vrml-mode" "VRML mode." t)
   (setq auto-mode-alist (append '(("\\.wrl\\'" . vrml-mode)) auto-mode-alist)))
 
