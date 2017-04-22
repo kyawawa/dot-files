@@ -72,6 +72,9 @@
 (add-hook 'c-mode-hook '(lambda () (setq tab-width 4)))
 (add-hook 'c++-mode-hook '(lambda () (setq tab-width 4)))
 (electric-indent-mode 1)
+(dolist (mode-hook '(python-mode-hook))
+  ;; (add-hook mode-hook '(lambda () (electric-indent-local-mode -1)))) ;; for emacs 24.4 or above
+  (add-hook mode-hook '(lambda () (set (make-local-variable 'electric-indent-mode) nil))))
 (bind-key* "C-j" 'newline-and-indent (not (eq major-mode 'lisp-interaction-mode)))
 
 ;; show line number
