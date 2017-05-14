@@ -15,4 +15,8 @@ if 'VIRTUAL_ENV' in os.environ:
     # ADD2: insert(0 is wrong and breaks conformance of sys.path
     # sys.path.insert(1, virtual_site)
 
+    module_path = os.path.abspath(os.path.join('.'))
+    if module_path not in sys.path:
+        sys.path.append(module_path)
+
 del os, sys, distutils.spawn, subprocess
