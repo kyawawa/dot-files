@@ -28,16 +28,9 @@ export SVN_SSH="ssh -l ${SSH_USER}"
 #        ssh-add ~/.ssh/id_rsa
 # fi
 
-## ROS DISTRO
-for rosdistro in indigo hydro
-do
-    if [ -e $HOME/ros/$rosdistro ]; then
-        source $HOME/ros/$rosdistro/devel/setup.bash
-        break
-    fi
-done
-
-export ROS_WORKSPACE=${HOME}/ros/${ROS_DISTRO}
+## default ros package
+export ROS_WORKSPACE=${HOME}/catkin_ws/standard
+source ${ROS_WORKSPACE}/devel/setup.bash
 
 ## Rviz for a laptop user
 export OGRE_RTT_MODE=Copy
