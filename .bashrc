@@ -147,6 +147,18 @@ export GOPATH=$HOME/go_path
 export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 export PYTHONSTARTUP=$HOME/.pythonstartup
 
+# cuda
+# export CUDA_HOME=/usr/local/cuda
+# export LD_LIBRARY_PATH=${CUDA_HOME}/lib64
+# export PATH=${PATH}:${CUDA_HOME}/bin
+
+# export CPATH=${CUDA_PATH}/include:${CPATH}
+# export LIBRARY_PATH=$CUDA_PATH/lib64:$LD_LIBRARY_PATH
+# export LD_LIBRARY_PATH=$CUDA_PATH/lib64:$LD_LIBRARY_PATH
+
+# export CFLAGS=-I/usr/local/cuda/include
+# export LDFLAGS=-L/usr/local/cuda/lib64
+
 # colordiff
 if type "colordiff" > /dev/null 2>&1; then
   alias diff='colordiff -u'
