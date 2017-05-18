@@ -29,8 +29,15 @@ export SVN_SSH="ssh -l ${SSH_USER}"
 # fi
 
 ## default ros package
-export ROS_WORKSPACE=${HOME}/catkin_ws/standard
-source ${ROS_WORKSPACE}/devel/setup.bash
+export ROS_WORKSPACE=$(printf "cat <<++EOS\n`cat $dot_dir/ros_current_ws`\n++EOS\n" | sh)
+source ${ROS_WORKSPACE}/setup.bash
+
+function set_cur_ws () {
+    (
+        roscd
+        pwd > $dot_dir/ros_current_ws
+    )
+}
 
 ## Rviz for a laptop user
 export OGRE_RTT_MODE=Copy
@@ -46,7 +53,7 @@ export ROSCONSOLE_FORMAT='[${severity}] [${time}]: ${message}' # default
 #euslib
 export CVSDIR=~/prog
 alias eus='roseus "(jsk)" "(rbrain)"'
-alias rtccd='cd $HOME/ros/${ROS_DISTRO}_parent/src/hrpsys/rtc'
+alias rtccd='roscd hrpsys; cd rtc'
 alias cs='catkin build --this --start-with-this'
 
 if [ ! $INSIDE_EMACS ] && type "rlwrap" > /dev/null 2>&1; then
