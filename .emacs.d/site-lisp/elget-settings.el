@@ -23,6 +23,7 @@
 (el-get-bundle company)
 ;; (el-get-bundle company-auctex)
 (el-get-bundle company-cmake)
+(el-get-bundle company-jedi)
 (el-get-bundle company-statistics)
 (el-get-bundle dash)
 (el-get-bundle direx)
@@ -34,6 +35,7 @@
 (el-get-bundle git-commit-mode)
 (el-get-bundle git-gutter)
 (el-get-bundle git-modes)
+(el-get-bundle jedi-core)
 (el-get-bundle magit :type github :pkgname "magit/magit" :checkout "93cbf42") ;; ver 1.4.2 for emacs 24.3
 (el-get-bundle markdown-mode)
 (el-get-bundle popwin)
