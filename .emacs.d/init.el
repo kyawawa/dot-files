@@ -426,7 +426,7 @@ This function also returns nil meaning don't specify the indentation."
 (setq auto-mode-alist (cons (cons "\\.launch$" 'xml-mode) auto-mode-alist))
 
 ;; sudo apt-get install rosemacs-el
-(when (getenv "ROS_WORKSPACE" )
+(when (getenv "ROS_DISTRO")
   (when (require 'rosemacs nil t)
     (invoke-rosemacs)
     (global-set-key "\C-x\C-r" ros-keymap)))
