@@ -603,10 +603,13 @@ are always included."
         (global-set-key (kbd "C-x C-j") 'direx:jump-to-directory-other-window))
     (global-set-key (kbd "C-x C-j") 'direx:jump-to-directory)))
 
-;; http://qiita.com/yuizho/items/4c121bdecc103109e4fd
 (when (locate-library "jedi")
   (add-hook 'python-mode-hook 'jedi:setup)
-  (setq jedi:complete-on-dot t))
+  (setq jedi:complete-on-dot t)
+  (setq jedi:use-shortcuts t) ;; M-. : jump definition, M-, : return from definition
+  (when (locate-library "company-jedi")
+    (add-to-list 'company-backends 'company-jedi)) ;; backendに追加
+  )
 
 ;; For folding
 ;; http://d.hatena.ne.jp/yutoichinohe/20121119/1353321674
