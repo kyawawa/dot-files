@@ -77,6 +77,19 @@
   (add-hook mode-hook '(lambda () (set (make-local-variable 'electric-indent-mode) nil))))
 (bind-key* "C-j" 'newline-and-indent (not (eq major-mode 'lisp-interaction-mode)))
 
+;; paste with indent
+(defun yank-with-indent ()
+  (interactive)
+  (let ((indent
+         (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
+    (message indent)
+    (yank)
+    (narrow-to-region (mark t) (point))
+    (pop-to-mark-command)
+    (replace-string "\n" (concat "\n" indent))
+    (widen)))
+(bind-key* "C-y" 'yank-with-indent)
+
 ;; show line number
 ;; (global-linum-mode 1)
 ;; (set-face-attribute 'linum nil
