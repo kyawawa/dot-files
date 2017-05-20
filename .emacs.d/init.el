@@ -88,7 +88,7 @@
     (pop-to-mark-command)
     (replace-string "\n" (concat "\n" indent))
     (widen)))
-(bind-key* "C-y" 'yank-with-indent)
+;; (bind-key* "C-i C-y" 'yank-with-indent)
 
 ;; show line number
 ;; (global-linum-mode 1)
