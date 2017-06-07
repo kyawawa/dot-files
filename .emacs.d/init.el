@@ -611,9 +611,9 @@ are always included."
                           (lambda (a b) (string< (buffer-name (car a)) (buffer-name (car b))))))))))
 ) ;; end of tabbar settings
 
-;; auto-complete
-(when (locate-library "auto-complete")
-  (ac-config-default))
+;; ;; auto-complete
+;; (when (locate-library "auto-complete")
+;;   (ac-config-default))
 
 ;; popwin
 (when (locate-library "popwin")
