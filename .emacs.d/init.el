@@ -66,6 +66,8 @@
 (set-face-foreground 'font-lock-comment-delimiter-face "red")
 
 ;; setting of indent
+;; does not allow use hard tab.
+(setq-default indent-tabs-mode nil)
 (setq default-tab-width 4)
 (setq-default c-basic-offset 4
               tab-width 4)
@@ -111,13 +113,13 @@
           '(lambda ()
              (set (make-local-variable 'delete-trailing-whitespece-before-save) nil)))
 
-;; vcを起動しないようにする
-(custom-set-variables
- '(vc-handled-backends nil))
+;; ;; vcを起動しないようにする
+;; (custom-set-variables
+;;  ;; '(vc-handled-backends nil))
 
 ;; 不要なhookを外す
-(remove-hook 'find-file-hook 'vc-find-file-hook)
-(remove-hook 'kill-buffer-hook 'vc-kill-buffer-hook)
+;; (remove-hook 'find-file-hook 'vc-find-file-hook)
+;; (remove-hook 'kill-buffer-hook 'vc-kill-buffer-hook)
 
 ;; cua-mode
 (cua-mode t)
@@ -269,9 +271,6 @@
                                '(1 font-lock-constant-face nil t))
                          (list "\\(\\+\\w\+\\+\\)\\>"
                                '(1 font-lock-constant-face nil t))))
-
-;; does not allow use hard tab.
-(setq-default indent-tabs-mode nil)
 
 ;; ignore start message
 (setq inhibit-startup-message t)
