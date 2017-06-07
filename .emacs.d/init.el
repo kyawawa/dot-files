@@ -79,6 +79,19 @@
   (add-hook mode-hook '(lambda () (set (make-local-variable 'electric-indent-mode) nil))))
 (bind-key* "C-j" 'newline-and-indent (not (eq major-mode 'lisp-interaction-mode)))
 
+;; paste with indent
+(defun yank-with-indent ()
+  (interactive)
+  (let ((indent
+         (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
+    (message indent)
+    (yank)
+    (narrow-to-region (mark t) (point))
+    (pop-to-mark-command)
+    (replace-string "\n" (concat "\n" indent))
+    (widen)))
+;; (bind-key* "C-i C-y" 'yank-with-indent)
+
 ;; show line number
 ;; (global-linum-mode 1)
 ;; (set-face-attribute 'linum nil
@@ -430,6 +443,39 @@ This function also returns nil meaning don't specify the indentation."
     (invoke-rosemacs)
     (global-set-key "\C-x\C-r" ros-keymap)))
 
+;; http://qiita.com/sune2/items/b73037f9e85962f5afb7
+(when (locate-library "company")
+  (require 'company)
+  (require 'company-statistics)
+  (company-statistics-mode)
+  (add-hook 'cmake-mode-hook 'company-mode)
+  (add-hook 'LaTeX-mode-hook 'company-mode)
+  (setq company-idle-delay 0) ; デフォルトは0.5
+  (setq company-minimum-prefix-length 2) ; デフォルトは4
+  (setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
+  (setq company-transformers '(company-sort-by-statistics company-sort-by-backend-importance))
+  (define-key company-active-map (kbd "M-n") nil)
+  (define-key company-active-map (kbd "M-p") nil)
+  (define-key company-active-map (kbd "C-n") 'company-select-next)
+  (define-key company-active-map (kbd "C-p") 'company-select-previous)
+  (define-key company-active-map (kbd "C-h") nil)
+
+  (set-face-attribute 'company-tooltip nil
+                      :foreground "black" :background "lightgrey")
+  (set-face-attribute 'company-tooltip-common nil
+                      :foreground "black" :background "lightgrey")
+  (set-face-attribute 'company-tooltip-common-selection nil
+                      :foreground "white" :background "steelblue")
+  (set-face-attribute 'company-tooltip-selection nil
+                      :foreground "black" :background "steelblue")
+  (set-face-attribute 'company-preview-common nil
+                      :background nil :foreground "lightgrey" :underline t)
+  (set-face-attribute 'company-scrollbar-fg nil
+                      :background "orange")
+  (set-face-attribute 'company-scrollbar-bg nil
+                      :background "gray40")
+  )
+
 ;; vrml mode
 (when (file-exists-p (expand-file-name "vrml-mode.el" (locate-user-emacs-file "site-lisp")))
   (autoload 'vrml-mode "vrml-mode" "VRML mode." t)
@@ -762,39 +808,6 @@ are always included."
 
   (add-hook 'after-save-hook
             'my-c-mode-update-gtags))
-
-;; http://qiita.com/sune2/items/b73037f9e85962f5afb7
-(when (locate-library "company")
-  (require 'company)
-  (require 'company-statistics)
-  (company-statistics-mode)
-  (add-hook 'cmake-mode-hook 'company-mode)
-  (add-hook 'LaTeX-mode-hook 'company-mode)
-  (setq company-idle-delay 0) ; デフォルトは0.5
-  (setq company-minimum-prefix-length 2) ; デフォルトは4
-  (setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
-  (setq company-transformers '(company-sort-by-statistics company-sort-by-backend-importance))
-  (define-key company-active-map (kbd "M-n") nil)
-  (define-key company-active-map (kbd "M-p") nil)
-  (define-key company-active-map (kbd "C-n") 'company-select-next)
-  (define-key company-active-map (kbd "C-p") 'company-select-previous)
-  (define-key company-active-map (kbd "C-h") nil)
-
-  (set-face-attribute 'company-tooltip nil
-                      :foreground "black" :background "lightgrey")
-  (set-face-attribute 'company-tooltip-common nil
-                      :foreground "black" :background "lightgrey")
-  (set-face-attribute 'company-tooltip-common-selection nil
-                      :foreground "white" :background "steelblue")
-  (set-face-attribute 'company-tooltip-selection nil
-                      :foreground "black" :background "steelblue")
-  (set-face-attribute 'company-preview-common nil
-                      :background nil :foreground "lightgrey" :underline t)
-  (set-face-attribute 'company-scrollbar-fg nil
-                      :background "orange")
-  (set-face-attribute 'company-scrollbar-bg nil
-                      :background "gray40")
-  )
 
 ;; yasnippet
 (when (locate-library "yasnippet")

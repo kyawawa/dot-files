@@ -9,7 +9,8 @@ if 'VIRTUAL_ENV' in os.environ:
     # virtual_site = os.path.join(os.environ.get('VIRTUAL_ENV'), py_infix, 'site-packages')
 
     # exclude PYTHONPATH
-    sys.path = [p for p in sys.path if all([not p.count(path) for path in os.environ.get('PYTHONPATH').split(':')]) and len(p)]
+    if os.environ.get('PYTHONPATH'):
+        sys.path = [p for p in sys.path if all([not p.count(path) for path in os.environ.get('PYTHONPATH').split(':')]) and len(p)]
 
     # add virtualenv site
     # ADD2: insert(0 is wrong and breaks conformance of sys.path
