@@ -39,6 +39,12 @@ function set_cur_ws () {
     )
 }
 
+function print_ws_path () {
+    printf "[$(roscd; echo `pwd` | rev | cut -f2 -d '/' | rev)]"
+}
+
+PS1='$(print_ws_path) '$PS1
+
 ## Rviz for a laptop user
 export OGRE_RTT_MODE=Copy
 
