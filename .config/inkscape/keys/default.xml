@@ -689,5 +689,5 @@ override) the bindings in the main default.xml.
   <bind key="J" modifiers="Ctrl,Alt" action="org.inkscape.typography.nextglyphlayer"/>
 
   <!-- extensions -->
-  <bind key="F10" action="org.pecker.writetex" display="true"/>
+  <bind key="F10" action="tk.whywhow.writetex" display="true"/>
 </keys>

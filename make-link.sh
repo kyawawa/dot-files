@@ -13,6 +13,14 @@ if [ -e $HOME/.config/gtk-3.0/gtk.css ]; then
     rm -ri $HOME/.config/gtk-3.0/gtk.css
 fi
 
+# .config
+for i in $(ls $dir/.config); do
+    if [ -e $HOME/.config/$i ]; then
+        rm -ri $HOME/.config/$i
+    fi
+    ln -sn $dir/.config/$i $HOME/.config/$i
+done
+
 if [ $# -eq 0 ]; then
     ln -s $dir/.bashrc $HOME/.bashrc
 elif [ $# -eq 1 -a $1 = "JSK" ]; then
