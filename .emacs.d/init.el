@@ -653,7 +653,7 @@ are always included."
 (define-key global-map (kbd "C-c ;") 'hs-toggle-hiding)
 
 ;; Open markdown with shiba
-(when (eq 0 (shell-command "type shiba"))
+(when (eq 0 (shell-command "type Shiba"))
   (defun open-with-shiba ()
     "open a current markdown file with shiba"
     (interactive)
