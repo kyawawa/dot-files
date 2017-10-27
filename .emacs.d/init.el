@@ -299,6 +299,7 @@
                 ("\\.cpp$" . "template.cpp")
                 ("\\.h$" . "template.h")
                 ("\\.py$" . "template.py")
+                ("\\.launch$" . "template.launch")
                 ) auto-insert-alist))
 (add-hook 'find-file-not-found-hooks 'auto-insert)
 
@@ -347,7 +348,7 @@
      '(
        ("\t" 0 my-face-b-1 append)
        ("　" 0 my-face-b-2 append)
-                                        ;("[ \t]+$" 0 my-face-u-1 append)
+       ;; ("[ \t]+$" 0 my-face-u-1 append)
        )))
   (ad-enable-advice 'font-lock-mode 'before 'my-font-lock-mode)
   (ad-activate 'font-lock-mode)
@@ -679,35 +680,35 @@ are always included."
   (add-hook 'web-mode-hook  'web-mode-hook)
 
 
-  ;; 色の設定
-  (custom-set-faces
-   ;; web-mode. colors.
-   '(web-mode-doctype-face
-     ((t (:foreground "cyan"))))
-   '(web-mode-html-tag-face
-     ((t (:foreground "cyan"))))
-   '(web-mode-html-attr-name-face
-     ((t (:foreground "#87CEEB"))))
-   '(web-mode-html-attr-equal-face
-     ((t (:foreground "#FFFFFF"))))
-   '(web-mode-html-attr-value-face
-     ((t (:foreground "#00FF00"))))
-   '(web-mode-comment-face
-     ((t (:foreground "#587F35"))))
-   '(web-mode-server-comment-face
-     ((t (:foreground "#587F35"))))
+ ;;  ;; 色の設定
+ ;;  (custom-set-faces
+ ;;   ;; web-mode. colors.
+ ;;   '(web-mode-doctype-face
+ ;;     ((t (:foreground "cyan"))))
+ ;;   '(web-mode-html-tag-face
+ ;;     ((t (:foreground "cyan"))))
+ ;;   '(web-mode-html-attr-name-face
+ ;;     ((t (:foreground "#87CEEB"))))
+ ;;   '(web-mode-html-attr-equal-face
+ ;;     ((t (:foreground "#FFFFFF"))))
+ ;;   '(web-mode-html-attr-value-face
+ ;;     ((t (:foreground "#00FF00"))))
+ ;;   '(web-mode-comment-face
+ ;;     ((t (:foreground "#587F35"))))
+ ;;   '(web-mode-server-comment-face
+ ;;     ((t (:foreground "#587F35"))))
 
- ;;; web-mode. css colors.
-   '(web-mode-css-at-rule-face
-     ((t (:foreground "#DFCF44"))))
-   '(web-mode-css-selector-face
-     ((t (:foreground "#DFCF44"))))
-   '(web-mode-css-pseudo-class
-     ((t (:foreground "#DFCF44"))))
-   '(web-mode-css-property-name-face
-     ((t (:foreground "#87CEEB"))))
-   '(web-mode-css-string-face
-     ((t (:foreground "#D78181")))))
+ ;; ;;; web-mode. css colors.
+ ;;   '(web-mode-css-at-rule-face
+ ;;     ((t (:foreground "#DFCF44"))))
+ ;;   '(web-mode-css-selector-face
+ ;;     ((t (:foreground "#DFCF44"))))
+ ;;   '(web-mode-css-pseudo-class
+ ;;     ((t (:foreground "#DFCF44"))))
+ ;;   '(web-mode-css-property-name-face
+ ;;     ((t (:foreground "#87CEEB"))))
+ ;;   '(web-mode-css-string-face
+ ;;     ((t (:foreground "#D78181")))))
   )
 
 (when (locate-library "rainbow-mode")
@@ -856,10 +857,28 @@ are always included."
   (set-face-foreground 'git-gutter:deleted "red")
   (set-face-foreground 'git-gutter:separator "blue"))
 
-;;;;;;;;;; TeX ;;;;;;;;;;
 (custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(font-latex-math-face ((t (:foreground "green"))))
- )
+ '(font-lock-constant-face ((t (:foreground "#87CEEB"))))
+ ;; '(font-lock-constant-face ((t (:foreground "maroona"))))
+ '(web-mode-comment-face ((t (:foreground "#587F35"))))
+ '(web-mode-css-at-rule-face ((t (:foreground "#DFCF44"))))
+ '(web-mode-css-property-name-face ((t (:foreground "#87CEEB"))))
+ '(web-mode-css-pseudo-class ((t (:foreground "#DFCF44"))))
+ '(web-mode-css-selector-face ((t (:foreground "#DFCF44"))))
+ '(web-mode-css-string-face ((t (:foreground "#D78181"))))
+ '(web-mode-doctype-face ((t (:foreground "cyan"))))
+ '(web-mode-html-attr-equal-face ((t (:foreground "#FFFFFF"))))
+ '(web-mode-html-attr-name-face ((t (:foreground "#87CEEB"))))
+ '(web-mode-html-attr-value-face ((t (:foreground "#00FF00"))))
+ '(web-mode-html-tag-face ((t (:foreground "cyan"))))
+ '(web-mode-server-comment-face ((t (:foreground "#587F35")))))
+
+;;;;;;;;;; TeX ;;;;;;;;;;
 (when (locate-library "auctex")
   (require 'company-auctex)
   (company-auctex-init)

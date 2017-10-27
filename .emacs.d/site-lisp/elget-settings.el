@@ -36,6 +36,7 @@
 (el-get-bundle git-gutter)
 (el-get-bundle git-modes)
 (el-get-bundle jedi-core)
+(el-get-bundle lua-mode)
 (el-get-bundle magit :type github :pkgname "magit/magit" :checkout "93cbf42") ;; ver 1.4.2 for emacs 24.3
 (el-get-bundle markdown-mode)
 (el-get-bundle popwin)
