@@ -491,6 +491,7 @@ This function also returns nil meaning don't specify the indentation."
 
 ;; for Arduino
 (setq auto-mode-alist (append '(("\\.pde\\'" . c++-mode)) auto-mode-alist))
+(setq auto-mode-alist (append '(("\\.ino\\'" . c++-mode)) auto-mode-alist))
 
 ;; assembler mode
 (when (locate-library "asm-mode")
