@@ -179,29 +179,30 @@
 
 ;; Show Git branch information to mode-line
 ;; http://syohex.hatenablog.com/entry/20130201/1359731697
-(let ((cell (or (memq 'mode-line-position mode-line-format)
-                (memq 'mode-line-buffer-identification mode-line-format)))
-      (newcdr '(:eval (my/update-git-branch-mode-line))))
-  (unless (member newcdr mode-line-format)
-    (setcdr cell (cons newcdr (cdr cell)))))
+;; mark-set problem for emacs 24.5
+;; (let ((cell (or (memq 'mode-line-position mode-line-format)
+;;                 (memq 'mode-line-buffer-identification mode-line-format)))
+;;       (newcdr '(:eval (my/update-git-branch-mode-line))))
+;;   (unless (member newcdr mode-line-format)
+;;     (setcdr cell (cons newcdr (cdr cell)))))
 
-(defun my/update-git-branch-mode-line ()
-  (let* ((branch (replace-regexp-in-string
-                  "[\r\n]+\\'" ""
-                  (shell-command-to-string "git symbolic-ref -q HEAD")))
-         (mode-line-str (if (string-match "^refs/heads/" branch)
-                            (format "[%s]" (substring branch 11))
-                          "[Not Repo]")))
-    (propertize mode-line-str
-                'face '((:foreground "blue" :background "orange" :weight bold)))))
+;; (defun my/update-git-branch-mode-line ()
+;;   (let* ((branch (replace-regexp-in-string
+;;                   "[\r\n]+\\'" ""
+;;                   (shell-command-to-string "git symbolic-ref -q HEAD")))
+;;          (mode-line-str (if (string-match "^refs/heads/" branch)
+;;                             (format "[%s]" (substring branch 11))
+;;                           "[Not Repo]")))
+;;     (propertize mode-line-str
+;;                 'face '((:foreground "blue" :background "orange" :weight bold)))))
 
-(defun reopen-with-sudo ()
-  "Reopen current buffer-file with sudo using tramp."
-  (interactive)
-  (let ((file-name (buffer-file-name)))
-    (if file-name
-        (find-alternate-file (concat "/sudo::" file-name))
-      (error "Cannot get a file name"))))
+;; (defun reopen-with-sudo ()
+;;   "Reopen current buffer-file with sudo using tramp."
+;;   (interactive)
+;;   (let ((file-name (buffer-file-name)))
+;;     (if file-name
+;;         (find-alternate-file (concat "/sudo::" file-name))
+;;       (error "Cannot get a file name"))))
 
 ;; -*- mode: Emacs-Lisp -*-
 ;;; Global Setting Key
@@ -865,7 +866,9 @@ are always included."
  ;; If there is more than one, they won't work right.
  '(font-latex-math-face ((t (:foreground "green"))))
  '(font-lock-constant-face ((t (:foreground "#87CEEB"))))
- ;; '(font-lock-constant-face ((t (:foreground "maroona"))))
+ '(font-lock-function-name-face ((t (:foreground "blue"))))
+ '(font-lock-preprocessor-face ((t (:inherit default))))
+ '(font-lock-string-face ((t (:foreground "green"))))
  '(web-mode-comment-face ((t (:foreground "#587F35"))))
  '(web-mode-css-at-rule-face ((t (:foreground "#DFCF44"))))
  '(web-mode-css-property-name-face ((t (:foreground "#87CEEB"))))
