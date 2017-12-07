@@ -25,6 +25,7 @@
 (el-get-bundle company-cmake)
 (el-get-bundle company-jedi)
 (el-get-bundle company-statistics)
+(el-get-bundle cyberpunk-theme :type github :pkgname "n3mo/cyberpunk-theme.el")
 (el-get-bundle dash)
 (el-get-bundle direx)
 (el-get-bundle dtrt-indent)
