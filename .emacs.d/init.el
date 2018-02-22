@@ -10,7 +10,9 @@
   (setq user-emacs-directory (file-name-directory load-file-name)))
 
 (add-to-list 'load-path (locate-user-emacs-file "site-lisp/"))
+(add-to-list 'load-path (locate-user-emacs-file "settings/"))
 (load "elget-settings.el")
+(load "my-cc-mode")
 
 (set-face-attribute 'mode-line
                  nil
@@ -71,8 +73,8 @@
 (setq default-tab-width 4)
 (setq-default c-basic-offset 4
               tab-width 4)
-(add-hook 'c-mode-hook '(lambda () (setq tab-width 4)))
-(add-hook 'c++-mode-hook '(lambda () (setq tab-width 4)))
+;; (add-hook 'c-mode-hook '(lambda () (setq tab-width 4)))
+;; (add-hook 'c++-mode-hook '(lambda () (setq tab-width 4)))
 (electric-indent-mode 1)
 (dolist (mode-hook '(python-mode-hook))
   ;; (add-hook mode-hook '(lambda () (electric-indent-local-mode -1)))) ;; for emacs 24.4 or above
@@ -260,8 +262,8 @@
   (next-line n)
   (scroll-up n))
 
-(global-set-key "\M-n" 'scroll-down-in-place)
-(global-set-key "\M-p" 'scroll-up-in-place)
+(bind-key* "M-n" 'scroll-down-in-place)
+(bind-key* "M-p" 'scroll-up-in-place)
 
 ;; dabbrev
 (global-set-key "\C-o" 'dabbrev-expand)
@@ -277,7 +279,7 @@
         ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
         )
   )
-(global-set-key "\M-q" 'match-paren)
+(bind-key* "M-q" 'match-paren)
 
 (font-lock-add-keywords 'lisp-mode
                         (list
@@ -744,6 +746,7 @@ are always included."
 
 (when (locate-library "dummy-h-mode")
   (add-to-list 'auto-mode-alist '("\\.h$" . dummy-h-mode))
+  (add-to-list 'auto-mode-alist '("\\.inl$" . dummy-h-mode))
   (autoload 'dummy-h-mode "dummy-h-mode" "Dummy H mode" t))
 
 (when (locate-library "dtrt-indent")

@@ -3,4 +3,5 @@
 !.emacs.d/site-lisp
 !.emacs.d/snippets
 !.emacs.d/templates
+!.emacs.d/settings
 *.elc
