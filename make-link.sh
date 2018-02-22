@@ -2,7 +2,7 @@
 
 dir=$(dirname $(readlink -f $0))
 
-for dotfile in .bashrc .emacs .emacs.d .gitconfig
+for dotfile in .bashrc .emacs .emacs.d .gitconfig .globalrc
 do
     if [ -e $HOME/$dotfile ]; then
         rm -ri $HOME/$dotfile
@@ -32,6 +32,7 @@ fi
 
 ln -sn $dir/.emacs.d $HOME/.emacs.d # not to create link such as $HOME/.emacs.d/.emacs.d
 ln -sn $dir/.gitconfig $HOME/.gitconfig
+ln -sn $dir/.globalrc $HOME/.globalrc
 ln -sn $dir/gtk.css $HOME/.config/gtk-3.0/gtk.css
 ln -sn $dir/.pythonstartup $HOME/.pythonstartup
 ln -sn $dir/.ipython $HOME/.ipython
