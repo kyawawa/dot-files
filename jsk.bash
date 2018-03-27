@@ -29,8 +29,9 @@ export SVN_SSH="ssh -l ${SSH_USER}"
 # fi
 
 ## default ros package
-export ROS_WORKSPACE=$(printf "cat <<++EOS\n`cat $dot_dir/ros_current_ws`\n++EOS\n" | sh)
-source ${ROS_WORKSPACE}/setup.bash
+default_ros_workspace=$(printf "cat <<++EOS\n`cat $dot_dir/ros_current_ws`\n++EOS\n" | sh)
+source ${default_ros_workspace}/setup.bash
+unset default_ros_workspace
 
 function set_cur_ws () {
     (
