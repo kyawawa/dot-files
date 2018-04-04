@@ -302,6 +302,7 @@
                 ("\\.cpp$" . "template.cpp")
                 ("\\.h$" . "template.h")
                 ("\\.py$" . "template.py")
+                ("\\.jl$" . "template.jl")
                 ("\\.launch$" . "template.launch")
                 ) auto-insert-alist))
 (add-hook 'find-file-not-found-hooks 'auto-insert)
@@ -648,6 +649,9 @@ are always included."
   (when (locate-library "company-jedi")
     (add-to-list 'company-backends 'company-jedi)) ;; backendに追加
   )
+
+(when (locate-library "julia-repl")
+  (add-hook 'julia-mode-hook 'julia-repl-mode))
 
 ;; For folding
 ;; http://d.hatena.ne.jp/yutoichinohe/20121119/1353321674
