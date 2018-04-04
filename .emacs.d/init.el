@@ -440,8 +440,10 @@ This function also returns nil meaning don't specify the indentation."
   )
 
 (setq ring-bell-function 'ignore)
-(setq auto-mode-alist (cons (cons "\\.launch$" 'xml-mode) auto-mode-alist))
-(setq auto-mode-alist (cons (cons "\\.world$" 'xml-mode) auto-mode-alist))
+(add-to-list 'auto-mode-alist '("\\.launch$" . xml-mode))
+(add-to-list 'auto-mode-alist '("\\.world$" . xml-mode))
+(add-to-list 'auto-mode-alist '("\\.urdf$" . xml-mode))
+(add-to-list 'auto-mode-alist '("\\.sdf$" . xml-mode))
 
 ;; sudo apt-get install rosemacs-el
 (when (getenv "ROS_DISTRO")
@@ -507,7 +509,8 @@ This function also returns nil meaning don't specify the indentation."
 (when (locate-library "yaml-mode")
   ;; can use add-to-list too
   (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
-  (add-to-list 'auto-mode-alist '("\\.cnoid$" . yaml-mode)))
+  (add-to-list 'auto-mode-alist '("\\.cnoid$" . yaml-mode)) ;; Choreonoid project file
+  (add-to-list 'auto-mode-alist '("\\.body$" . yaml-mode))) ;; Choreonoid body file
 
 ;; tabbar settings
 (when (locate-library "tabbar")
@@ -761,7 +764,9 @@ are always included."
 
 (when (locate-library "atomic-chrome")
   (setq atomic-chrome-url-major-mode-alist
-      '(("github\\.com" . gfm-mode))))
+        '(("github\\.com" . gfm-mode)
+          ("overleaf\\.com" . latex-mode)
+          )))
   ;; (atomic-chrome-start-server))
 
 ;;; smooth-scroll
