@@ -41,6 +41,11 @@
 (el-get-bundle clang-format)
 (el-get-bundle dummy-h-mode)
 (el-get-bundle dtrt-indent)
+;;; Rust
+(el-get-bundle rust-mode)
+(el-get-bundle emacs-racer)
+(el-get-bundle f) ;; required in emacs-racer
+(el-get-bundle flycheck-rust)
 ;;; TeX
 ;; (el-get-bundle auctex)
 ;; (el-get-bundle company-auctex)

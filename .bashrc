@@ -147,6 +147,11 @@ export GOPATH=$HOME/go_path
 export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 export PYTHONSTARTUP=$HOME/.pythonstartup
 
+# setting rust
+if [ -x $HOME/.cargo ]; then
+    source $HOME/.cargo/env
+fi
+
 # cuda
 # export CUDA_HOME=/usr/local/cuda
 # export LD_LIBRARY_PATH=${CUDA_HOME}/lib64
