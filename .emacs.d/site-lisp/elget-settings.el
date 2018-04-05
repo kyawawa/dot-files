@@ -11,49 +11,63 @@
     (goto-char (point-max))
     (eval-print-last-sexp)))
 
-;; Install list
+;;;; Install list
+;;;; Fundamental packages
 (el-get-bundle anzu)
-(el-get-bundle atomic-chrome :type github :pkgname "alpha22jp/atomic-chrome")
-;; (el-get-bundle auctex)
 (el-get-bundle auto-complete)
-(el-get-bundle bash-completion)
-(el-get-bundle c-eldoc)
-(el-get-bundle clang-format)
-(el-get-bundle cmake-mode)
-(el-get-bundle company)
-;; (el-get-bundle company-auctex)
-(el-get-bundle company-cmake)
-(el-get-bundle company-jedi)
-(el-get-bundle company-statistics)
 (el-get-bundle cyberpunk-theme :type github :pkgname "n3mo/cyberpunk-theme.el")
-(el-get-bundle dash)
 (el-get-bundle direx)
-(el-get-bundle dtrt-indent)
-(el-get-bundle dummy-h-mode)
 (el-get-bundle flycheck)
-(el-get-bundle fsharp-mode)
 (el-get-bundle ggtags)
-(el-get-bundle git-commit-mode)
 (el-get-bundle git-gutter)
-(el-get-bundle git-modes)
-(el-get-bundle jedi-core)
-(el-get-bundle julia-mode)
-(el-get-bundle julia-repl :type github :pkgname "tpapp/julia-repl")
-(el-get-bundle lua-mode)
-(el-get-bundle magit :type github :pkgname "magit/magit" :checkout "93cbf42") ;; ver 1.4.2 for emacs 24.3
-(el-get-bundle markdown-mode)
 (el-get-bundle popwin)
 (el-get-bundle rainbow-mode)
-(el-get-bundle smooth-scroll)
-(el-get-bundle tramp)
 (el-get-bundle tabbar)
 (el-get-bundle undo-tree)
-(el-get-bundle use-package)
 (el-get-bundle volatile-highlights)
-(el-get-bundle web-mode)
-(el-get-bundle websocket)
-(el-get-bundle yaml-mode)
 (el-get-bundle yasnippet)
+
+;;;; For emacs lisp
+(el-get-bundle dash)
+(el-get-bundle use-package)
+
+;;;; Completion
+(el-get-bundle bash-completion)
+(el-get-bundle company)
+
+;;;; For specific mode
+;;; C, C++
+(el-get-bundle c-eldoc)
+(el-get-bundle clang-format)
+(el-get-bundle dummy-h-mode)
+(el-get-bundle dtrt-indent)
+;;; TeX
+;; (el-get-bundle auctex)
+;; (el-get-bundle company-auctex)
+;; Scripts
+(el-get-bundle jedi-core)
+(el-get-bundle company-jedi)
+(el-get-bundle julia-mode)
+(el-get-bundle julia-repl :type github :pkgname "tpapp/julia-repl")
+;; (el-get-bundle ess)
+(el-get-bundle company-statistics)
+(el-get-bundle lua-mode)
+;;; Others
+(el-get-bundle cmake-mode)
+(el-get-bundle company-cmake)
+(el-get-bundle fsharp-mode)
+(el-get-bundle markdown-mode)
+(el-get-bundle web-mode)
+(el-get-bundle yaml-mode)
+
+;;;; Convenient packages
+(el-get-bundle atomic-chrome :type github :pkgname "alpha22jp/atomic-chrome")
+(el-get-bundle git-commit-mode)
+(el-get-bundle git-modes)
+(el-get-bundle magit :type github :pkgname "magit/magit" :checkout "93cbf42") ;; ver 1.4.2 for emacs 24.3
+(el-get-bundle smooth-scroll)
+(el-get-bundle tramp)
+;; (el-get-bundle websocket)
 
 ;; Enable to fix version
 ;; To update package, just execute M-x el-get-update and git add el-get.lock
