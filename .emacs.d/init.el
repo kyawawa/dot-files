@@ -14,6 +14,7 @@
 (load "elget-settings.el")
 (load "my-cc-mode")
 (load "my-euslisp-mode")
+(load "my-rust-mode")
 
 ;; Temporary fix for TERM=screen environment
 (let ((frame-background-mode 'light)) (frame-set-background-mode nil))
