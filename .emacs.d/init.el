@@ -98,7 +98,7 @@
     (widen)))
 ;; (bind-key* "C-i C-y" 'yank-with-indent)
 
-;; show line number
+;; show line number (conflict with git-gutter)
 ;; (global-linum-mode 1)
 ;; (set-face-attribute 'linum nil
 ;;                     :foreground "green"
@@ -119,15 +119,14 @@
 ;; Show function name
 ;; (which-function-mode 1)
 
-;; 保存時に行末の空白削除
+;;; Delete endline whitespace with saving files
 ;; (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (defvar delete-trailing-whitespece-before-save t)
 (defun my-delete-trailing-whitespace ()
   (if delete-trailing-whitespece-before-save
       (delete-trailing-whitespace)))
 (add-hook 'before-save-hook 'my-delete-trailing-whitespace)
-
-; 無効にしたいモードのhook
+;; Disable delete-trailing-whitespace at some modes below
 (add-hook 'markdown-mode-hook
           '(lambda ()
              (set (make-local-variable 'delete-trailing-whitespece-before-save) nil)))
@@ -230,7 +229,7 @@
   (setq text-mode-hook 'my-auto-fill-mode)
   (setq mail-mode-hook 'my-auto-fill-mode))
 
-;; (lookup)
+;;; (lookup)
 (setq lookup-search-agents '((ndtp "nfs")))
 (define-key global-map "\C-co" 'lookup-pattern)
 (define-key global-map "\C-cr" 'lookup-region)
