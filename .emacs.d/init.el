@@ -235,6 +235,15 @@
 (define-key global-map "\C-cr" 'lookup-region)
 (autoload 'lookup "lookup" "Online dictionary." t nil )
 
+;;; recentf M-x recentf-open-files
+(when (require 'recentf nil t)
+  (setq recentf-max-saved-items 2000)
+  (setq recentf-exclude '(".recentf"))
+  (setq recentf-auto-cleanup 'never)
+  (setq recentf-auto-save-timer
+        (run-with-idle-timer 30 t 'recentf-save-list))
+  (recentf-mode 1))
+
 ;; Japanese
 ;; uncommented by ueda. beacuse in shell buffer, they invokes mozibake
 (set-language-environment 'Japanese)
