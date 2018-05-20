@@ -9,21 +9,29 @@
 (when load-file-name
   (setq user-emacs-directory (file-name-directory load-file-name)))
 
-(add-to-list 'load-path (locate-user-emacs-file "site-lisp/"))
-(add-to-list 'load-path (locate-user-emacs-file "settings/"))
+(add-to-list 'load-path (locate-user-emacs-file "site-lisp"))
+(add-to-list 'load-path (locate-user-emacs-file "settings"))
 (load "elget-settings.el")
 (load "my-cc-mode")
 
-(set-face-attribute 'mode-line
-                 nil
-                 :foreground "gray30"
-                 :background "green")
-(set-face-attribute 'mode-line-inactive
-                 nil
-                 :foreground "gray80"
-                 :background "gray25")
+;; Temporary fix for TERM=screen environment
+(let ((frame-background-mode 'light)) (frame-set-background-mode nil))
 
-;; shift+方向キーでバッファ切り替え
+;; Theme
+(when (locate-library "cyberpunk-theme")
+  (add-to-list 'custom-theme-load-path (locate-user-emacs-file "el-get/cyberpunk-theme"))
+  (load-theme 'cyberpunk t))
+  ;; (use-package cyberpunk-theme
+  ;;   :disabled t
+  ;;   :config
+  ;;   (load-theme 'cyberpunk t)))
+
+;; Color Settings
+;; Comment Color for Byobu
+;; (set-face-foreground 'font-lock-comment-face "red")
+;; (set-face-foreground 'font-lock-comment-delimiter-face "red")
+
+;; Moving buffer by Shift + arrow key
 (setq windmove-wrap-around t)
 (windmove-default-keybindings)
 ;; fix Shift + up is recognized as <select>
@@ -61,11 +69,6 @@
 (setq isearch-case-fold-search t)
 (setq read-buffer-completion-ignore-case t)
 (setq read-file-name-completion-ignore-case t)
-
-;; Color Settings
-;; Comment Color for Byobu
-(set-face-foreground 'font-lock-comment-face "red")
-(set-face-foreground 'font-lock-comment-delimiter-face "red")
 
 ;; setting of indent
 ;; does not allow use hard tab.
@@ -894,15 +897,6 @@ are always included."
 ;;  '(web-mode-html-attr-value-face ((t (:foreground "#00FF00"))))
 ;;  '(web-mode-html-tag-face ((t (:foreground "cyan"))))
 ;;  '(web-mode-server-comment-face ((t (:foreground "#587F35")))))
-
-;; Theme
-(when (locate-library "cyberpunk-theme")
-  (add-to-list 'custom-theme-load-path (locate-user-emacs-file "el-get/cyberpunk-theme"))
-  (load-theme 'cyberpunk t))
-  ;; (use-package cyberpunk-theme
-  ;;   :disabled t
-  ;;   :config
-  ;;   (load-theme 'cyberpunk t)))
 
 ;;;;;;;;;; TeX ;;;;;;;;;;
 (when (locate-library "auctex")
