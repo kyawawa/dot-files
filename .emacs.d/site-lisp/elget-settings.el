@@ -37,6 +37,11 @@
 (el-get-bundle company)
 (el-get-bundle company-statistics)
 
+;;;; Enable to fix version
+;; To update package, just execute M-x el-get-update and git add el-get.lock
+(el-get-bundle tarao/el-get-lock)
+(el-get-lock)
+
 ;;;; For specific mode
 ;;; C, C++
 (el-get-bundle c-eldoc)
@@ -52,7 +57,7 @@
 ;;; TeX
 ;; (el-get-bundle auctex)
 ;; (el-get-bundle company-auctex)
-;; Scripts
+;;; Scripts
 (el-get-bundle jedi-core)
 (el-get-bundle company-jedi)
 (el-get-bundle julia-mode)
@@ -66,6 +71,7 @@
 (el-get-bundle markdown-mode)
 (el-get-bundle web-mode)
 (el-get-bundle yaml-mode)
+(el-get-bundle toml-mode)
 
 ;;;; Convenient packages
 (el-get-bundle atomic-chrome :type github :pkgname "alpha22jp/atomic-chrome")
@@ -76,8 +82,3 @@
 (el-get-bundle smooth-scroll)
 (el-get-bundle tramp)
 ;; (el-get-bundle websocket)
-
-;; Enable to fix version
-;; To update package, just execute M-x el-get-update and git add el-get.lock
-(el-get-bundle tarao/el-get-lock)
-(el-get-lock)

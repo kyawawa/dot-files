@@ -6,15 +6,14 @@
 ;; You may delete these explanatory comments.
 ;; (package-initialize)
 
-(when load-file-name
-  (setq user-emacs-directory (file-name-directory load-file-name)))
-
 (add-to-list 'load-path (locate-user-emacs-file "site-lisp"))
 (add-to-list 'load-path (locate-user-emacs-file "settings"))
-(load "elget-settings.el")
+(load "elget-settings")
 (load "my-cc-mode")
+(load "my-tabbar-mode")
 (load "my-euslisp-mode")
 (load "my-rust-mode")
+(load "my-tex-mode")
 
 ;; Temporary fix for TERM=screen environment
 (let ((frame-background-mode 'light)) (frame-set-background-mode nil))
@@ -78,8 +77,6 @@
 (setq default-tab-width 4)
 (setq-default c-basic-offset 4
               tab-width 4)
-;; (add-hook 'c-mode-hook '(lambda () (setq tab-width 4)))
-;; (add-hook 'c++-mode-hook '(lambda () (setq tab-width 4)))
 (electric-indent-mode 1)
 (dolist (mode-hook '(python-mode-hook))
   ;; (add-hook mode-hook '(lambda () (electric-indent-local-mode -1)))) ;; for emacs 24.4 or above
@@ -304,16 +301,32 @@
 ;; ignore start message
 (setq inhibit-startup-message t)
 
+;; TODO: http://d.hatena.ne.jp/higepon/20080731/1217491155
 (require 'autoinsert)
 (setq auto-insert-directory (locate-user-emacs-file "templates/"))
+
+(defvar template-replacements-alists
+  '(("%file%"             . (lambda () (file-name-nondirectory (buffer-file-name))))
+    ("%file-without-ext%" . (lambda () (file-name-sans-extension (file-name-nondirectory (buffer-file-name)))))
+    ("%include-guard%"    . (lambda () (format "__%s_H__" (upcase (file-name-sans-extension (file-name-nondirectory buffer-file-name))))))))
+(defun my-template ()
+  (time-stamp)
+  (mapc #'(lambda(c)
+        (progn
+          (goto-char (point-min))
+          (replace-string (car c) (funcall (cdr c)) nil)))
+    template-replacements-alists)
+  (goto-char (point-max))
+  (message "done."))
+
 (setq auto-insert-alist
       (append '(
                 ("\\.l$" . "template.l")
                 ("\\.sh$" . "template.sh")
                 ("\\.bash$" . "template.sh")
                 ("Makefile$" . "template.Makefile")
-                ("\\.cpp$" . "template.cpp")
-                ("\\.h$" . "template.h")
+                ("\\.cpp$" . ["template.cpp" my-template])
+                ("\\.h$" . ["template.h" my-template])
                 ("\\.py$" . "template.py")
                 ("\\.jl$" . "template.jl")
                 ("\\.launch$" . "template.launch")
@@ -461,115 +474,6 @@
   (add-to-list 'auto-mode-alist '("\\.cnoid$" . yaml-mode)) ;; Choreonoid project file
   (add-to-list 'auto-mode-alist '("\\.body$" . yaml-mode))) ;; Choreonoid body file
 
-;; tabbar settings
-(when (locate-library "tabbar")
-  (tabbar-mode 1)
-  ;; タブ上でマウスホイール操作無効
-  (tabbar-mwheel-mode -1)
-  ;; グループ化しない
-  (setq tabbar-buffer-groups-function nil)
-  ;; 左に表示されるボタンを無効化
-  (dolist (btn '(tabbar-buffer-home-button
-                 tabbar-scroll-left-button
-                 tabbar-scroll-right-button))
-    (set btn (cons (cons "" nil)
-                   (cons "" nil))))
-
-  ;; 外観変更
-  ;; tab width
-  (setq tabbar-separator '(1.5))
-  ;; (setq tabbar-background-color (face-attribute 'mode-line-inactive :background))
-  (set-face-attribute
-   'tabbar-default nil
-   :family "Comic Sans MS"
-   ;; :background (face-attribute 'mode-line-inactive :foreground)
-   ;; :foreground (face-attribute 'mode-line-inactive :background)
-   :background "black"
-   :foreground "gray72"
-   :height 1.0)
-  (set-face-attribute
-   'tabbar-unselected nil
-   ;; :background (face-attribute 'mode-line-inactive :background)
-   ;; :foreground (face-attribute 'mode-line-inactive :foreground)
-   :background "black"
-   :foreground "gray72"
-   :box nil)
-  (set-face-attribute
-   'tabbar-selected nil
-   ;; :background "cyan"
-   ;; :foreground "black"
-   :background "black"
-   :foreground "yellow"
-   :box nil)
-  (set-face-attribute
-   'tabbar-button nil
-   :box nil)
-
-  ;; タブに表示させるバッファの設定
-  (defvar my-tabbar-displayed-buffers
-    '("*scratch*" "*shell*" "*Colors*" "*Faces*" "*vc-" "*inferior-lisp*")
-    "*Regexps matches buffer names always included tabs.")
-
-  (defun my-tabbar-buffer-list ()
-    "Return the list of buffers to show in tabs.
-Exclude buffers whose name starts with a space or an asterisk.
-The current buffer and buffers matches `my-tabbar-displayed-buffers'
-are always included."
-    (let* ((hides (list ?\  ?\*))
-           (re (regexp-opt my-tabbar-displayed-buffers))
-           (cur-buf (current-buffer))
-           (tabs (delq nil
-                       (mapcar (lambda (buf)
-                                 (let ((name (buffer-name buf)))
-                                   (when (or (string-match re name)
-                                             (not (memq (aref name 0) hides)))
-                                     buf)))
-                               (buffer-list)))))
-      ;; Always include the current buffer.
-      (if (memq cur-buf tabs)
-          tabs
-        (cons cur-buf tabs))))
-
-  (setq tabbar-buffer-list-function 'my-tabbar-buffer-list)
-  ;; タブ切り替えのキーバインド
-  (global-set-key (kbd "<M-right>") 'tabbar-forward-tab)
-  (global-set-key "\C-\\" 'tabbar-forward-tab)
-  (global-set-key (kbd "<M-left>") 'tabbar-backward-tab)
-  (global-set-key "\C-^" 'tabbar-backward-tab)
-
-  (defun my-tabbar-buffer-select-tab (event tab)
-    "On mouse EVENT, select TAB."
-    (let ((mouse-button (event-basic-type event))
-          (buffer (tabbar-tab-value tab)))
-      (cond
-       ((eq mouse-button 'mouse-2)
-        (with-current-buffer buffer
-          (kill-buffer)))
-       ((eq mouse-button 'mouse-3)
-        (delete-other-windows))
-       (t
-        (switch-to-buffer buffer)))
-      ;; Don't show groups.
-      (tabbar-buffer-show-groups nil)))
-
-  (setq tabbar-help-on-tab-function 'my-tabbar-buffer-help-on-tab)
-  (setq tabbar-select-tab-function 'my-tabbar-buffer-select-tab)
-
-  ;; sort by fullpath
- ;;  (defun tabbar-add-tab (tabset object &optional append_ignored)
- ;;    "Add to TABSET a tab with value OBJECT if there isn't one there yet.
- ;; If the tab is added, it is added at the beginning of the tab list,
- ;; unless the optional argument APPEND is non-nil, in which case it is
- ;; added at the end."
- ;;    (let ((tabs (tabbar-tabs tabset)))
- ;;      (if (tabbar-get-tab object tabset)
- ;;          tabs
- ;;        (let ((tab (tabbar-make-tab object tabset)))
- ;;          (tabbar-set-template tabset nil)
- ;;          (set tabset (sort (cons tab tabs)
- ;;                            (lambda (a b) (string< (buffer-name (car a)) (buffer-name (car b))))))))))
-) ;; end of tabbar settings
-
 ;; ;; auto-complete
 ;; (when (locate-library "auto-complete")
 ;;   (ac-config-default))
@@ -583,15 +487,17 @@ are always included."
   ;;                               popwin:special-display-config)))
 
 ;; direx (with popwin)
+;; TODO: Erase window when escape window
 (when (locate-library "direx")
   (setq direx:leaf-icon "  "
         direx:open-icon "- "
         direx:closed-icon "+ ")
   (if (locate-library "popwin")
       (progn
-        (push '(direx:direx-mode :position left :width 40 :dedicated t)
+        (push '(direx:direx-mode :position left :width 35 :dedicated t)
               popwin:special-display-config)
         (global-set-key (kbd "C-x C-j") 'direx:jump-to-directory-other-window))
+        ;; (global-set-key (kbd "C-x C-j") (lambda () (interactive) (direx:find-directory-other-window "hoge"))))
     (global-set-key (kbd "C-x C-j") 'direx:jump-to-directory)))
 
 (when (locate-library "jedi")
@@ -700,11 +606,6 @@ are always included."
   (global-undo-tree-mode t)
   (global-set-key (kbd "M-/") 'undo-tree-redo))
 
-(when (locate-library "dummy-h-mode")
-  (add-to-list 'auto-mode-alist '("\\.h$" . dummy-h-mode))
-  (add-to-list 'auto-mode-alist '("\\.inl$" . dummy-h-mode))
-  (autoload 'dummy-h-mode "dummy-h-mode" "Dummy H mode" t))
-
 (when (locate-library "dtrt-indent")
   (require 'dtrt-indent)
   (dtrt-indent-mode 1)
@@ -726,53 +627,6 @@ are always included."
   ;; 横方向のスクロール行数を変更する。
   (setq smooth-scroll/hscroll-step-size 4)
   (smooth-scroll-mode t))
-
-;;;;;;;;;; C-mode ;;;;;;;;;;
-;; eldoc
-;; (when (locate-library "c-eldoc")
-;;   (require 'c-eldoc)
-;;   (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
-;;   (add-hook 'c++-mode-hook 'c-turn-on-eldoc-mode)
-;;   (setq c-eldoc-buffer-regenerate-time 60))
-
-;; ggtags
-(when (locate-library "ggtags")
-  (require 'ggtags)
-  (add-hook 'c-mode-common-hook
-            (lambda ()
-              (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
-                (ggtags-mode 1))))
-
-  ;; use helm
-  ;; (setq ggtags-completing-read-function nil)
-
-  ;; use eldoc
-  (setq-local eldoc-documentation-function #'ggtags-eldoc-function)
-
-  ;; imenu
-  (setq-local imenu-create-index-function #'ggtags-build-imenu-index)
-
-  (define-key ggtags-mode-map (kbd "C-c g s") 'ggtags-find-other-symbol)
-  (define-key ggtags-mode-map (kbd "C-c g h") 'ggtags-view-tag-history)
-  (define-key ggtags-mode-map (kbd "C-c g r") 'ggtags-find-reference)
-  (define-key ggtags-mode-map (kbd "C-c g d") 'ggtags-find-definition)
-  (define-key ggtags-mode-map (kbd "C-c g f") 'ggtags-find-file)
-  (define-key ggtags-mode-map (kbd "C-c g c") 'ggtags-create-tags)
-  (define-key ggtags-mode-map (kbd "C-c g u") 'ggtags-update-tags)
-
-  (define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark)
-
-  ;; update GTAGS
-  (defun my-c-mode-update-gtags ()
-    (interactive "P")
-    (let* ((file (buffer-file-name (current-buffer)))
-           (dir (directory-file-name (file-name-directory file))))
-      (when (executable-find "global")
-        (start-process "gtags-update" nil
-                       "global" "-uv"))))
-
-  (add-hook 'after-save-hook
-            'my-c-mode-update-gtags))
 
 ;; yasnippet
 (when (locate-library "yasnippet")
