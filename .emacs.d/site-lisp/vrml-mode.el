@@ -94,7 +94,7 @@ detecting function is used.")
       (define-key vrml-mode-map "\e\C-q" 'indent-vrml-exp)
       (define-key vrml-mode-map "\177" 'backward-delete-char-untabify)
       (define-key vrml-mode-map "\t" 'vrml-indent-command)
-      (define-key vrml-mode-map "\M-;" 'vrml-indent-for-comment)
+      ;; (define-key vrml-mode-map "\M-;" 'vrml-indent-for-comment)
       ))
 
 (defvar vrml-mode-syntax-table nil
