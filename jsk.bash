@@ -56,6 +56,11 @@ LIBGL_ALWAYS_SOFTWARE=1
 ## format of log messages
 export ROSCONSOLE_FORMAT='[${severity}] [${time}]: ${message}' # default
 
+export CNOID_INSTALL_DIR=/usr/local/src/choreonoid
+export CNOID_RTM_DIR=/opt/ros/${ROS_DISTRO}
+export PKG_CONFIG_PATH=${CNOID_INSTALL_DIR}/lib/pkgconfig:$PKG_CONFIG_PATH
+export PATH=${CNOID_INSTALL_DIR}/bin:$PATH
+
 ##### dot.bashrc.ros #####
 #euslib
 export CVSDIR=~/prog
