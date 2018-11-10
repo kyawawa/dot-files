@@ -260,8 +260,8 @@
 (global-font-lock-mode t)
 
 ;; M-n and M-p
-(global-unset-key "\M-p")
-(global-unset-key "\M-n")
+;; (global-unset-key "\M-p")
+;; (global-unset-key "\M-n")
 
 (defun scroll-up-in-place (n)
   (interactive "p")
@@ -272,8 +272,8 @@
   (next-line n)
   (scroll-up n))
 
-(bind-key* "M-n" 'scroll-down-in-place)
-(bind-key* "M-p" 'scroll-up-in-place)
+(bind-key "M-n" 'scroll-down-in-place)
+(bind-key "M-p" 'scroll-up-in-place)
 
 ;; dabbrev
 (global-set-key "\C-o" 'dabbrev-expand)
@@ -620,13 +620,13 @@
   ;; (atomic-chrome-start-server))
 
 ;;; smooth-scroll
-(when (locate-library "smooth-scroll")
-  (require 'smooth-scroll)
-  ;; 縦方向のスクロール行数を変更する。
-  (setq smooth-scroll/vscroll-step-size 4)
-  ;; 横方向のスクロール行数を変更する。
-  (setq smooth-scroll/hscroll-step-size 4)
-  (smooth-scroll-mode t))
+;; (when (locate-library "smooth-scroll")
+;;   (require 'smooth-scroll)
+;;   ;; 縦方向のスクロール行数を変更する。
+;;   (setq smooth-scroll/vscroll-step-size 4)
+;;   ;; 横方向のスクロール行数を変更する。
+;;   (setq smooth-scroll/hscroll-step-size 4)
+;;   (smooth-scroll-mode nil))
 
 ;; yasnippet
 (when (locate-library "yasnippet")
