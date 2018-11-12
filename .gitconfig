@@ -1,8 +1,8 @@
 [color]
     ui = auto
 [user]
-    name = Tatsuya Ishikawa
-    email = ishikawa@jsk.imi.i.u-tokyo.ac.jp
+    name =
+    email =
 [core]
     excludesfile = /home/ishikawa/.gitignore
     autocrlf = false
