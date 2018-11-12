@@ -33,18 +33,24 @@ default_ros_workspace=$(printf "cat <<++EOS\n`cat $dot_dir/ros_current_ws`\n++EO
 source ${default_ros_workspace}/setup.bash
 unset default_ros_workspace
 
+function print_ws_path () {
+    # Copy from rosbash
+    IFS=":" read -a workspaces <<< "$CMAKE_PREFIX_PATH"
+    for ws in "${workspaces[@]}"; do
+        if [ -f $ws/.catkin ]; then
+            echo ${ws}
+            return 0
+        fi
+    done
+}
+
 function set_cur_ws () {
     (
-        roscd
-        pwd > $dot_dir/ros_current_ws
+        print_ws_path > $dot_dir/ros_current_ws
     )
 }
 
-function print_ws_path () {
-    printf "[$(roscd; echo `pwd` | rev | cut -f2 -d '/' | rev)]"
-}
-
-PS1='$(print_ws_path) '$PS1
+PS1='[$(print_ws_path | rev | cut -f2 -d '/' | rev)] '$PS1
 
 ## Rviz for a laptop user
 export OGRE_RTT_MODE=Copy
