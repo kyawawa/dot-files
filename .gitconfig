@@ -4,7 +4,7 @@
     name =
     email =
 [core]
-    excludesfile = /home/ishikawa/.gitignore
+    excludesfile = ~/.gitignore
     autocrlf = false
     quotepath = false
     pager = ""
@@ -20,13 +20,14 @@
     ci = commit
     st = status --short --branch
     br = branch
-    br-date = "!f () { (for i in `git branch | colrm 1 2`; do echo `git log --date=iso8601 -n 1 --pretty=\"format:[%ai] %h\" $i` $i ; done) | sort -r; };f"
-    br-date-all = "!f () { (for i in `git branch -a | colrm 1 2`; do echo `git log --date=iso8601 -n 1 --pretty=\"format:[%ai] %h\" $i` $i ; done) | sort -r; };f"
     hist = log --pretty=format:\"%h %C(red reverse)%ad%Creset %C(green reverse)%an%Creset \t| %s%d\" --graph --date=short --name-status
-    rm-all = "!f () {\
-              git rm `git ls-files --deleted`;\
-              };f"
-
+    # Show local branches sorted by date
+    br-date = "!f () { (for i in `git branch | colrm 1 2`; do echo `git log --date=iso8601 -n 1 --pretty=\"format:[%ai] %h\" $i` $i ; done) | sort -r; };f"
+    # Show all branches (including remote) sorted by date
+    br-date-all = "!f () { (for i in `git branch -a | colrm 1 2`; do echo `git log --date=iso8601 -n 1 --pretty=\"format:[%ai] %h\" $i` $i ; done) | sort -r; };f"
+    # Remove all deleted items
+    rm-all = "!f () { git rm `git ls-files --deleted`; };f"
+    # Remove Sumbodules
     smrm  = "!f () {\
              if [ $# -ne 1 ];then \
                 echo \"Usage: git smrm path/to/submodule\";\
