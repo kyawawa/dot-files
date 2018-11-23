@@ -12,7 +12,7 @@ promptRemove () {
 
 dir=$(dirname $(readlink -f $0))
 
-for dotfile in .bashrc .emacs .emacs.d .gitconfig .globalrc .gdbinit .pythonstartup .ipython
+for dotfile in .bashrc .emacs .emacs.d .gitconfig .globalrc .gdbinit .pythonstartup .ipython .mozc
 do
     if [ -e $HOME/$dotfile ]; then
         promptRemove $dotfile
@@ -48,3 +48,4 @@ ln -sn $dir/.gdbinit $HOME/.gdbinit
 ln -sn $dir/gtk.css $HOME/.config/gtk-3.0/gtk.css
 ln -sn $dir/.pythonstartup $HOME/.pythonstartup
 ln -sn $dir/.ipython $HOME/.ipython
+ln -sn $dir/.mozc $HOME/.mozc
