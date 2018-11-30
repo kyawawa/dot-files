@@ -150,9 +150,12 @@ export GOPATH=$HOME/go_path
 export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 export PYTHONSTARTUP=$HOME/.pythonstartup
 
+# rustup component add rust-src
 # setting rust
 if [ -x $HOME/.cargo ]; then
     source $HOME/.cargo/env
+    export CARGO_NAME='Tatsuya Ishikawa'
+    export CARGO_EMAIL='kyawawa1992@gmail.com'
 fi
 
 # cuda
