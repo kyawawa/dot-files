@@ -66,6 +66,13 @@ export CNOID_INSTALL_DIR=/usr/local/src/choreonoid
 export CNOID_RTM_DIR=/opt/ros/${ROS_DISTRO}
 export PKG_CONFIG_PATH=${CNOID_INSTALL_DIR}/lib/pkgconfig:$PKG_CONFIG_PATH
 export PATH=${CNOID_INSTALL_DIR}/bin:$PATH
+export CNOID_USE_GLSL=1
+
+# .bashrcに書くとROSが先に来て面倒
+export PKG_INSTALL_DIR=${HOME}/install
+export PKG_CONFIG_PATH=${PKG_INSTALL_DIR}/lib/pkgconfig:$PKG_CONFIG_PATH
+# export LD_LIBRARY_PATH=${PKG_INSTALL_DIR}/lib:${LD_LIBRARY_PATH}
+export PATH=${PKG_INSTALL_DIR}/bin:$PATH
 
 ##### dot.bashrc.ros #####
 #euslib
