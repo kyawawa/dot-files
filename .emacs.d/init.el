@@ -21,6 +21,9 @@
 ;; Theme
 (when (locate-library "cyberpunk-theme")
   (add-to-list 'custom-theme-load-path (locate-user-emacs-file "el-get/cyberpunk-theme"))
+  ;; Memo
+  ;; (setq cyberpunk-pink "#ff9500")
+  ;; (setq cyberpunk-pink-1 "#ff0000")
   (load-theme 'cyberpunk t))
   ;; (use-package cyberpunk-theme
   ;;   :disabled t
