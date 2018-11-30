@@ -24,6 +24,7 @@
 (el-get-bundle undo-tree)
 (el-get-bundle volatile-highlights)
 (el-get-bundle yasnippet)
+(el-get-bundle which-key)
 
 ;;;; Emacs theme
 (el-get-bundle cyberpunk-theme :type github :pkgname "n3mo/cyberpunk-theme.el")
@@ -74,6 +75,7 @@
 (el-get-bundle toml-mode)
 
 ;;;; Convenient packages
+(el-get-bundle websocket)
 (el-get-bundle atomic-chrome :type github :pkgname "alpha22jp/atomic-chrome")
 (el-get-bundle git-commit-mode)
 (el-get-bundle git-modes)

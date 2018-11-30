@@ -74,7 +74,7 @@
 ;; setting of indent
 ;; does not allow use hard tab.
 (setq-default indent-tabs-mode nil)
-(setq default-tab-width 4)
+(setq tab-width 4)
 (setq-default c-basic-offset 4
               tab-width 4)
 (electric-indent-mode 1)
@@ -159,24 +159,22 @@
 (defun backtab-line-or-region ()
   (interactive)
   (if mark-active (save-excursion
-                    (setq count (count-lines (region-beginning) (region-end)))
+                    (defvar count (count-lines (region-beginning) (region-end)))
                     (goto-char (region-beginning))
-                    (while (> count 0)
+                    (dotimes (i count)
                       (backtab)
-                      (forward-line)
-                      (setq count (1- count)))
+                      (forward-line))
                     (setq deactivate-mark nil))
     (backtab)))
 
 (defun tab-to-tab-stop-line-or-region ()
   (interactive)
   (if mark-active (save-excursion
-                    (setq count (count-lines (region-beginning) (region-end)))
+                    (defvar count (count-lines (region-beginning) (region-end)))
                     (goto-char (region-beginning))
-                    (while (> count 0)
+                    (dotimes (i count)
                       (tab-to-tab-stop)
-                      (forward-line)
-                      (setq count (1- count)))
+                      (forward-line))
                     (setq deactivate-mark nil))
     (tab-to-tab-stop)))
 
@@ -207,6 +205,12 @@
 ;;         (find-alternate-file (concat "/sudo::" file-name))
 ;;       (error "Cannot get a file name"))))
 
+(use-package which-key
+  :diminish which-key-mode
+  :init
+  (which-key-setup-side-window-right-bottom)
+  (which-key-mode t))
+
 ;; -*- mode: Emacs-Lisp -*-
 ;;; Global Setting Key
 ;;;
@@ -228,7 +232,7 @@
   (setq mail-mode-hook 'my-auto-fill-mode))
 
 ;;; (lookup)
-(setq lookup-search-agents '((ndtp "nfs")))
+(defvar lookup-search-agents '((ndtp "nfs")))
 (define-key global-map "\C-co" 'lookup-pattern)
 (define-key global-map "\C-cr" 'lookup-region)
 (autoload 'lookup "lookup" "Online dictionary." t nil )
@@ -278,9 +282,12 @@
 ;; dabbrev
 (global-set-key "\C-o" 'dabbrev-expand)
 
-;; add by kojima
-(require 'paren)
-;; (show-paren-mode 1)
+;; (show-paren-mode nil)
+;; (setq show-paren-delay 0)
+;; (set-face-attribute 'show-paren-match nil
+;;                     :background nil
+;;                     :foreground nil
+;;                     :underline "#ffff00")
 ;; M-qで移動
 (defun match-paren (arg)
   "Go to the matching parenthesis if on parenthesis."
