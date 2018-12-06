@@ -76,10 +76,7 @@
 
 ;; setting of indent
 ;; does not allow use hard tab.
-(setq-default indent-tabs-mode nil)
-(setq tab-width 4)
-(setq-default c-basic-offset 4
-              tab-width 4)
+(setq-default tab-width 4 indent-tabs-mode nil)
 (electric-indent-mode 1)
 (dolist (mode-hook '(python-mode-hook))
   ;; (add-hook mode-hook '(lambda () (electric-indent-local-mode -1)))) ;; for emacs 24.4 or above
