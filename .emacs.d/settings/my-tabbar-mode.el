@@ -1,7 +1,7 @@
 ;; -*- Mode: Emacs-Lisp; Coding: utf-8 -*-
 ;;; my-tabbar-mode.el --- Elisp settings for tabbar-mode
 
-(when (locate-library "tabbar")
+(setup "tabbar"
   (tabbar-mode 1)
   ;; タブ上でマウスホイール操作無効
   (tabbar-mwheel-mode -1)
@@ -108,3 +108,5 @@ are always included."
   ;;          (set tabset (sort (cons tab tabs)
   ;;                            (lambda (a b) (string< (buffer-name (car a)) (buffer-name (car b))))))))))
   )
+
+(provide 'my-tabbar-mode)

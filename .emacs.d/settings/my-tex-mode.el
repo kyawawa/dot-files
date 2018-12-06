@@ -1,9 +1,9 @@
 ;; -*- Mode: Emacs-Lisp; Coding: utf-8 -*-
 ;;; my-tex-mode.el --- Elisp settings for TeX
 
-(when (locate-library "auctex")
-  (require 'company-auctex)
-  (company-auctex-init)
+(setup-lazy '(LaTeX-mode) "latex"
+  (setup "company-auctex"
+    (company-auctex-init))
   (setq TeX-default-mode 'japanese-latex-mode)
   (setq japanese-LaTeX-default-style "jarticle")
   (setq TeX-output-view-style '(("^dvi$" "." "xdvi '%d'")))
@@ -58,6 +58,8 @@
   ;; (setq reftex-default-bibliography '("~/tex/biblio.bib" "~/tex/biblio2.bib"))
   (setq reftex-default-bibliography nil)
   ;; buffer上のファイルを更新
-  (add-hook 'LaTeX-mode-hook '(lambda () (auto-revert-mode t)))
-  (add-hook 'bibtex-mode-hook '(lambda () (auto-revert-mode t)))
+  (add-hook 'LaTeX-mode-hook 'auto-revert-mode)
+  (add-hook 'bibtex-mode-hook 'auto-revert-mode)
   )
+
+(provide 'my-tex-mode)

@@ -13,6 +13,7 @@
 ;;;; Install list
 ;;;; Fundamental packages
 (el-get-bundle anzu)
+(el-get-bundle auto-async-byte-compile)
 (el-get-bundle auto-complete)
 (el-get-bundle direx)
 (el-get-bundle flycheck)
@@ -20,6 +21,7 @@
 (el-get-bundle git-gutter)
 (el-get-bundle popwin)
 (el-get-bundle rainbow-mode)
+(el-get-bundle setup)
 (el-get-bundle tabbar)
 (el-get-bundle undo-tree)
 (el-get-bundle volatile-highlights)

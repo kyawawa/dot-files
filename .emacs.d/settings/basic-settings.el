@@ -173,9 +173,7 @@
 ;;         (find-alternate-file (concat "/sudo::" file-name))
 ;;       (error "Cannot get a file name"))))
 
-(use-package which-key
-  :diminish which-key-mode
-  :init
+(setup "which-key"
   (which-key-setup-side-window-right-bottom)
   (which-key-mode t))
 
@@ -317,9 +315,9 @@
   )
 
 ;;; http://qiita.com/sune2/items/b73037f9e85962f5afb7
-(when (require 'company nil t)
-  (require 'company-statistics)
-  (company-statistics-mode)
+(setup-lazy '(company) "company"
+  (setup-lazy '(company-statistics) "company-statistics"
+    (company-statistics-mode))
   (add-hook 'cmake-mode-hook 'company-mode)
   (add-hook 'LaTeX-mode-hook 'company-mode)
   (setq company-idle-delay 0) ; デフォルトは0.5
@@ -349,7 +347,7 @@
   )
 
 ;;; popwin
-(when (require 'popwin nil t)
+(setup "popwin"
   (setq display-buffer-function 'popwin:display-buffer))
   ;; (custom-set-variables popwin:special-display-config
   ;;                       (append '(("*Apropos*") ("*sdic*") ("*Faces*") ("*Colors*"))
@@ -357,20 +355,19 @@
 
 ;;; direx (with popwin)
 ;; TODO: Erase window when escape window
-(when (locate-library "direx")
+(setup-lazy '(direx) "direx"
+  :prepare
+  (global-set-key (kbd "C-x C-j") 'direx:jump-to-directory-other-window)
+
+  (setup-after "popwin"
+    (push '(direx:direx-mode :position left :width 35 :dedicated t)
+          popwin:special-display-config))
   (setq direx:leaf-icon "  "
         direx:open-icon "- "
-        direx:closed-icon "+ ")
-  (if (locate-library "popwin")
-      (progn
-        (push '(direx:direx-mode :position left :width 35 :dedicated t)
-              popwin:special-display-config)
-        (global-set-key (kbd "C-x C-j") 'direx:jump-to-directory-other-window))
-        ;; (global-set-key (kbd "C-x C-j") (lambda () (interactive) (direx:find-directory-other-window "hoge"))))
-    (global-set-key (kbd "C-x C-j") 'direx:jump-to-directory)))
+        direx:closed-icon "+ "))
 
 ;;; anzu
-(when (require 'anzu nil t)
+(setup "anzu"
   (global-anzu-mode +1)
   (set-face-attribute 'anzu-mode-line nil
                       :foreground "blue" :background "orange" :weight 'bold)
@@ -381,43 +378,46 @@
    '(anzu-search-threshold 1000)
    '(anzu-replace-to-string-separator " => ")))
 
-(when (require 'volatile-highlights nil t)
+(setup "volatile-highlights"
   (volatile-highlights-mode t))
 
 ;; show undo-tree C-x u
-(when (require 'undo-tree nil t)
+(setup "undo-tree"
   (global-undo-tree-mode t)
   (global-set-key (kbd "M-/") 'undo-tree-redo))
 
-(when (require 'dtrt-indent nil t)
+(setup "dtrt-indent"
   (dtrt-indent-mode 1)
   (custom-set-variables '(dtrt-indent-min-quality 50.0)))
 ;; (setq dtrt-indent-verbosity 0))
 
-(when (locate-library "atomic-chrome")
-  (setq atomic-chrome-url-major-mode-alist
-        '(("github\\.com" . gfm-mode)
-          ("overleaf\\.com" . latex-mode)
-          )))
+(setup-lazy '(atomic-chrome) "atomic-chrome"
+  :prepare (setq atomic-chrome-url-major-mode-alist
+                 '(("github\\.com" . gfm-mode)
+                   ("overleaf\\.com" . latex-mode)
+                   )))
 ;; (atomic-chrome-start-server))
 
 ;; yasnippet
-(when (require 'yasnippet nil t)
-  (define-key yas-minor-mode-map (kbd "C-M-y") 'yas-expand)
-  (define-key yas-minor-mode-map (kbd "TAB") nil)
-  ;; insert existing snippet
-  (define-key yas-minor-mode-map (kbd "C-c i i") 'yas-insert-snippet)
-  ;; edit new snippet
-  (define-key yas-minor-mode-map (kbd "C-c i n") 'yas-new-snippet)
-  ;; edit existing snippet
-  (define-key yas-minor-mode-map (kbd "C-c i v") 'yas-visit-snippet-file)
+(setup-lazy '(yasnippet) "yasnippet"
+  (setup-keybinds yas-minor-mode-map
+    "C-M-y" 'yas-expand
+    "TAB" nil
+    ;; insert existing snippet
+    "C-c i i" 'yas-insert-snippet
+    ;; edit new snippet
+    "C-c i n" 'yas-new-snippet
+    ;; edit existing snippet
+    "C-c i v" 'yas-visit-snippet-file)
   (yas-global-mode 1))
 
 ;;;;;;;;;; git ;;;;;;;;;;
 ;; (when (locate-library "magit")
 ;;   (require 'magit))
 
-(when (require 'git-gutter nil t)
+;; global-linum-mode
+
+(setup "git-gutter"
   ;; If you enable global minor mode
   (global-git-gutter-mode t)
   ;; If you would like to use git-gutter.el and linum-mode
@@ -451,3 +451,5 @@
 ;;   (load-library "yc"))
 ;; ;; (when (require 'migemo nil t)
 ;; ;;   (load "migemo"))
+
+(provide 'basic-settings)

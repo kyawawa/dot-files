@@ -6,17 +6,32 @@
 ;; You may delete these explanatory comments.
 ;; (package-initialize)
 
+;; Hot fix for byte-compile
+(eval-when-compile
+  (add-to-list 'load-path (locate-user-emacs-file "el-get/use-package"))
+  (require 'use-package))
+
 (add-to-list 'load-path (locate-user-emacs-file "site-lisp"))
 (add-to-list 'load-path (locate-user-emacs-file "settings"))
 (load "elget-settings")
-(load "basic-settings")
-(load "theme-settings")
-(load "ros-settings")
-(load "my-cc-mode")
-(load "my-tabbar-mode")
-(load "my-euslisp-mode")
-(load "my-rust-mode")
-(load "my-tex-mode")
+
+(require 'setup)
+(setup-initialize)
+(setup "use-package") ;; Hot fix for byte-compile
+
+(setup "auto-async-byte-compile"
+  ;; Compile only init.el
+  (setq auto-async-byte-compile-exclude-files-regexp "/el-get/\\|/elpa/\\|/settings/\\|/site-lisp/")
+  (add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode))
+
+(setup-include "basic-settings")
+(setup-include "theme-settings")
+(setup-include "ros-settings")
+(setup-include "my-cc-mode")
+(setup-include "my-tabbar-mode")
+(setup-include "my-euslisp-mode")
+(setup-include "my-rust-mode")
+(setup-include "my-tex-mode")
 
 (dolist (mode-hook '(python-mode-hook))
   ;; (add-hook mode-hook '(lambda () (electric-indent-local-mode -1)))) ;; for emacs 24.4 or above
@@ -33,7 +48,7 @@
 (set-terminal-coding-system 'utf-8)
 (set-buffer-file-coding-system 'utf-8)
 (setq explicit-shell-file-name shell-file-name)
-(setq shell-command-option "-c")
+(defvar shell-command-option "-c")
 (setq system-uses-terminfo nil)
 (setq shell-file-name-chars "~/A-Za-z0-9_^$!#%&{}@`'.,:()-")
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
@@ -76,15 +91,15 @@
 ;; (when (locate-library "auto-complete")
 ;;   (ac-config-default))
 
-(when (locate-library "jedi")
+(setup-expecting "jedi"
   (add-hook 'python-mode-hook 'jedi:setup)
-  (setq jedi:complete-on-dot t)
-  (setq jedi:use-shortcuts t) ;; M-. : jump definition, M-, : return from definition
-  (when (locate-library "company-jedi")
+  (defvar jedi:complete-on-dot t)
+  (defvar jedi:use-shortcuts t) ;; M-. : jump definition, M-, : return from definition
+  (setup-expecting "company-jedi"
     (add-to-list 'company-backends 'company-jedi)) ;; backendに追加
   )
 
-(when (locate-library "julia-repl")
+(setup-expecting "julia-repl"
   (add-hook 'julia-mode-hook 'julia-repl-mode))
 
 ;; For folding
@@ -114,10 +129,10 @@
     (add-to-list 'auto-mode-alist `(,extensions . web-mode)))
 
   (defun web-mode-hook ()
-    (setq web-mode-markup-indent-offset 2)
-    (setq web-mode-css-indent-offset 2)
-    (setq web-mode-code-indent-offset 2)
-    (setq web-mode-engines-alist
+    (defvar web-mode-markup-indent-offset 2)
+    (defvar web-mode-css-indent-offset 2)
+    (defvar web-mode-code-indent-offset 2)
+    (defvar web-mode-engines-alist
           '(("php"    . "\\.phtml\\'")
             ("blade"  . "\\.blade\\."))))
   (add-hook 'web-mode-hook  'web-mode-hook)

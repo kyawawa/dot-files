@@ -1,5 +1,5 @@
 ;; -*- Mode: Emacs-Lisp; Coding: utf-8 -*-
-;;; cc-mode.el --- Elisp settings for euslisp-mode
+;;; my-euslisp-mode.el --- Elisp settings for euslisp-mode
 
 ;; to change indent for euslisp's method definition ;; begin
 (define-derived-mode euslisp-mode lisp-mode
@@ -65,3 +65,5 @@ This function also returns nil meaning don't specify the indentation."
                                      indent-point normal-indent))
               (method
                (funcall method indent-point state)))))))
+
+(provide 'my-euslisp-mode)
