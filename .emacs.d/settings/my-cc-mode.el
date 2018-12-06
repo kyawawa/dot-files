@@ -43,6 +43,7 @@
   (setq c-basic-offset 4)
   (setq tab-width 4)
   (setq indent-tabs-mode nil)
+  (hs-minor-mode 1)
   )
 
 
@@ -75,12 +76,9 @@
 ;;   (setq c-eldoc-buffer-regenerate-time 60))
 
 ;; ggtags
-(when (locate-library "ggtags")
-  (require 'ggtags)
-  (add-hook 'c-mode-common-hook
-            (lambda ()
-              (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
-                (ggtags-mode 1))))
+(when (require 'ggtags nil t)
+  (dolist (mode-hook '(c-mode-hook c++-mode-hook java-mode-hook asm-mode-hook))
+    (add-hook mode-hook '(lambda () (ggtags-mode 1))))
 
   ;; use helm
   ;; (setq ggtags-completing-read-function nil)
@@ -114,8 +112,6 @@
 
 ;; For c++11
 ;; https://stackoverflow.com/questions/8549351/c11-mode-or-settings-for-emacs
-(require 'font-lock)
-
 (defun --copy-face (new-face face)
   "Define NEW-FACE from existing FACE."
   (copy-face face new-face)
@@ -129,9 +125,7 @@
 (--copy-face 'font-lock-doc-string-face ; comment markups
              'font-lock-comment-face)
 
-(global-font-lock-mode t)
 (setq font-lock-maximum-decoration t)
-
 
 (add-hook 'c++-mode-hook
           '(lambda()
