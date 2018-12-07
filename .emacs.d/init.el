@@ -13,7 +13,8 @@
 
 (add-to-list 'load-path (locate-user-emacs-file "site-lisp"))
 (add-to-list 'load-path (locate-user-emacs-file "settings"))
-(load "elget-settings")
+
+(require 'elget-settings)
 
 (require 'setup)
 (setup-initialize)
@@ -21,7 +22,7 @@
 
 (setup "auto-async-byte-compile"
   ;; Compile only init.el
-  (setq auto-async-byte-compile-exclude-files-regexp "/el-get/\\|/elpa/\\|/settings/\\|/site-lisp/")
+  (setq auto-async-byte-compile-exclude-files-regexp "/el-get/\\|/elpa/\\|/settings/")
   (add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode))
 
 (setup-include "basic-settings")
@@ -30,8 +31,9 @@
 (setup-include "my-cc-mode")
 (setup-include "my-tabbar-mode")
 (setup-include "my-euslisp-mode")
-(setup-include "my-rust-mode")
-(setup-include "my-tex-mode")
+;; (setup-include "my-rust-mode")
+(!when (locate-library "latex")
+  (setup-include "my-tex-mode"))
 
 (dolist (mode-hook '(python-mode-hook))
   ;; (add-hook mode-hook '(lambda () (electric-indent-local-mode -1)))) ;; for emacs 24.4 or above
@@ -59,8 +61,8 @@
   )
 
 ;; vrml mode
-(when (locate-library "vrml-mode")
-  (autoload 'vrml-mode "vrml-mode" "VRML mode." t)
+(setup-lazy '(vrml-mode) "vrml-mode"
+  :prepare
   (setq auto-mode-alist (append '(("\\.wrl\\'" . vrml-mode)) auto-mode-alist)))
 
 ;; matlab mode
@@ -80,12 +82,15 @@
   (setq auto-mode-alist (append '(("\\.s\\'" . asm-mode)) auto-mode-alist)))
 
 ;; yaml mode
-(when (locate-library "yaml-mode")
-  ;; can use add-to-list too
-  (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
-  (add-to-list 'auto-mode-alist '("\\.rosinstall$" . yaml-mode))
-  (add-to-list 'auto-mode-alist '("\\.cnoid$" . yaml-mode)) ;; Choreonoid project file
-  (add-to-list 'auto-mode-alist '("\\.body$" . yaml-mode))) ;; Choreonoid body file
+(setup-lazy '(yaml-mode) "yaml-mode"
+  :prepare
+  (progn
+    ;; can use add-to-list too
+    (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+    (add-to-list 'auto-mode-alist '("\\.rosinstall$" . yaml-mode))
+    (add-to-list 'auto-mode-alist '("\\.cnoid$" . yaml-mode)) ;; Choreonoid project file
+    (add-to-list 'auto-mode-alist '("\\.body$" . yaml-mode))) ;; Choreonoid body file
+  )
 
 ;; ;; auto-complete
 ;; (when (locate-library "auto-complete")
@@ -112,64 +117,62 @@
 (define-key global-map (kbd "C-c ;") 'hs-toggle-hiding)
 
 ;; Open markdown with shiba
-(when (eq 0 (shell-command "type Shiba"))
-  (defun open-with-shiba ()
-    "open a current markdown file with shiba"
-    (interactive)
-    (start-process "shiba" "*shiba*" "Shiba" "--detach" buffer-file-name))
-  (add-hook 'markdown-mode-hook
-            '(lambda()
-               (define-key markdown-mode-map (kbd "C-c C-c") 'open-with-shiba)
-               )))
+(defun open-with-shiba ()
+  "open a current markdown file with shiba"
+  (interactive)
+  (when (eq 0 (shell-command "type Shiba"))
+    (start-process "shiba" "*shiba*" "Shiba" "--detach" buffer-file-name)))
+(setup-lazy '(markdown-mode) "markdown-mode"
+  (bind-key :map markdown-mode-map "C-c C-c" 'open-with-shiba))
 
-(when (locate-library "web-mode")
-  (autoload 'web-mode "web-mode" "WEB mode." t)
-  (dolist (extensions '("\\.phtml\\'" "\\.tpl\\.php\\'" "\\.[gj]sp\\'" "\\.as[cp]x\\'"
-                        "\\.erb\\'" "\\.mustache\\'" "\\.djhtml\\'" "\\.html?\\'"))
-    (add-to-list 'auto-mode-alist `(,extensions . web-mode)))
+;; (setup-lazy '(web-mode) "web-mode"
+;;   :prepare
+;;   (dolist (extensions '("\\.phtml\\'" "\\.tpl\\.php\\'" "\\.[gj]sp\\'" "\\.as[cp]x\\'"
+;;                         "\\.erb\\'" "\\.mustache\\'" "\\.djhtml\\'" "\\.html?\\'"))
+;;     (add-to-list 'auto-mode-alist `(,extensions . web-mode)))
 
-  (defun web-mode-hook ()
-    (defvar web-mode-markup-indent-offset 2)
-    (defvar web-mode-css-indent-offset 2)
-    (defvar web-mode-code-indent-offset 2)
-    (defvar web-mode-engines-alist
-          '(("php"    . "\\.phtml\\'")
-            ("blade"  . "\\.blade\\."))))
-  (add-hook 'web-mode-hook  'web-mode-hook)
+;;   (defun web-mode-hook ()
+;;     (defvar web-mode-markup-indent-offset 2)
+;;     (defvar web-mode-css-indent-offset 2)
+;;     (defvar web-mode-code-indent-offset 2)
+;;     (defvar web-mode-engines-alist
+;;           '(("php"    . "\\.phtml\\'")
+;;             ("blade"  . "\\.blade\\."))))
+;;   (add-hook 'web-mode-hook  'web-mode-hook)
 
+;;  ;;  ;; 色の設定
+;;  ;;  (custom-set-faces
+;;  ;;   ;; web-mode. colors.
+;;  ;;   '(web-mode-doctype-face
+;;  ;;     ((t (:foreground "cyan"))))
+;;  ;;   '(web-mode-html-tag-face
+;;  ;;     ((t (:foreground "cyan"))))
+;;  ;;   '(web-mode-html-attr-name-face
+;;  ;;     ((t (:foreground "#87CEEB"))))
+;;  ;;   '(web-mode-html-attr-equal-face
+;;  ;;     ((t (:foreground "#FFFFFF"))))
+;;  ;;   '(web-mode-html-attr-value-face
+;;  ;;     ((t (:foreground "#00FF00"))))
+;;  ;;   '(web-mode-comment-face
+;;  ;;     ((t (:foreground "#587F35"))))
+;;  ;;   '(web-mode-server-comment-face
+;;  ;;     ((t (:foreground "#587F35"))))
 
- ;;  ;; 色の設定
- ;;  (custom-set-faces
- ;;   ;; web-mode. colors.
- ;;   '(web-mode-doctype-face
- ;;     ((t (:foreground "cyan"))))
- ;;   '(web-mode-html-tag-face
- ;;     ((t (:foreground "cyan"))))
- ;;   '(web-mode-html-attr-name-face
- ;;     ((t (:foreground "#87CEEB"))))
- ;;   '(web-mode-html-attr-equal-face
- ;;     ((t (:foreground "#FFFFFF"))))
- ;;   '(web-mode-html-attr-value-face
- ;;     ((t (:foreground "#00FF00"))))
- ;;   '(web-mode-comment-face
- ;;     ((t (:foreground "#587F35"))))
- ;;   '(web-mode-server-comment-face
- ;;     ((t (:foreground "#587F35"))))
+;;  ;; ;;; web-mode. css colors.
+;;  ;;   '(web-mode-css-at-rule-face
+;;  ;;     ((t (:foreground "#DFCF44"))))
+;;  ;;   '(web-mode-css-selector-face
+;;  ;;     ((t (:foreground "#DFCF44"))))
+;;  ;;   '(web-mode-css-pseudo-class
+;;  ;;     ((t (:foreground "#DFCF44"))))
+;;  ;;   '(web-mode-css-property-name-face
+;;  ;;     ((t (:foreground "#87CEEB"))))
+;;  ;;   '(web-mode-css-string-face
+;;  ;;     ((t (:foreground "#D78181")))))
+;;   )
 
- ;; ;;; web-mode. css colors.
- ;;   '(web-mode-css-at-rule-face
- ;;     ((t (:foreground "#DFCF44"))))
- ;;   '(web-mode-css-selector-face
- ;;     ((t (:foreground "#DFCF44"))))
- ;;   '(web-mode-css-pseudo-class
- ;;     ((t (:foreground "#DFCF44"))))
- ;;   '(web-mode-css-property-name-face
- ;;     ((t (:foreground "#87CEEB"))))
- ;;   '(web-mode-css-string-face
- ;;     ((t (:foreground "#D78181")))))
-  )
-
-(when (locate-library "rainbow-mode")
+(setup-lazy '(rainbow-mode) "rainbow-mode"
+  :prepare
   (dolist (mode-hook '(css-mode-hook web-mode-hook
                        html-mode-hook vrml-mode-hook
                        emacs-lisp-mode-hook))
@@ -204,3 +207,33 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(query-replace ((t (:inherit isearch :background "color-40")))))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(anzu-deactivate-region t)
+ '(anzu-mode-lighter "")
+ '(anzu-replace-to-string-separator " => ")
+ '(anzu-search-threshold 1000)
+ '(dtrt-indent-min-quality 50.0)
+ '(git-gutter:added-sign "+")
+ '(git-gutter:always-show-separator t)
+ '(git-gutter:deleted-sign "-")
+ '(git-gutter:modified-sign " ")
+ '(git-gutter:separator-sign "|")
+ '(safe-local-variable-values
+   (quote
+    ((eval ignore-errors "Write-contents-functions is a buffer-local alternative to before-save-hook"
+           (add-hook
+            (quote write-contents-functions)
+            (lambda nil
+              (delete-trailing-whitespace)
+              nil))
+           (require
+            (quote whitespace))
+           "Sometimes the mode needs to be toggled off and on."
+           (whitespace-mode 0)
+           (whitespace-mode 1))
+     (whitespace-line-column . 80)
+     (whitespace-style face tabs trailing lines-tail)))))

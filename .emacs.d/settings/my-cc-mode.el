@@ -100,8 +100,6 @@
                )))
 
 
-;; (setup "dummy-h-mode"
-  ;; (autoload 'dummy-h-mode "dummy-h-mode" "Dummy H mode" t))
 (setup-lazy '(dummy-h-mode) "dummy-h-mode"
   :prepare
   (progn

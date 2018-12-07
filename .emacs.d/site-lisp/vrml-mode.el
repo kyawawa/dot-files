@@ -821,4 +821,5 @@ Parts of this were taken from indent-for-comment (simple.el)."
     ;;(skip-chars-backward "^ \t" (match-beginning 0))
     ))
 
+(provide 'vrml-mode)
 ;;; vrml-mode.el ends here
