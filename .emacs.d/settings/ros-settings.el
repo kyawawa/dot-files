@@ -5,12 +5,12 @@
   (message "Byte compile rosemacs")
   (let ((ROS_DISTRO (getenv "ROS_DISTRO")))
     (when ROS_DISTRO
-      (setq byte-compile-dest-file-function
-            (lambda (filename)
-              (concat (locate-user-emacs-file "site-lisp/")
-                      (file-name-sans-extension (file-name-nondirectory filename))
-                      ".elc")))
-      (byte-recompile-directory (format "/opt/ros/%s/share/emacs/site-lisp" ROS_DISTRO) 0))
+      (let ((byte-compile-dest-file-function
+             (lambda (filename)
+               (concat (locate-user-emacs-file "site-lisp/")
+                       (file-name-sans-extension (file-name-nondirectory filename))
+                       ".elc"))))
+        (byte-recompile-directory (format "/opt/ros/%s/share/emacs/site-lisp" ROS_DISTRO) 0)))
     ))
 
 ;; sudo apt install ros-${ROSDISTRO}-rosemacs

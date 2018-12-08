@@ -19,6 +19,13 @@
   (message "Byte compile site-lisp")
   (byte-recompile-directory (locate-user-emacs-file "site-lisp") 0))
 
+(add-hook 'after-init-hook
+          '(lambda ()
+             (let* ((el (expand-file-name "init.el" user-emacs-directory))
+                    (elc (concat el "c")))
+               (when (file-newer-than-file-p el elc)
+                 (byte-compile-file el)))))
+
 (add-to-list 'load-path (locate-user-emacs-file "site-lisp"))
 (add-to-list 'load-path (locate-user-emacs-file "settings"))
 
