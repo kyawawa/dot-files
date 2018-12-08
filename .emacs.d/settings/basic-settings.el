@@ -315,11 +315,12 @@
   )
 
 ;;; http://qiita.com/sune2/items/b73037f9e85962f5afb7
-(setup-lazy '(company) "company"
-  (setup-lazy '(company-statistics) "company-statistics"
+(setup "company"
+  (setup-lazy '(company-statistics-mode) "company-statistics"
     (company-statistics-mode))
-  (add-hook 'cmake-mode-hook 'company-mode)
-  (add-hook 'LaTeX-mode-hook 'company-mode)
+  (add-hook 'after-init-hook 'global-company-mode)
+  ;; (add-hook 'cmake-mode-hook 'company-mode)
+  ;; (add-hook 'LaTeX-mode-hook 'company-mode)
   (setq company-idle-delay 0) ; デフォルトは0.5
   (setq company-minimum-prefix-length 2) ; デフォルトは4
   (setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る

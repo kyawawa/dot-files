@@ -8,17 +8,40 @@
 
 ;; Hot fix for byte-compile
 (eval-when-compile
+  (add-to-list 'load-path (locate-user-emacs-file "el-get/el-get"))
+  (add-to-list 'load-path (locate-user-emacs-file "el-get/el-get-lock"))
   (add-to-list 'load-path (locate-user-emacs-file "el-get/use-package"))
-  (require 'use-package))
+  (require 'el-get)
+  (require 'el-get-lock)
+  (require 'use-package)
+  (el-get-lock))
 
 (add-to-list 'load-path (locate-user-emacs-file "site-lisp"))
 (add-to-list 'load-path (locate-user-emacs-file "settings"))
 
-(require 'elget-settings)
+;; Initialize el-get
+(add-to-list 'load-path (locate-user-emacs-file "el-get/el-get"))
+(unless (require 'el-get nil 'noerror)
+  (with-current-buffer
+      (url-retrieve-synchronously
+       "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
+    (goto-char (point-max))
+    (eval-print-last-sexp)))
+
+(require 'initchart)
+(initchart-record-execution-time-of load file)
+(initchart-record-execution-time-of require feature)
+
+(eval-after-load 'el-get
+  ;; This must be reloaded when updating el-get: unloading
+  ;; `el-get-custom' undefines the `el-get-sources' variable.
+  '(load  "elget-recipes"))
+(el-get 'sync (mapcar #'el-get-source-name el-get-sources))
+;; (el-get nil (mapcar #'el-get-source-name el-get-sources))
 
 (require 'setup)
 (setup-initialize)
-(setup "use-package") ;; Hot fix for byte-compile
+(setup "use-package")
 
 (setup "auto-async-byte-compile"
   ;; Compile only init.el
@@ -31,8 +54,9 @@
 (setup-include "my-cc-mode")
 (setup-include "my-tabbar-mode")
 (setup-include "my-euslisp-mode")
-;; (setup-include "my-rust-mode")
-(!when (locate-library "latex")
+(when (eq 0 (shell-command "type rustc"))
+  (setup-include "my-rust-mode"))
+(when (locate-library "latex")
   (setup-include "my-tex-mode"))
 
 (dolist (mode-hook '(python-mode-hook))
@@ -96,15 +120,20 @@
 ;; (when (locate-library "auto-complete")
 ;;   (ac-config-default))
 
-(setup-expecting "jedi"
+(setup-lazy '(jedi:setup) "jedi"
+  :prepare
   (add-hook 'python-mode-hook 'jedi:setup)
   (defvar jedi:complete-on-dot t)
   (defvar jedi:use-shortcuts t) ;; M-. : jump definition, M-, : return from definition
-  (setup-expecting "company-jedi"
-    (add-to-list 'company-backends 'company-jedi)) ;; backendに追加
+  (setup "company-jedi")
   )
 
-(setup-expecting "julia-repl"
+(setup-lazy '(company-jedi) "company-jedi"
+  :prepare
+  (add-to-list 'company-backends 'company-jedi)) ;; backendに追加
+
+(setup-lazy '(julia-repl-mode) "julia-repl"
+  :prepare
   (add-hook 'julia-mode-hook 'julia-repl-mode))
 
 ;; For folding
