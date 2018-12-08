@@ -13,8 +13,11 @@
   (add-to-list 'load-path (locate-user-emacs-file "el-get/use-package"))
   (require 'el-get)
   (require 'el-get-lock)
-  (require 'use-package)
-  (el-get-lock))
+  (require 'bind-key)
+  (el-get-lock)
+
+  (message "Byte compile site-lisp")
+  (byte-recompile-directory (locate-user-emacs-file "site-lisp") 0))
 
 (add-to-list 'load-path (locate-user-emacs-file "site-lisp"))
 (add-to-list 'load-path (locate-user-emacs-file "settings"))
@@ -36,12 +39,12 @@
   ;; This must be reloaded when updating el-get: unloading
   ;; `el-get-custom' undefines the `el-get-sources' variable.
   '(load  "elget-recipes"))
+(setq el-get-is-lazy t)
 (el-get 'sync (mapcar #'el-get-source-name el-get-sources))
-;; (el-get nil (mapcar #'el-get-source-name el-get-sources))
 
 (require 'setup)
 (setup-initialize)
-(setup "use-package")
+(setup "bind-key")
 
 (setup "auto-async-byte-compile"
   ;; Compile only init.el
@@ -78,6 +81,10 @@
 (setq system-uses-terminfo nil)
 (setq shell-file-name-chars "~/A-Za-z0-9_^$!#%&{}@`'.,:()-")
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+;; not show line number when shell-mode
+(add-hook 'shell-mode-hook
+          '(lambda ()
+             (global-linum-mode 0))) ;; TODO: Disable only shell-mode
 
 (when nil
   ;; stop auto scroll according to cursol

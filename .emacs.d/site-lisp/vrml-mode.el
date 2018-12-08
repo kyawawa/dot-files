@@ -267,13 +267,13 @@ Commands:
 
   ;; Settings for new dabbrev code.
   (make-local-variable 'dabbrev-case-fold-search)
-  (setq dabbrev-case-fold-search nil)
+  (defvar dabbrev-case-fold-search nil)
   (make-local-variable 'dabbrev-case-replace)
-  (setq dabbrev-case-replace nil)
+  (defvar dabbrev-case-replace nil)
   (make-local-variable 'dabbrev-abbrev-skip-leading-regexp)
-  (setq dabbrev-abbrev-skip-leading-regexp "[$!]")
+  (defvar dabbrev-abbrev-skip-leading-regexp "[$!]")
   (make-local-variable 'dabbrev-abbrev-char-regexp)
-  (setq dabbrev-abbrev-char-regexp "\\sw\\|\\s_")
+  (defvar dabbrev-abbrev-char-regexp "\\sw\\|\\s_")
 
   (run-hooks 'vrml-mode-hook))
 

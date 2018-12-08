@@ -69,10 +69,7 @@
 ;; (set-face-attribute 'linum nil
 ;;                     :foreground "green"
 ;;                     :height 0.9)
-;; not show line number when shell-mode
-(add-hook 'shell-mode-hook
-          '(lambda ()
-             (global-linum-mode 0)))
+
 ;; show and hide line number by f8 key
 (global-set-key [f8] 'linum-mode)
 
@@ -108,7 +105,7 @@
 ;; cua-mode
 (cua-mode t)
 (setq cua-enable-cua-keys nil)
-(define-key global-map (kbd "C-x SPC") 'cua-set-rectangle-mark)
+(bind-key* "C-x SPC" 'cua-set-rectangle-mark)
 
 ;; backtab
 ;; http://d.hatena.ne.jp/mtv/20110925/p1
@@ -177,11 +174,11 @@
   (which-key-setup-side-window-right-bottom)
   (which-key-mode t))
 
-(global-set-key "\C-h" 'backward-delete-char)
-(global-set-key "\M-g" 'goto-line)
-(global-set-key "\C-xL" 'goto-line)
-(global-set-key "\C-xR" 'revert-buffer)
-(global-set-key "\er" 'query-replace)
+(bind-key* "\C-h" 'backward-delete-char)
+(bind-key* "\M-g" 'goto-line)
+(bind-key* "\C-xL" 'goto-line)
+(bind-key* "\C-xR" 'revert-buffer)
+(bind-key* "\er" 'query-replace)
 
 ;; (setq visible-bell t)
 (setq ring-bell-function 'ignore)
@@ -192,10 +189,10 @@
 ;; (setq mail-mode-hook 'my-auto-fill-mode))
 
 ;;; (lookup)
-(defvar lookup-search-agents '((ndtp "nfs")))
-(define-key global-map "\C-co" 'lookup-pattern)
-(define-key global-map "\C-cr" 'lookup-region)
-(autoload 'lookup "lookup" "Online dictionary." t nil )
+;; (defvar lookup-search-agents '((ndtp "nfs")))
+;; (define-key global-map "\C-co" 'lookup-pattern)
+;; (define-key global-map "\C-cr" 'lookup-region)
+;; (autoload 'lookup "lookup" "Online dictionary." t nil )
 
 ;; ;;; recentf M-x recentf-open-files
 ;; (when (require 'recentf nil t)
@@ -253,36 +250,36 @@
 
 ;;; Auto insert
 ;; TODO: http://d.hatena.ne.jp/higepon/20080731/1217491155
-(require 'autoinsert)
-(setq auto-insert-directory (locate-user-emacs-file "templates/"))
-
-(defvar template-replacements-alists
-  '(("%file%"             . (lambda () (file-name-nondirectory (buffer-file-name))))
-    ("%file-without-ext%" . (lambda () (file-name-sans-extension (file-name-nondirectory (buffer-file-name)))))
-    ("%include-guard%"    . (lambda () (format "__%s_H__" (upcase (file-name-sans-extension (file-name-nondirectory buffer-file-name))))))))
-(defun my-template ()
-  (time-stamp)
-  (mapc #'(lambda(c)
-        (progn
-          (goto-char (point-min))
-          (replace-string (car c) (funcall (cdr c)) nil)))
-    template-replacements-alists)
-  (goto-char (point-max))
-  (message "done."))
-
-(setq auto-insert-alist
-      (append '(
-                ("\\.l$" . "template.l")
-                ("\\.sh$" . "template.sh")
-                ("\\.bash$" . "template.sh")
-                ("Makefile$" . "template.Makefile")
-                ("\\.cpp$" . ["template.cpp" my-template])
-                ("\\.h$" . ["template.h" my-template])
-                ("\\.py$" . "template.py")
-                ("\\.jl$" . "template.jl")
-                ("\\.launch$" . "template.launch")
-                ) auto-insert-alist))
-(add-hook 'find-file-not-found-hooks 'auto-insert)
+(setup-lazy '(auto-insert) "autoinsert"
+  :prepare
+  (progn
+    (setq auto-insert-directory (locate-user-emacs-file "templates/"))
+    (add-hook 'find-file-not-found-hooks 'auto-insert))
+  (setq auto-insert-alist
+        (append '(
+                  ("\\.l$" . "template.l")
+                  ("\\.sh$" . "template.sh")
+                  ("\\.bash$" . "template.sh")
+                  ("Makefile$" . "template.Makefile")
+                  ("\\.cpp$" . ["template.cpp" my-template])
+                  ("\\.h$" . ["template.h" my-template])
+                  ("\\.py$" . "template.py")
+                  ("\\.jl$" . "template.jl")
+                  ("\\.launch$" . "template.launch")
+                  ) auto-insert-alist))
+  (defvar template-replacements-alists
+    '(("%file%"             . (lambda () (file-name-nondirectory (buffer-file-name))))
+      ("%file-without-ext%" . (lambda () (file-name-sans-extension (file-name-nondirectory (buffer-file-name)))))
+      ("%include-guard%"    . (lambda () (format "__%s_H__" (upcase (file-name-sans-extension (file-name-nondirectory buffer-file-name))))))))
+  (defun my-template ()
+    (time-stamp)
+    (mapc #'(lambda(c)
+              (progn
+                (goto-char (point-min))
+                (replace-string (car c) (funcall (cdr c)) nil)))
+          template-replacements-alists)
+    (goto-char (point-max))
+    (message "done.")))
 
 ;; https://github.com/cs14095/ci.el
 ;; Ctrl-c, i, w => kill a word
@@ -316,8 +313,7 @@
 
 ;;; http://qiita.com/sune2/items/b73037f9e85962f5afb7
 (setup "company"
-  (setup-lazy '(company-statistics-mode) "company-statistics"
-    (company-statistics-mode))
+  (setup "company-statistics")
   (add-hook 'after-init-hook 'global-company-mode)
   ;; (add-hook 'cmake-mode-hook 'company-mode)
   ;; (add-hook 'LaTeX-mode-hook 'company-mode)
@@ -410,7 +406,7 @@
     "C-c i n" 'yas-new-snippet
     ;; edit existing snippet
     "C-c i v" 'yas-visit-snippet-file)
-  (yas-global-mode 1))
+  (yas-global-mode 1)) ;; Not here?
 
 ;;;;;;;;;; git ;;;;;;;;;;
 ;; (when (locate-library "magit")
