@@ -135,12 +135,9 @@
   (add-hook 'python-mode-hook 'jedi:setup)
   (defvar jedi:complete-on-dot t)
   (defvar jedi:use-shortcuts t) ;; M-. : jump definition, M-, : return from definition
-  (setup "company-jedi")
+  (setup "company-jedi"
+    (add-to-list 'company-backends 'company-jedi))
   )
-
-(setup-lazy '(company-jedi) "company-jedi"
-  :prepare
-  (add-to-list 'company-backends 'company-jedi)) ;; backendに追加
 
 (setup-lazy '(julia-repl-mode) "julia-repl"
   :prepare
