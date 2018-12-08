@@ -38,10 +38,6 @@
     (goto-char (point-max))
     (eval-print-last-sexp)))
 
-(require 'initchart)
-(initchart-record-execution-time-of load file)
-(initchart-record-execution-time-of require feature)
-
 (eval-after-load 'el-get
   ;; This must be reloaded when updating el-get: unloading
   ;; `el-get-custom' undefines the `el-get-sources' variable.
