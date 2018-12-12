@@ -1,8 +1,10 @@
 ;; -*- Mode: Emacs-Lisp; Coding: utf-8 -*-
 ;;; theme-settings.el --- Elisp theme settings
 
-;; Temporary fix for TERM=screen environment
-(let ((frame-background-mode 'light)) (frame-set-background-mode nil))
+;; (add-hook 'tty-setup-hook '(lambda () (set-terminal-parameter nil 'background-mode 'dark)))
+
+;; ;; Temporary fix for TERM=screen environment
+;; (let ((frame-background-mode 'light)) (frame-set-background-mode nil))
 
 ;; (defun set-background-for-terminal (&optional frame)
 ;;   (or frame (setq frame (selected-frame)))
