@@ -7,6 +7,8 @@
   "Major Mode for EusLisp"
   )
 
+(cl-pushnew '("\\.l$" . euslisp-mode) auto-mode-alist)
+
 (defun lisp-indent-function (indent-point state)
   "This function is the normal value of the variable `lisp-indent-function'.
 It is used when indenting a line within a function call, to see if the

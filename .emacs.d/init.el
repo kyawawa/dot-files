@@ -8,9 +8,9 @@
 
 ;; Hot fix for byte-compile
 (eval-when-compile
-  (add-to-list 'load-path (locate-user-emacs-file "el-get/el-get"))
-  (add-to-list 'load-path (locate-user-emacs-file "el-get/el-get-lock"))
-  (add-to-list 'load-path (locate-user-emacs-file "el-get/use-package"))
+  (cl-pushnew (locate-user-emacs-file "el-get/el-get") load-path)
+  (cl-pushnew (locate-user-emacs-file "el-get/el-get-lock") load-path)
+  (cl-pushnew (locate-user-emacs-file "el-get/use-package") load-path)
   (when (require 'el-get nil t)
     (require 'el-get-lock)
     (require 'bind-key)
@@ -19,6 +19,7 @@
   (message "Byte compile site-lisp")
   (byte-recompile-directory (locate-user-emacs-file "site-lisp") 0))
 
+;; Byte compile when opening emacs if init.el is newer than init.elc
 (add-hook 'after-init-hook
           '(lambda ()
              (let* ((el (expand-file-name "init.el" user-emacs-directory))
@@ -26,11 +27,11 @@
                (when (file-newer-than-file-p el elc)
                  (byte-compile-file el)))))
 
-(add-to-list 'load-path (locate-user-emacs-file "site-lisp"))
-(add-to-list 'load-path (locate-user-emacs-file "settings"))
+(cl-pushnew (locate-user-emacs-file "site-lisp") load-path)
+(cl-pushnew (locate-user-emacs-file "settings") load-path)
 
 ;; Initialize el-get
-(add-to-list 'load-path (locate-user-emacs-file "el-get/el-get"))
+(cl-pushnew (locate-user-emacs-file "el-get/el-get") load-path)
 (unless (require 'el-get nil 'noerror)
   (with-current-buffer
       (url-retrieve-synchronously
@@ -42,7 +43,7 @@
   ;; This must be reloaded when updating el-get: unloading
   ;; `el-get-custom' undefines the `el-get-sources' variable.
   '(load  "elget-recipes"))
-(setq el-get-is-lazy t)
+(setq el-get-is-lazy nil)
 (el-get 'sync (mapcar #'el-get-source-name el-get-sources))
 
 (require 'setup)
@@ -97,34 +98,32 @@
 ;; vrml mode
 (setup-lazy '(vrml-mode) "vrml-mode"
   :prepare
-  (setq auto-mode-alist (append '(("\\.wrl\\'" . vrml-mode)) auto-mode-alist)))
+  (cl-pushnew '("\\.wrl$" . vrml-mode) auto-mode-alist))
 
 ;; matlab mode
 (when (locate-library "matlab-mode")
-  (setq auto-mode-alist (append '(("\\.m\\'" . matlab-mode)) auto-mode-alist)))
+  (cl-pushnew '("\\.m$" . matlab-mode) auto-mode-alist))
 
 (when (locate-library "octave-mod")
-  (setq auto-mode-alist (append '(("\\.m\\'" . octave-mode)) auto-mode-alist)))
+  (cl-pushnew '("\\.m$" . octave-mode) auto-mode-alist))
 
 ;; for Arduino
-(setq auto-mode-alist (append '(("\\.pde\\'" . c++-mode)) auto-mode-alist))
-(setq auto-mode-alist (append '(("\\.ino\\'" . c++-mode)) auto-mode-alist))
+(cl-pushnew '("\\.pde$" . c++-mode) auto-mode-alist)
+(cl-pushnew '("\\.ino$" . c++-mode) auto-mode-alist)
 
 ;; assembler mode
 (when (locate-library "asm-mode")
-  ;; add .s
-  (setq auto-mode-alist (append '(("\\.s\\'" . asm-mode)) auto-mode-alist)))
+  (cl-pushnew '("\\.s$" . asm-mode) auto-mode-alist))
 
 ;; yaml mode
 (setup-lazy '(yaml-mode) "yaml-mode"
   :prepare
   (progn
-    ;; can use add-to-list too
-    (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
-    (add-to-list 'auto-mode-alist '("\\.rosinstall$" . yaml-mode))
-    (add-to-list 'auto-mode-alist '("\\.cnoid$" . yaml-mode)) ;; Choreonoid project file
-    (add-to-list 'auto-mode-alist '("\\.body$" . yaml-mode))) ;; Choreonoid body file
-  )
+    (cl-pushnew '("\\.yml$" . yaml-mode) auto-mode-alist)
+    (cl-pushnew '("\\.rosinstall$" . yaml-mode) auto-mode-alist)
+    (cl-pushnew '("\\.cnoid$" . yaml-mode) auto-mode-alist) ;; Choreonoid project file
+    (cl-pushnew '("\\.body$" . yaml-mode) auto-mode-alist) ;; Choreonoid body file
+  ))
 
 ;; ;; auto-complete
 ;; (when (locate-library "auto-complete")
@@ -136,7 +135,7 @@
   (defvar jedi:complete-on-dot t)
   (defvar jedi:use-shortcuts t) ;; M-. : jump definition, M-, : return from definition
   (setup "company-jedi"
-    (add-to-list 'company-backends 'company-jedi))
+    (cl-pushnew 'company-jedi company-backends))
   )
 
 (setup-lazy '(julia-repl-mode) "julia-repl"
@@ -149,7 +148,7 @@
                                       lisp-mode-hook python-mode-hook ruby-mode-hook))
   (add-hook mode-hook
             '(lambda ()
-               (hs-minor-mode 1))))
+               (hs-minor-mode t))))
 (define-key global-map (kbd "C-c ;") 'hs-toggle-hiding)
 
 ;; Open markdown with shiba

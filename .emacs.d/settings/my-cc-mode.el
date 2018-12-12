@@ -43,7 +43,7 @@
     (setq c-basic-offset 4)
     (setq tab-width 4)
     (setq indent-tabs-mode nil)
-    (hs-minor-mode 1)
+    (hs-minor-mode t)
     )
 
 
@@ -116,7 +116,7 @@
 ;;   (setq c-eldoc-buffer-regenerate-time 60))
 
 ;; ggtags
-(setup-lazy '(ggtags) "ggtags"
+(setup-lazy '(ggtags-mode) "ggtags"
   :prepare (dolist (mode-hook '(c-mode-hook c++-mode-hook java-mode-hook asm-mode-hook))
              (add-hook mode-hook 'ggtags-mode))
 

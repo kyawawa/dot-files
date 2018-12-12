@@ -375,8 +375,8 @@
    '(anzu-search-threshold 1000)
    '(anzu-replace-to-string-separator " => ")))
 
-(setup "volatile-highlights"
-  (volatile-highlights-mode t))
+;; (setup "volatile-highlights"
+;;   (volatile-highlights-mode t))
 
 ;; show undo-tree C-x u
 (setup "undo-tree"
@@ -384,7 +384,7 @@
   (global-set-key (kbd "M-/") 'undo-tree-redo))
 
 (setup "dtrt-indent"
-  (dtrt-indent-mode 1)
+  (dtrt-indent-mode t)
   (custom-set-variables '(dtrt-indent-min-quality 50.0)))
 ;; (setq dtrt-indent-verbosity 0))
 
