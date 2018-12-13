@@ -8,12 +8,16 @@
 
 ;; Hot fix for byte-compile
 (eval-when-compile
+  (cl-pushnew (locate-user-emacs-file "el-get") load-path)
   (cl-pushnew (locate-user-emacs-file "el-get/el-get") load-path)
   (cl-pushnew (locate-user-emacs-file "el-get/el-get-lock") load-path)
   (cl-pushnew (locate-user-emacs-file "el-get/use-package") load-path)
+  (cl-pushnew (locate-user-emacs-file "el-get/with-eval-after-load-feature") load-path)
   (when (require 'el-get nil t)
+    (require '.loaddefs)
     (require 'el-get-lock)
     (require 'bind-key)
+    (require 'with-eval-after-load-feature)
     (el-get-lock))
 
   (message "Byte compile site-lisp")
@@ -89,6 +93,9 @@
 (add-hook 'shell-mode-hook
           '(lambda ()
              (global-linum-mode 0))) ;; TODO: Disable only shell-mode
+(when (locate-library "bash-completion")
+  (add-hook 'shell-dynamic-complete-functions
+            'bash-completion-dynamic-complete))
 
 (when nil
   ;; stop auto scroll according to cursol
@@ -116,30 +123,25 @@
   (cl-pushnew '("\\.s$" . asm-mode) auto-mode-alist))
 
 ;; yaml mode
-(setup-lazy '(yaml-mode) "yaml-mode"
-  :prepare
-  (progn
-    (cl-pushnew '("\\.yml$" . yaml-mode) auto-mode-alist)
-    (cl-pushnew '("\\.rosinstall$" . yaml-mode) auto-mode-alist)
-    (cl-pushnew '("\\.cnoid$" . yaml-mode) auto-mode-alist) ;; Choreonoid project file
-    (cl-pushnew '("\\.body$" . yaml-mode) auto-mode-alist) ;; Choreonoid body file
-  ))
+(when (locate-library "yaml-mode")
+  (cl-pushnew '("\\.rosinstall$" . yaml-mode) auto-mode-alist)
+  (cl-pushnew '("\\.cnoid$" . yaml-mode) auto-mode-alist) ;; Choreonoid project file
+  (cl-pushnew '("\\.body$" . yaml-mode) auto-mode-alist) ;; Choreonoid body file
+  )
 
 ;; ;; auto-complete
 ;; (when (locate-library "auto-complete")
 ;;   (ac-config-default))
 
-(setup-lazy '(jedi:setup) "jedi"
-  :prepare
+(when (locate-library "jedi-core")
   (add-hook 'python-mode-hook 'jedi:setup)
-  (defvar jedi:complete-on-dot t)
-  (defvar jedi:use-shortcuts t) ;; M-. : jump definition, M-, : return from definition
-  (setup "company-jedi"
-    (cl-pushnew 'company-jedi company-backends))
-  )
+  (with-eval-after-load-feature 'jedi-core
+    (defvar jedi:complete-on-dot t)
+    (defvar jedi:use-shortcuts t) ;; M-. : jump definition, M-, : return from definition
+    (when (locate-library "company-jedi")
+      (cl-pushnew 'company-jedi company-backends))))
 
-(setup-lazy '(julia-repl-mode) "julia-repl"
-  :prepare
+(when (locate-library "julia-repl")
   (add-hook 'julia-mode-hook 'julia-repl-mode))
 
 ;; For folding
@@ -151,14 +153,15 @@
                (hs-minor-mode t))))
 (define-key global-map (kbd "C-c ;") 'hs-toggle-hiding)
 
-;; Open markdown with shiba
-(defun open-with-shiba ()
-  "open a current markdown file with shiba"
-  (interactive)
+(with-eval-after-load-feature 'markdown-mode
+  ;; Open markdown with shiba
   (when (eq 0 (shell-command "type Shiba"))
-    (start-process "shiba" "*shiba*" "Shiba" "--detach" buffer-file-name)))
-(setup-lazy '(markdown-mode) "markdown-mode"
-  (bind-key :map markdown-mode-map "C-c C-c" 'open-with-shiba))
+    (defun open-with-shiba ()
+      "open a current markdown file with shiba"
+      (interactive)
+      (start-process "shiba" "*shiba*" "Shiba" "--detach" buffer-file-name))
+    ;; (bind-key :map markdown-mode-map "C-c C-c p" 'open-with-shiba))
+    (define-key markdown-mode-map (kbd "C-c C-c p") 'open-with-shiba)))
 
 ;; (setup-lazy '(web-mode) "web-mode"
 ;;   :prepare
@@ -206,8 +209,7 @@
 ;;  ;;     ((t (:foreground "#D78181")))))
 ;;   )
 
-(setup-lazy '(rainbow-mode) "rainbow-mode"
-  :prepare
+(when (locate-library "rainbow-mode")
   (dolist (mode-hook '(css-mode-hook web-mode-hook
                        html-mode-hook vrml-mode-hook
                        emacs-lisp-mode-hook))
@@ -257,6 +259,7 @@
  '(git-gutter:deleted-sign "-")
  '(git-gutter:modified-sign " ")
  '(git-gutter:separator-sign "|")
+ '(package-selected-packages (quote (rainbow-mode)))
  '(safe-local-variable-values
    (quote
     ((eval ignore-errors "Write-contents-functions is a buffer-local alternative to before-save-hook"

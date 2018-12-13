@@ -250,11 +250,9 @@
 
 ;;; Auto insert
 ;; TODO: http://d.hatena.ne.jp/higepon/20080731/1217491155
-(setup-lazy '(auto-insert) "autoinsert"
-  :prepare
-  (progn
-    (setq auto-insert-directory (locate-user-emacs-file "templates/"))
-    (add-hook 'find-file-not-found-hooks 'auto-insert))
+(add-hook 'find-file-not-found-hooks 'auto-insert)
+(with-eval-after-load-feature 'autoinsert
+  (setq auto-insert-directory (locate-user-emacs-file "templates/"))
   (setq auto-insert-alist
         (append '(
                   ("\\.l$" . "template.l")
@@ -352,6 +350,7 @@
 
 ;;; direx (with popwin)
 ;; TODO: Erase window when escape window
+;; TODO: Do not use setup
 (setup-lazy '(direx) "direx"
   :prepare
   (global-set-key (kbd "C-x C-j") 'direx:jump-to-directory-other-window)
@@ -388,15 +387,16 @@
   (custom-set-variables '(dtrt-indent-min-quality 50.0)))
 ;; (setq dtrt-indent-verbosity 0))
 
-(setup-lazy '(atomic-chrome) "atomic-chrome"
-  :prepare (setq atomic-chrome-url-major-mode-alist
-                 '(("github\\.com" . gfm-mode)
-                   ("overleaf\\.com" . latex-mode)
-                   )))
+(with-eval-after-load-feature 'atomic-chrome
+  (setq atomic-chrome-url-major-mode-alist
+        '(("github\\.com" . gfm-mode)
+          ("overleaf\\.com" . latex-mode)
+          )))
 ;; (atomic-chrome-start-server))
 
 ;; yasnippet
-(setup-lazy '(yasnippet) "yasnippet"
+(setup "yasnippet"
+  (yas-global-mode 1)
   (setup-keybinds yas-minor-mode-map
     "C-M-y" 'yas-expand
     "TAB" nil
@@ -405,8 +405,7 @@
     ;; edit new snippet
     "C-c i n" 'yas-new-snippet
     ;; edit existing snippet
-    "C-c i v" 'yas-visit-snippet-file)
-  (yas-global-mode 1)) ;; Not here?
+    "C-c i v" 'yas-visit-snippet-file))
 
 ;;;;;;;;;; git ;;;;;;;;;;
 ;; (when (locate-library "magit")
