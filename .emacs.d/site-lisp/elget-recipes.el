@@ -68,9 +68,10 @@
   )
 ;;; Rust
 (when (eq 0 (shell-command "type rustc"))
-  (add-to-list 'el-get-sources '(:name rust-mode))
-  (add-to-list 'el-get-sources '(:name emacs-racer))
-  (add-to-list 'el-get-sources '(:name f)) ;; required in emacs-racer
-  (add-to-list 'el-get-sources '(:name flycheck-rust)))
+  (cl-pushnew '(:name rust-mode) el-get-sources)
+  (cl-pushnew '(:name emacs-racer) el-get-sources)
+  (cl-pushnew '(:name f) el-get-sources) ;; required in emacs-racer
+  (cl-pushnew '(:name pos-tip) el-get-sources) ;; required in emacs-racer
+  (cl-pushnew '(:name flycheck-rust) el-get-sources))
 
 (provide 'elget-recipes)
