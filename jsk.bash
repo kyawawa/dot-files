@@ -2,31 +2,7 @@ dot_dir=$(dirname `readlink -f $HOME/.bashrc`)
 source $dot_dir/.bashrc
 
 ##### JSK settings #####
-## Alias Commands
-#alias rm='rm -i'
-#alias cp='cp -i'
-#alias mv='mv -i'
 alias grep='grep --color=auto --exclude-dir=.svn'
-
-## SVN and SSH
-export SSH_USER=ishikawa
-export SVN_SSH="ssh -l ${SSH_USER}"
-
-# #
-# # Start up ssh-agent if it's not running
-# SSHAGENT=/usr/bin/ssh-agent
-# SSHAGENTARGS="-s"
-# if [ -z "$SSH_AUTH_SOCK" -a -x "$SSHAGENT" ]; then
-#   eval `$SSHAGENT $SSHAGENTARGS`
-#   trap "kill $SSH_AGENT_PID" 0
-# else
-#   echo SSH Agent running
-# fi
-# #
-# # Add my private key
-# if [[ -z `ssh-add -L | grep id_rsa` ]]; then
-#        ssh-add ~/.ssh/id_rsa
-# fi
 
 ## default ros package
 default_ros_workspace=$(printf "cat <<++EOS\n`cat $dot_dir/ros_current_ws`\n++EOS\n" | sh)
