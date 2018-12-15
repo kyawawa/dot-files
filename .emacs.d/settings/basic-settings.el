@@ -47,9 +47,19 @@
 ;; setting of indent
 ;; does not allow use hard tab.
 (setq-default tab-width 4 indent-tabs-mode nil)
-(electric-indent-mode 1)
 
+(electric-indent-mode t)
 (bind-key* "C-j" 'newline-and-indent (not (eq major-mode 'lisp-interaction-mode)))
+
+;; Basic keybindings
+(define-key key-translation-map (kbd "C-h") (kbd "<DEL>"))
+(bind-key* "\C-h" 'backward-delete-char)
+(bind-key* "\M-g" 'goto-line)
+(bind-key* "\C-xL" 'goto-line)
+(bind-key* "\C-xR" 'revert-buffer)
+(bind-key* "\er" 'query-replace)
+(bind-key* "C-x k" (lambda () (interactive) (kill-buffer (buffer-name))))
+;; (bind-key* "M-u" (lambda () (interactive) (upcase-word -1)))
 
 ;; paste with indent
 (defun yank-with-indent ()
@@ -173,12 +183,6 @@
 (setup "which-key"
   (which-key-setup-side-window-right-bottom)
   (which-key-mode t))
-
-(bind-key* "\C-h" 'backward-delete-char)
-(bind-key* "\M-g" 'goto-line)
-(bind-key* "\C-xL" 'goto-line)
-(bind-key* "\C-xR" 'revert-buffer)
-(bind-key* "\er" 'query-replace)
 
 ;; (setq visible-bell t)
 (setq ring-bell-function 'ignore)
@@ -308,6 +312,40 @@
   (ad-enable-advice 'font-lock-mode 'before 'my-font-lock-mode)
   (ad-activate 'font-lock-mode)
   )
+
+;;; Ido
+(setup "ido"
+  (ido-mode t)
+  (ido-everywhere t)
+  ;; Hot fix to get out of minibuffer (using popwin)
+  (setup-after "popwin"
+    (customize-set-variable 'popwin:special-display-config
+                            (delete '(completion-list-mode :noselect t) popwin:special-display-config))
+    )
+
+  (setup "ido-completing-read-plus"
+    (ido-ubiquitous-mode t))
+
+  (setup "ido-vertical-mode"
+    (ido-vertical-mode t)
+    (setq ido-vertical-define-keys 'C-n-and-C-p-only) ;; C-n/C-pで候補選択する
+    (setq ido-vertical-show-count t))
+    ;; Fix bad behavior with popwin
+    ;; http://tam5917.hatenablog.com/entry/2015/01/13/213640
+    ;; (setup-after "popwin"
+    ;;   (defun popwin:start-close-popup-window-timer ()
+    ;;     (or popwin:close-popup-window-timer
+    ;;         (setq popwin:close-popup-window-timer
+    ;;               (run-with-timer popwin:close-popup-window-timer-interval
+    ;;                               popwin:close-popup-window-timer-interval
+    ;;                               'popwin:close-popup-window-timer))))))
+
+  (setup "smex"
+    (smex-initialize)
+    (bind-key* "M-x" 'smex)
+    (bind-key* "M-X" 'smex-major-mode-commands)
+    ;; This is your old M-x.
+    (bind-key* "C-c C-c M-x" 'execute-extended-command)))
 
 ;;; http://qiita.com/sune2/items/b73037f9e85962f5afb7
 (setup "company"

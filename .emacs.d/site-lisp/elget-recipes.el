@@ -21,6 +21,11 @@
     (:name yasnippet)
     (:name which-key)
     (:name with-eval-after-load-feature)
+    ;;; Ido
+    (:name ido-ubiquitous)
+    (:name ido-vertical-mode)
+    (:name ido-completing-read-plus)
+    (:name smex)
 ;;;; Emacs theme
     (:name cyberpunk-theme :type github :pkgname "n3mo/cyberpunk-theme.el")
 ;;;; Completion
