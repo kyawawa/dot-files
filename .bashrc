@@ -159,16 +159,9 @@ if [ -x $HOME/.cargo ]; then
 fi
 
 # cuda
-# export CUDA_HOME=/usr/local/cuda
-# export LD_LIBRARY_PATH=${CUDA_HOME}/lib64
-# export PATH=${PATH}:${CUDA_HOME}/bin
-
-# export CPATH=${CUDA_PATH}/include:${CPATH}
-# export LIBRARY_PATH=$CUDA_PATH/lib64:$LD_LIBRARY_PATH
-# export LD_LIBRARY_PATH=$CUDA_PATH/lib64:$LD_LIBRARY_PATH
-
-# export CFLAGS=-I/usr/local/cuda/include
-# export LDFLAGS=-L/usr/local/cuda/lib64
+export CUDA_HOME=/usr/local/cuda
+export LD_LIBRARY_PATH=${CUDA_HOME}/lib64:${LD_LIBRARY_PATH}
+export PATH=${CUDA_HOME}/bin:${PATH}
 
 # colordiff
 if type "colordiff" > /dev/null 2>&1; then

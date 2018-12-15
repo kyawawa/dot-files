@@ -38,17 +38,16 @@ LIBGL_ALWAYS_SOFTWARE=1
 ## format of log messages
 export ROSCONSOLE_FORMAT='[${severity}] [${time}]: ${message}' # default
 
-export CNOID_INSTALL_DIR=/usr/local/src/choreonoid
-export CNOID_RTM_DIR=/opt/ros/${ROS_DISTRO}
-export PKG_CONFIG_PATH=${CNOID_INSTALL_DIR}/lib/pkgconfig:$PKG_CONFIG_PATH
-export PATH=${CNOID_INSTALL_DIR}/bin:$PATH
-export CNOID_USE_GLSL=1
-
 # .bashrcに書くとROSが先に来て面倒
 export PKG_INSTALL_DIR=${HOME}/install
 export PKG_CONFIG_PATH=${PKG_INSTALL_DIR}/lib/pkgconfig:$PKG_CONFIG_PATH
-# export LD_LIBRARY_PATH=${PKG_INSTALL_DIR}/lib:${LD_LIBRARY_PATH}
+export LD_LIBRARY_PATH=${PKG_INSTALL_DIR}/lib:${LD_LIBRARY_PATH}
 export PATH=${PKG_INSTALL_DIR}/bin:$PATH
+
+## Please comment in if you install choreonoid to $HOME/install
+# export CNOID_INSTALL_DIR=${PKG_INSTALL_DIR}
+# export CNOID_RTM_DIR=/opt/ros/${ROS_DISTRO}
+export CNOID_USE_GLSL=1
 
 ##### dot.bashrc.ros #####
 #euslib
