@@ -14,6 +14,9 @@
 ;; (add-hook 'after-make-frame-functions 'set-background-for-terminal)
 ;; (add-hook 'window-setup-hook 'set-background-for-terminal)
 
+(set-face-background 'vertical-border "#880000")
+(set-face-foreground 'vertical-border (face-background 'vertical-border))
+
 ;; Theme
 (setup "cyberpunk-theme"
   ;; Memo: Autumn theme

@@ -322,7 +322,7 @@
     (customize-set-variable 'popwin:special-display-config
                             (delete '(completion-list-mode :noselect t) popwin:special-display-config)))
 
-  (setup "ido-completing-read-plus"
+  (setup "ido-completing-read+"
     (ido-ubiquitous-mode t))
 
   (setup "ido-vertical-mode"
