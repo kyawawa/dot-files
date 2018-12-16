@@ -320,8 +320,7 @@
   ;; Hot fix to get out of minibuffer (using popwin)
   (setup-after "popwin"
     (customize-set-variable 'popwin:special-display-config
-                            (delete '(completion-list-mode :noselect t) popwin:special-display-config))
-    )
+                            (delete '(completion-list-mode :noselect t) popwin:special-display-config)))
 
   (setup "ido-completing-read-plus"
     (ido-ubiquitous-mode t))
@@ -380,7 +379,9 @@
   )
 
 ;;; popwin
-(setup "popwin"
+;; (setup-lazy '(popwin:display-buffer) "popwin"
+;;   :prepare
+(when (locate-library "popwin")
   (setq display-buffer-function 'popwin:display-buffer))
   ;; (custom-set-variables popwin:special-display-config
   ;;                       (append '(("*Apropos*") ("*sdic*") ("*Faces*") ("*Colors*"))
@@ -389,8 +390,9 @@
 ;;; direx (with popwin)
 ;; TODO: Erase window when escape window
 ;; TODO: Do not use setup
-(setup-lazy '(direx) "direx"
-  :prepare
+;; (setup-lazy '(direx) "direx"
+;;   :prepare
+(when (locate-library "direx")
   (global-set-key (kbd "C-x C-j") 'direx:jump-to-directory-other-window)
 
   (setup-after "popwin"
@@ -433,17 +435,20 @@
 ;; (atomic-chrome-start-server))
 
 ;; yasnippet
-(setup "yasnippet"
-  (yas-global-mode 1)
-  (setup-keybinds yas-minor-mode-map
+;; (setup "yasnippet"
+(setup-lazy '(yas-expand yas-insert-snippet
+                         yas-new-snippet yas-visit-snippet-file) "yasnippet"
+  :prepare
+  (setup-keybinds nil
     "C-M-y" 'yas-expand
-    "TAB" nil
     ;; insert existing snippet
     "C-c i i" 'yas-insert-snippet
     ;; edit new snippet
     "C-c i n" 'yas-new-snippet
     ;; edit existing snippet
-    "C-c i v" 'yas-visit-snippet-file))
+    "C-c i v" 'yas-visit-snippet-file)
+  (yas-global-mode 1)
+  (setup-keybinds yas-minor-mode-map "TAB" nil))
 
 ;;;;;;;;;; git ;;;;;;;;;;
 ;; (when (locate-library "magit")
