@@ -423,7 +423,7 @@
   (global-set-key (kbd "M-/") 'undo-tree-redo))
 
 (setup "dtrt-indent"
-  (dtrt-indent-mode t)
+  (dtrt-indent-global-mode t)
   (custom-set-variables '(dtrt-indent-min-quality 50.0)))
 ;; (setq dtrt-indent-verbosity 0))
 
