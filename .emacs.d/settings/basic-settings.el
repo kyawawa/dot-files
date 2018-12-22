@@ -317,6 +317,8 @@
 (setup "ido"
   (ido-mode t)
   (ido-everywhere t)
+  (customize-set-variable 'ido-confirm-unique-completion t)
+
   ;; Hot fix to get out of minibuffer (using popwin)
   (setup-after "popwin"
     (customize-set-variable 'popwin:special-display-config
