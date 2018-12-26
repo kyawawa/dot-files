@@ -52,7 +52,6 @@
 (bind-key* "C-j" 'newline-and-indent (not (eq major-mode 'lisp-interaction-mode)))
 
 ;; Basic keybindings
-(define-key key-translation-map (kbd "C-h") (kbd "<DEL>"))
 (bind-key* "\C-h" 'backward-delete-char)
 (bind-key* "\M-g" 'goto-line)
 (bind-key* "\C-xL" 'goto-line)
@@ -455,6 +454,8 @@
 ;;;;;;;;;; git ;;;;;;;;;;
 ;; (when (locate-library "magit")
 ;;   (require 'magit))
+
+(add-hook 'gitconfig-mode-hook '(lambda () (setq indent-tabs-mode nil)))
 
 ;; global-linum-mode
 
