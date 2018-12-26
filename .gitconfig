@@ -25,6 +25,17 @@
     br-date = "!f () { (for i in `git branch | colrm 1 2`; do echo `git log --date=iso8601 -n 1 --pretty=\"format:[%ai] %h\" $i` $i ; done) | sort -r; };f"
     # Show all branches (including remote) sorted by date
     br-date-all = "!f () { (for i in `git branch -a | colrm 1 2`; do echo `git log --date=iso8601 -n 1 --pretty=\"format:[%ai] %h\" $i` $i ; done) | sort -r; };f"
+    # Add kyawawa's remote repository (Github Only)
+    remote-add-kyawawa = "!f () {\
+        prefix=$(echo $(git remote -v | grep origin$'\t' | head -n 1 | cut -f2 | cut -f1 -d \" \") | cut -f1 -d@ | cut -f1 -d:); \
+        if [ \"$prefix\" = \"https\" ];then \
+            prefix=https://github.com/; \
+        else \
+            prefix=git@github.com:; \
+        fi; \
+        suffix=$(echo https://github.com/start-jsk/rtmros_common.git | rev | cut -f1 -d/ | rev); \
+        git remote add kyawawa ${prefix}kyawawa/${suffix}; \
+        };f"
     # Remove all deleted items
     rm-all = "!f () { git rm `git ls-files --deleted`; };f"
     # Remove Sumbodules

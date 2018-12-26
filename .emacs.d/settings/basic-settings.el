@@ -52,7 +52,7 @@
 (bind-key* "C-j" 'newline-and-indent (not (eq major-mode 'lisp-interaction-mode)))
 
 ;; Basic keybindings
-(bind-key* "\C-h" 'backward-delete-char)
+(define-key key-translation-map (kbd "C-h") (kbd "<DEL>"))
 (bind-key* "\M-g" 'goto-line)
 (bind-key* "\C-xL" 'goto-line)
 (bind-key* "\C-xR" 'revert-buffer)
