@@ -8,6 +8,7 @@
 
 ;; Hot fix for byte-compile
 (eval-when-compile
+  (require 'cl)
   (cl-pushnew (locate-user-emacs-file "el-get") load-path)
   (cl-pushnew (locate-user-emacs-file "el-get/el-get") load-path)
   (cl-pushnew (locate-user-emacs-file "el-get/el-get-lock") load-path)
@@ -15,10 +16,10 @@
   (cl-pushnew (locate-user-emacs-file "el-get/with-eval-after-load-feature") load-path)
   (when (require 'el-get nil t)
     (require '.loaddefs)
-    (require 'el-get-lock)
-    (require 'bind-key)
-    (require 'with-eval-after-load-feature)
-    (el-get-lock))
+    (require 'bind-key nil t)
+    (require 'with-eval-after-load-feature nil t)
+    (when (require 'el-get-lock nil t)
+      (el-get-lock)))
 
   (message "Byte compile site-lisp")
   (byte-recompile-directory (locate-user-emacs-file "site-lisp") 0))
@@ -31,6 +32,7 @@
                (when (file-newer-than-file-p el elc)
                  (byte-compile-file el)))))
 
+(require 'cl)
 (cl-pushnew (locate-user-emacs-file "site-lisp") load-path)
 (cl-pushnew (locate-user-emacs-file "settings") load-path)
 
