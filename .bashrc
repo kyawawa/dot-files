@@ -64,6 +64,8 @@ case $(hostname) in
     mirei-antec  ) col='33'   ;; # yellow
     chiya-acubic ) col='32'   ;; # green
     kon-antec    ) col='1;32' ;; # light green
+    chidorivision) col='32'   ;; # green
+    chidorifc    ) col='33'   ;; # yellow
     *            ) col='36'   ;; # cyan
 esac
 
