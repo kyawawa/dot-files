@@ -343,9 +343,9 @@
   (setup "smex"
     (smex-initialize)
     (bind-key* "M-x" 'smex)
-    (bind-key* "M-X" 'smex-major-mode-commands)
+    (bind-key* "M-X" 'smex-major-mode-commands)))
     ;; This is your old M-x.
-    (bind-key* "C-c C-c M-x" 'execute-extended-command)))
+    ;; (bind-key* "M-x" 'execute-extended-command)))
 
 ;;; http://qiita.com/sune2/items/b73037f9e85962f5afb7
 (setup "company"
