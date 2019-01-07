@@ -26,7 +26,7 @@ function set_cur_ws () {
     )
 }
 
-PS1='[$(print_ws_path | rev | cut -f2 -d '/' | rev)] '$PS1
+PS1='[$(print_ws_path | rev | cut -f2 -d '/' | rev)] '"$PS1"
 
 ## Rviz for a laptop user
 export OGRE_RTT_MODE=Copy
