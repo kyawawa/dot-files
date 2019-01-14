@@ -41,7 +41,9 @@
 (setq case-fold-search t)
 ;; don't distinguish upper/lower cases when incremental search
 (setq isearch-case-fold-search t)
+;; don't distinguish upper/lower cases when complete buffer name
 (setq read-buffer-completion-ignore-case t)
+;; don't distinguish upper/lower cases when complete file name
 (setq read-file-name-completion-ignore-case t)
 
 ;; setting of indent
@@ -56,7 +58,6 @@
 (bind-key* "\M-g" 'goto-line)
 (bind-key* "\C-xL" 'goto-line)
 (bind-key* "\C-xR" 'revert-buffer)
-(bind-key* "\er" 'query-replace)
 (bind-key* "C-x k" (lambda () (interactive) (kill-buffer (buffer-name))))
 ;; (bind-key* "M-u" (lambda () (interactive) (upcase-word -1)))
 
@@ -408,7 +409,7 @@
   (global-anzu-mode +1)
   (set-face-attribute 'anzu-mode-line nil
                       :foreground "blue" :background "orange" :weight 'bold)
-  (global-set-key "\er" 'anzu-query-replace)
+  (bind-key "M-r" 'anzu-query-replace)
   (custom-set-variables
    '(anzu-mode-lighter "")
    '(anzu-deactivate-region t)
