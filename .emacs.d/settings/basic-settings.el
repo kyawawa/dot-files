@@ -252,6 +252,13 @@
 ;; ignore start message
 (setq inhibit-startup-message t)
 
+;;; Open protected file as root automatically
+(defadvice ido-find-file (after find-file-sudo activate)
+  "Find file as root if necessary."
+  (unless (and buffer-file-name
+               (file-writable-p buffer-file-name))
+    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+
 ;;; Auto insert
 ;; TODO: http://d.hatena.ne.jp/higepon/20080731/1217491155
 (add-hook 'find-file-not-found-hooks 'auto-insert)
