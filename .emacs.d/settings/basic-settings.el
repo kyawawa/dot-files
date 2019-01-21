@@ -19,6 +19,9 @@
 (line-number-mode t)
 (column-number-mode t)
 
+;; Ask whether to insert newline at final line
+(setq require-final-newline 0)
+
 ;; share clipboard
 (when (window-system)
   (setq x-select-enable-primary t)
