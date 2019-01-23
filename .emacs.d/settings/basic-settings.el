@@ -420,6 +420,7 @@
   (set-face-attribute 'anzu-mode-line nil
                       :foreground "blue" :background "orange" :weight 'bold)
   (bind-key "M-r" 'anzu-query-replace)
+  (bind-key "M-r" 'comint-history-isearch-backward-regexp shell-mode-map)
   (custom-set-variables
    '(anzu-mode-lighter "")
    '(anzu-deactivate-region t)
