@@ -2,20 +2,27 @@
 
 promptRemove () {
     local yn
-    read -p "rm: remove '$1'? [Y/n] " yn
+    read -p "rm: remove '$1'? [y/N] " yn
     case $yn in
-        "Y" | "y" ) rm -rf $HOME/$1;;
+        "Y" | "y" ) rm -rf $1;;
         * )
     esac
 }
 
+createSymLink () {
+    local dot_dir=$(dirname $(readlink -f $0))
+    if [ ! -e $HOME/$1 ]; then
+        # not to create link such as $HOME/.emacs.d/.emacs.d
+        ln -sn $dot_dir/$1 $HOME/$1
+    fi
+}
 
 dir=$(dirname $(readlink -f $0))
 
 for dotfile in .bashrc .emacs .emacs.d .gitconfig .globalrc .gdbinit .pythonstartup .ipython .mozc
 do
-    if [ -e $HOME/$dotfile ]; then
-        promptRemove $dotfile
+    if [ $(readlink -f $HOME/$dotfile) != $(readlink -f $dir/$dotfile) ]; then
+        promptRemove $HOME/$dotfile
     fi
 done
 
@@ -41,11 +48,11 @@ else
     echo "Please select JSK or Nothing!!" 1>&2
 fi
 
-ln -sn $dir/.emacs.d $HOME/.emacs.d # not to create link such as $HOME/.emacs.d/.emacs.d
-ln -sn $dir/.gitconfig $HOME/.gitconfig
-ln -sn $dir/.globalrc $HOME/.globalrc
-ln -sn $dir/.gdbinit $HOME/.gdbinit
+createSymLink .emacs.d
+createSymLink .gitconfig
+createSymLink .globalrc
+createSymLink .gdbinit
+createSymLink .pythonstartup
+createSymLink .ipython
+createSymLink .mozc
 ln -sn $dir/gtk.css $HOME/.config/gtk-3.0/gtk.css
-ln -sn $dir/.pythonstartup $HOME/.pythonstartup
-ln -sn $dir/.ipython $HOME/.ipython
-ln -sn $dir/.mozc $HOME/.mozc
