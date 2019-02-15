@@ -41,7 +41,7 @@
     ;; (:name clang-format)
     (:name dummy-h-mode)
     (:name dtrt-indent)
-    (:name ggtags)
+    (:name ggtags :checkout "0.8.13") ;; For emacs24
 ;;; TeX
     ;; (:name auctex)
     ;; (:name company-auctex)
