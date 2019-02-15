@@ -47,6 +47,7 @@
     ;; (:name company-auctex)
 ;;; Others
     (:name cmake-mode)
+    (:name dockerfile-mode)
     ;; (:name fsharp-mode)
     (:name markdown-mode)
     (:name yaml-mode)
