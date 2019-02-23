@@ -277,6 +277,7 @@
                   ("\\.h$" . ["template.h" my-template])
                   ("\\.py$" . "template.py")
                   ("\\.jl$" . "template.jl")
+                  ("\\.lua$" . "template.lua")
                   ("\\.launch$" . "template.launch")
                   ) auto-insert-alist))
   (defvar template-replacements-alists
