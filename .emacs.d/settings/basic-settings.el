@@ -279,6 +279,7 @@
                   ("\\.jl$" . "template.jl")
                   ("\\.lua$" . "template.lua")
                   ("\\.launch$" . "template.launch")
+                  ("\\.html$" . "template.html")
                   ) auto-insert-alist))
   (defvar template-replacements-alists
     '(("%file%"             . (lambda () (file-name-nondirectory (buffer-file-name))))
