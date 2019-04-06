@@ -22,6 +22,12 @@
 ;; Ask whether to insert newline at final line
 (setq require-final-newline 0)
 
+;; Set buffer that can not be killed.
+(with-current-buffer "*scratch*"
+  (emacs-lock-mode 'kill))
+(with-current-buffer "*Messages*"
+  (emacs-lock-mode 'kill))
+
 ;; share clipboard
 (when (window-system)
   (setq x-select-enable-primary t)
