@@ -29,21 +29,23 @@
   (emacs-lock-mode 'kill))
 
 ;; share clipboard
-(when (window-system)
-  (setq x-select-enable-primary t)
-  (setq x-select-enable-clipboard t))
-;; share clipboard at emacs -nw
-;; You must install xsel
-(when (and (executable-find "xsel") (getenv "DISPLAY"))
-  (setq interprogram-paste-function
-        (lambda ()
-          (shell-command-to-string "xsel -b -o")))
-  (setq interprogram-cut-function
-        (lambda (text &optional rest)
-          (let* ((process-connection-type nil)
-                 (proc (start-process "xsel" "*Messages*" "xsel" "-b" "-i")))
-            (process-send-string proc text)
-            (process-send-eof proc))))
+(if (window-system)
+    (progn
+      (setq x-select-enable-primary t)
+      (setq x-select-enable-clipboard t))
+  ;; share clipboard at emacs -nw
+  ;; You must install xsel
+  (when (and (executable-find "xsel") (getenv "DISPLAY"))
+    (setq interprogram-paste-function
+          (lambda ()
+            (shell-command-to-string "xsel -b -o")))
+    (setq interprogram-cut-function
+          (lambda (text &optional rest)
+            (let* ((process-connection-type nil)
+                   (proc (start-process "xsel" "*Messages*" "xsel" "-b" "-i")))
+              (process-send-string proc text)
+              (process-send-eof proc))))
+    )
   )
 
 ;; don't distinguish upper/lower cases when search
