@@ -1,5 +1,8 @@
 my dot-files
 
+## emacs
+git clone https://github.com/kyawawa/emacs.d .emacs.d
+
 ## create symbolic link to $HOME
 ```bash
 cd dot-files
