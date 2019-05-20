@@ -1,58 +1,58 @@
 #!/bin/sh
 
-promptRemove () {
+moveOriginalFile () {
+    local today=$(date "+%Y%m%d")
     local yn
-    read -p "rm: remove '$1'? [y/N] " yn
+    read -p "mv: move '$1' to '$1.$today'? [y/N] " yn
     case $yn in
-        "Y" | "y" ) rm -rf $1;;
+        "Y" | "y" ) mv $1 $1.$today;;
         * )
     esac
 }
 
+# $1: target name
+# $2: link name (optional)
+# $3: directory which contains the link (optional)
 createSymLink () {
     local dot_dir=$(dirname $(readlink -f $0))
-    if [ ! -e $HOME/$1 ]; then
-        # not to create link such as $HOME/.emacs.d/.emacs.d
-        ln -sn $dot_dir/$1 $HOME/$1
+    local link_name=$1
+    if [ $2 ]; then
+        link_name=$2
+    fi
+
+    local link_root=${HOME}
+    if [ $3 ]; then
+        link_root=$3
+    fi
+
+    if [ $(readlink -f ${link_root}/${link_name}) != $(readlink -f ${dot_dir}/$1) ]; then
+        if [ -e ${link_root}/${link_name} ]; then
+            moveOriginalFile ${link_root}/${link_name}
+        fi
+
+        if [ ! -e ${link_root}/${link_name} ]; then
+            # not to create link such as $HOME/.emacs.d/.emacs.d
+            ln -sn ${dot_dir}/$1 ${link_root}/${link_name}
+        fi
     fi
 }
 
-dir=$(dirname $(readlink -f $0))
-
-for dotfile in .bashrc .emacs .emacs.d .gitconfig .globalrc .gdbinit .pythonstartup .ipython .mozc
-do
-    if [ $(readlink -f $HOME/$dotfile) != $(readlink -f $dir/$dotfile) ]; then
-        promptRemove $HOME/$dotfile
-    fi
-done
-
-if [ -e $HOME/.config/gtk-3.0/gtk.css ]; then
-    promptRemove $HOME/.config/gtk-3.0/gtk.css
-fi
-
-# .config
-for i in $(ls $dir/.config); do
-    home_conf_file=$HOME/.config/$i
-    if [ -e $home_conf_file ]; then
-        promptRemove $home_conf_file
-    fi
-    ln -sn $dir/.config/$i $home_conf_file
-done
-
 if [ $# -eq 0 ]; then
-    ln -s $dir/.bashrc $HOME/.bashrc
+    target_bashrc=.bashrc
 elif [ $# -eq 1 -a $1 = "JSK" ]; then
-    ln -s $dir/jsk.bash $HOME/.bashrc
+    target_bashrc=jsk.bash
 else
     echo "Argument Error!!" 1>&2
     echo "Please select JSK or Nothing!!" 1>&2
 fi
 
-createSymLink .emacs.d
+createSymLink ${target_bashrc} .bashrc
 createSymLink .gitconfig
 createSymLink .globalrc
 createSymLink .gdbinit
 createSymLink .pythonstartup
 createSymLink .ipython
 createSymLink .mozc
-ln -sn $dir/gtk.css $HOME/.config/gtk-3.0/gtk.css
+createSymLink .config/gtk-3.0/gtk.css
+createSymLink .config/fcitx
+createSymLink .config/inkscape
