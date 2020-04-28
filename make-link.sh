@@ -56,3 +56,4 @@ createSymLink .mozc
 createSymLink .config/gtk-3.0/gtk.css
 createSymLink .config/fcitx
 createSymLink .config/inkscape
+createSymLink .docker/config.json
