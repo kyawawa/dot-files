@@ -147,6 +147,7 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
 fi
 
 export EDITOR="emacs -nw"
+export PATH=$PATH:$HOME/.local/bin
 export PATH=$PATH:$HOME/scripts
 export GOPATH=$HOME/go_path
 export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
