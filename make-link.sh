@@ -48,6 +48,7 @@ fi
 
 createSymLink ${target_bashrc} .bashrc
 createSymLink .gitconfig
+createSymLink .gitignore_global
 createSymLink .globalrc
 createSymLink .gdbinit
 createSymLink .pythonstartup
