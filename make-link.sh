@@ -39,11 +39,11 @@ createSymLink () {
 
 if [ $# -eq 0 ]; then
     target_bashrc=.bashrc
-elif [ $# -eq 1 -a $1 = "JSK" ]; then
-    target_bashrc=jsk.bash
+elif [ $# -eq 1 -a $1 = "ROS" ]; then
+    target_bashrc=ros.bash
 else
     echo "Argument Error!!" 1>&2
-    echo "Please select JSK or Nothing!!" 1>&2
+    echo "Please select ROS or Nothing!!" 1>&2
 fi
 
 createSymLink ${target_bashrc} .bashrc

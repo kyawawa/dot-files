@@ -1,7 +1,6 @@
 dot_dir=$(dirname `readlink -f $HOME/.bashrc`)
 source $dot_dir/.bashrc
 
-##### JSK settings #####
 alias grep='grep --color=auto --exclude-dir=.svn'
 
 ## default ros package
@@ -50,46 +49,8 @@ export PATH=${PKG_INSTALL_DIR}/bin:$PATH
 export CNOID_USE_GLSL=1
 
 ##### dot.bashrc.ros #####
-#euslib
-export CVSDIR=~/prog
-alias eus='roseus "(jsk)" "(rbrain)"'
-alias rtccd='roscd hrpsys; cd rtc'
 alias cs='catkin build --this --start-with-this'
 
 if [ ! $INSIDE_EMACS ] && type "rlwrap" > /dev/null 2>&1; then
     alias roseus='rlwrap roseus'
 fi
-
-#
-# for finding programs
-#
-function eusgrep () {
-    EDIR=`rospack find euslisp`/jskeus
-    SDIR=`rospack find roseus`/euslisp
-    grep -iaH $@ ${EDIR}/eus/lisp/l/*.l \
-                ${EDIR}/eus/lisp/geo/*.l \
-                ${EDIR}/eus/lisp/comp/*.l \
-                ${EDIR}/eus/lisp/opengl/src/*.l \
-                ${EDIR}/eus/lisp/xwindow/*.l \
-                ${EDIR}/irteus/*.l \
-                ${SDIR}/*.l \
-                ${CVSDIR}/euslib/jsk/*.l \
-                ${CVSDIR}/euslib/rbrain/*.l
-                ${CVSDIR}/jvl/app/eusjvl.l
-}
-
-function proggrep() {
-    EDIR=`rospack find euslisp`/jskeus
-    SDIR=`rospack find roseus`
-    grep -iaH $@ ${EDIR}/eus/lisp/{c,l,geo,xwindow,comp,tool}/*.{l,c,h} \
-                ${EDIR}/eus/lisp/opengl/src/*.{l,c,h} \
-                ${EDIR}/irteus/*.{l,c,h} \
-                ${SDIR}/*.{l,c,cpp,h} \
-                ${SDIR}/{euslisp,scripts}/*.{l,c,cpp,h} \
-                ${CVSDIR}/euslib/{jsk,rbrain}/*.{l,c,cpp,h} \
-                ${CVSDIR}/hrp2/{corba,plugins}/*.{l,cpp,c,h} \
-                ${CVSDIR}/rats/{plugins,app,src,include}/*.{l,cpp,c,h}
-                # ${CVSDIR}/hoap/jvl/app/*.l \
-                # ${CVSDIR}/jvl/src/*/*.{cpp,c,h} \
-                # ${CVSDIR}/eusdyna/*.{l,cpp,c,h}
-}
