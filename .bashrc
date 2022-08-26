@@ -159,6 +159,7 @@ export PATH=$PATH:$PYENV_ROOT/bin
 if command -v pyenv 1>/dev/null 2>&1; then
     eval "$(pyenv init -)"
 fi
+alias flake8='flake8 --config=$HOME/.config/flake8'
 
 # rustup component add rust-src
 # setting rust
