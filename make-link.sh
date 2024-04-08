@@ -25,6 +25,11 @@ createSymLink () {
         link_root=$3
     fi
 
+    if [ ! $(readlink -f ${link_root}/${link_name}) ]; then
+        echo "Create $(dirname ${link_root}/${link_name})."
+        mkdir $(dirname ${link_root}/${link_name})
+    fi
+
     if [ $(readlink -f ${link_root}/${link_name}) != $(readlink -f ${dot_dir}/$1) ]; then
         if [ -e ${link_root}/${link_name} ]; then
             moveOriginalFile ${link_root}/${link_name}
